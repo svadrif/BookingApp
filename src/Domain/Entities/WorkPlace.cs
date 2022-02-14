@@ -19,7 +19,6 @@ namespace Domain.Entities
 
         /* EF Relation */
         public IEnumerable<Booking> Bookings { get; set; }
-        public IEnumerable<AppUser> Users { get; set; }
       
         public Guid MapId { get; set; }
         public Map Map { get; set; }
