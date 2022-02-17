@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Domain.Common;
+﻿using Domain.Common;
 using Domain.Enums;
+using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Domain.Entities
 {
@@ -19,9 +19,11 @@ namespace Domain.Entities
         public bool IsBlocked { get; set; }
 
         /* EF Relation */
+        [JsonIgnore]
         public IEnumerable<Booking> Bookings { get; set; }
 
-        public Guid MapId { get; set; }
+        [JsonIgnore]
         public Map Map { get; set; }
+        public Guid MapId { get; set; }
     }
 }

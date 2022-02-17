@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Domain.Common;
+﻿using Domain.Common;
+using System;
+using System.Text.Json.Serialization;
 
 namespace Domain.Entities
 {
@@ -14,12 +13,15 @@ namespace Domain.Entities
         public bool IsActive { get; set; }
 
         /* EF Relation */
+        [JsonIgnore]
         public AppUser User { get; set; }
         public Guid UserId { get; set; }
 
+        [JsonIgnore]
         public ParkingPlace ParkingPlace { get; set; }
         public Guid? ParkingPlaceId { get; set; }
 
+        [JsonIgnore]
         public WorkPlace WorkPlace { get; set; }
         public Guid WorkPlaceId { get; set; }
     }
