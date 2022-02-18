@@ -1,7 +1,6 @@
 ﻿using Domain.Common;
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace Domain.Entities
 {
@@ -14,10 +13,8 @@ namespace Domain.Entities
         public string Name { get; set; }
 
         /* EF Relation */
-        [JsonIgnore]
         public IEnumerable<Map> Maps { get; set; }
 
-        [JsonIgnore]
         public IEnumerable<ParkingPlace> ParkingPlaces { get; set; }
 
     }
