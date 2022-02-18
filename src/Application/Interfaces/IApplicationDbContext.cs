@@ -13,6 +13,6 @@ namespace Application.Interfaces
         DbSet<Vacation> Vacations { get; set; }
         DbSet<WorkPlace> WorkPlaces { get; set; }
 
-        Task<int> SaveChanges();
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }
