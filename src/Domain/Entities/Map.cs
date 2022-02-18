@@ -1,7 +1,6 @@
 ﻿using Domain.Common;
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace Domain.Entities
 {
@@ -12,8 +11,8 @@ namespace Domain.Entities
         public bool HasConfRoom { get; set; }
 
         /* EF Relation */
-        public IEnumerable<WorkPlace> WorkPlaces { get; set; }
         public Office Office { get; set; }
         public Guid OfficeId { get; set; }
+        public IEnumerable<WorkPlace> WorkPlaces { get; set; }
     }
 }

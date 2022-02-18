@@ -1,6 +1,5 @@
 ﻿using Domain.Common;
 using System;
-using System.Text.Json.Serialization;
 
 namespace Domain.Entities
 {

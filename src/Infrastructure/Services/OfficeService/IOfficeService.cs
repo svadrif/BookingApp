@@ -1,5 +1,5 @@
-﻿using Application.DTOs.OfficeDTO;
-using Domain.Entities;
+﻿using Application.Common;
+using Application.DTOs.OfficeDTO;
 
 namespace Infrastructure.Services.OfficeService
 {

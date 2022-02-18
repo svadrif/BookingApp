@@ -1,4 +1,4 @@
-﻿namespace Domain.Entities;
+﻿namespace Application.Common;
 
 public class ServiceResponse<T>
 {

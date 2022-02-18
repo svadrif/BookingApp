@@ -1,7 +1,8 @@
-﻿using Application.DTOs.OfficeDTO;
+﻿using Application.Common;
+using Application.DTOs.OfficeDTO;
 using AutoMapper;
-using Domain.Entities;
 using Infrastructure.Context;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services.OfficeService
@@ -17,19 +18,19 @@ namespace Infrastructure.Services.OfficeService
             _dataContext = dataContext;
             _mapper = mapper;
         }
-        public async Task<ServiceResponse<List<GetOfficeDTO>>>  AddOffice(AddOfficeDTO office)
+        public async Task<ServiceResponse<List<GetOfficeDTO>>>  AddOffice(AddOfficeDTO officeDto)
         {
-            Office office1 = new Office
+            Office newOffice = new Office
             {
                 Id = Guid.NewGuid(),
-                Country = office.Country,
-                City = office.City,
-                Address = office.Address,
-                Name = office.Name,
+                Country = officeDto.Country,
+                City = officeDto.City,
+                Address = officeDto.Address,
+                Name = officeDto.Name,
             };
 
             var serviceResponse = new ServiceResponse<List<GetOfficeDTO>>();
-            _dataContext.Offices.Add(office1);
+            _dataContext.Offices.Add(newOffice);
             await _dataContext.SaveChangesAsync();
             var list = await _dataContext.Offices.ToListAsync();
             serviceResponse.Data = list.Select(c=>_mapper.Map<GetOfficeDTO>(c)).ToList();
@@ -39,7 +40,8 @@ namespace Infrastructure.Services.OfficeService
         public async Task<ServiceResponse<List<GetOfficeDTO>>>  GetAllOffices()
         {
             var serviceResponse = new ServiceResponse<List<GetOfficeDTO>>();
-            serviceResponse.Data = (await _dataContext.Offices.ToListAsync()).Select(c=>_mapper.Map<GetOfficeDTO>(c)).ToList();
+            var officeList = await _dataContext.Offices.ToListAsync();
+            serviceResponse.Data = officeList.Select(c=>_mapper.Map<GetOfficeDTO>(c)).ToList();
             return serviceResponse;
         }
 
@@ -59,8 +61,8 @@ namespace Infrastructure.Services.OfficeService
             office.Address = office1.Address;
             office.Name = office1.Name;
             await _dataContext.SaveChangesAsync();
-            var list = await _dataContext.Offices.ToListAsync();
-            serviceResponse.Data = list.Select(c => _mapper.Map<GetOfficeDTO>(c)).ToList();
+            var officeList = await _dataContext.Offices.ToListAsync();
+            serviceResponse.Data = officeList.Select(c => _mapper.Map<GetOfficeDTO>(c)).ToList();
             return serviceResponse;
         }
         public async Task<ServiceResponse<GetOfficeDTO>>  GetById(Guid id)
@@ -76,8 +78,8 @@ namespace Infrastructure.Services.OfficeService
             var office = await _dataContext.Offices.FindAsync(id);
             _dataContext.Offices.Remove(office);
             await _dataContext.SaveChangesAsync();
-            var list = await _dataContext.Offices.ToListAsync();
-            serviceResponse.Data = list.Select(c => _mapper.Map<GetOfficeDTO>(c)).ToList();
+            var officeList = await _dataContext.Offices.ToListAsync();
+            serviceResponse.Data = officeList.Select(c => _mapper.Map<GetOfficeDTO>(c)).ToList();
             return serviceResponse;
 
         }
