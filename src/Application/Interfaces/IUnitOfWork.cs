@@ -10,6 +10,6 @@ namespace Application.Interfaces
     {
         IAppUserRepository AppUsers { get; }
 
-        int Complete();
+        Task <int> Complete();
     }
 }
