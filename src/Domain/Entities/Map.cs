@@ -11,8 +11,9 @@ namespace Domain.Entities
         public bool HasConfRoom { get; set; }
 
         /* EF Relation */
-        public Office Office { get; set; }
         public Guid OfficeId { get; set; }
+        public Office Office { get; set; }
+
         public IEnumerable<WorkPlace> WorkPlaces { get; set; }
     }
 }
