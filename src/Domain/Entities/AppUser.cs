@@ -22,10 +22,7 @@ namespace Domain.Entities
         public bool isDeleted { get; set; }
 
         /* EF Relation */
-        [JsonIgnore]
         public IEnumerable<Vacation> Vacations { get; set; }
-
-        [JsonIgnore]
         public IEnumerable<Booking> Bookings { get; set; }
 
     }
