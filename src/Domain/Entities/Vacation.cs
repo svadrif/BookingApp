@@ -11,7 +11,6 @@ namespace Domain.Entities
         public DateTime? VacationEnd { get; set; }
 
         /* EF Relation */
-        [JsonIgnore]
         public AppUser User { get; set; }
         public Guid UserId { get; set; }
     }
