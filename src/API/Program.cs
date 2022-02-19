@@ -15,6 +15,8 @@ builder.Services.AddSwaggerGen();
 #region Repositories
 builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddTransient<IAppUserRepository, AppUserRepository>();
+builder.Services.AddTransient<IMapRepository, MapRepository>();
+builder.Services.AddTransient<IOfficeRepository, OfficeRepository>();
 #endregion
 
 var app = builder.Build();
