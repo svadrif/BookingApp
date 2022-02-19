@@ -23,9 +23,9 @@ namespace Infrastructure.UnitOfWork
         public IMapRepository Maps { get; private set; }
         public IOfficeRepository Offices { get; private set; }
 
-        public Task <int> Complete()
+        public async Task <int> Complete()
         {
-            return _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync();
         }
         public void Dispose()
         {
