@@ -1,8 +1,10 @@
 ﻿using Application.Interfaces;
 using Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,29 +13,54 @@ namespace Infrastructure.Repositories
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         protected readonly ApplicationDbContext _context;
+        protected readonly DbSet<T> DbSet;
+
         public GenericRepository(ApplicationDbContext context)
         {
             _context = context;
+            DbSet = context.Set<T>();
         }
-        public void Add(T entity)
+        public async Task<IEnumerable<T>> Search(Expression<Func<T, bool>> predicate)
         {
-            _context.Set<T>().Add(entity);
-        }        
-        public IEnumerable<T> GetAll()
-        {
-            return _context.Set<T>().ToList();
+            return await DbSet.AsNoTracking().Where(predicate).ToListAsync();
         }
-        public IEnumerable<T> GetItemsPerPage(int item)
+
+        public virtual async Task<T> GetById(int id)
         {
-            return _context.Set<T>().Take(item).ToList();
+            return await DbSet.FindAsync(id);
         }
-        public T GetById(int id)
+
+        public virtual async Task<List<T>> GetAll()
         {
-            return _context.Set<T>().Find(id);
+            return await DbSet.ToListAsync();
         }
-        public void Remove(T entity)
+
+        public virtual async Task Add(T entity)
         {
-            _context.Set<T>().Remove(entity);
-        }        
+            DbSet.Add(entity);
+            await SaveChanges();
+        }
+
+        public virtual async Task Update(T entity)
+        {
+            DbSet.Update(entity);
+            await SaveChanges();
+        }
+
+        public virtual async Task Remove(T entity)
+        {
+            DbSet.Remove(entity);
+            await SaveChanges();
+        }
+
+        public async Task<int> SaveChanges()
+        {
+            return await _context.SaveChangesAsync();
+        }
+
+        public void Dispose()
+        {
+            _context?.Dispose();
+        }
     }
 }
