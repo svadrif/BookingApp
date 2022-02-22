@@ -1,5 +1,7 @@
 using Application;
+using Application.Interfaces;
 using Infrastructure;
+using Infrastructure.Repositories;
 using Telegram.Bot;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +20,11 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddHttpClient("tgwebhook")
                 .AddTypedClient<ITelegramBotClient>(httpClient
                     => new TelegramBotClient(builder.Configuration["BotToken"], httpClient));
+
+#region Repositories
+builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddTransient<IAppUserRepository, AppUserRepository>();
+#endregion
 
 var app = builder.Build();
 
