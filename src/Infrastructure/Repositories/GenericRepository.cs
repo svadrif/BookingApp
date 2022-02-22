@@ -23,6 +23,10 @@ namespace Infrastructure.Repositories
         {
             return _context.Set<T>().ToList();
         }
+        public IEnumerable<T> GetItemsPerPage(int item)
+        {
+            return _context.Set<T>().Take(item).ToList();
+        }
         public T GetById(int id)
         {
             return _context.Set<T>().Find(id);
