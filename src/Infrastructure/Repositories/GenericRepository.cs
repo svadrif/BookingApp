@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Domain.Common;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public abstract class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity<Guid>
     {
         protected readonly ApplicationDbContext _context;
         protected readonly DbSet<T> DbSet;
 
-        public GenericRepository(ApplicationDbContext context)
+        protected GenericRepository(ApplicationDbContext context)
         {
             _context = context;
             DbSet = context.Set<T>();
@@ -25,7 +26,7 @@ namespace Infrastructure.Repositories
             return await DbSet.AsNoTracking().Where(predicate).ToListAsync();
         }
 
-        public virtual async Task<T> GetById(int id)
+        public virtual async Task<T> GetById(Guid id)
         {
             return await DbSet.FindAsync(id);
         }
@@ -61,6 +62,6 @@ namespace Infrastructure.Repositories
         public void Dispose()
         {
             _context?.Dispose();
-        }
+        }        
     }
 }

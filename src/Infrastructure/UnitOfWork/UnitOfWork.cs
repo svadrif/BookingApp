@@ -16,12 +16,12 @@ namespace Infrastructure.UnitOfWork
         {
             _context = context;
             AppUsers = new AppUserRepository(_context);
-            Maps = new MapRepository(_context);
-            Offices = new OfficeRepository(_context);
+            //Maps = new MapRepository(_context);
+            //Offices = new OfficeRepository(_context);
         }
         public IAppUserRepository AppUsers { get; private set; }
-        public IMapRepository Maps { get; private set; }
-        public IOfficeRepository Offices { get; private set; }
+        //public IMapRepository Maps { get; private set; }
+        //public IOfficeRepository Offices { get; private set; }
 
         public async Task <int> Complete()
         {

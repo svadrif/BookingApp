@@ -8,9 +8,7 @@ namespace Application.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        IAppUserRepository AppUsers { get; }
-        IMapRepository Maps { get; }
-        IOfficeRepository Offices { get; }
+        IAppUserRepository AppUsers { get; }        
         Task <int> Complete();
     }
 }

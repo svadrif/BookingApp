@@ -11,9 +11,6 @@ namespace Infrastructure.Repositories
 {
     public class OfficeRepository : GenericRepository<Office>, IOfficeRepository
     {
-        public OfficeRepository(ApplicationDbContext context) : base(context)
-        {
-
-        }
+        
     }
 }
