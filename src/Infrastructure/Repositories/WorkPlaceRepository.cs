@@ -9,9 +9,8 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    public class OfficeRepository : GenericRepository<Office>, IOfficeRepository
+    public class WorkPlaceRepository : GenericRepository<WorkPlace>, IWorkPlaceRepository
     {
-        public OfficeRepository(ApplicationDbContext context) : base(context) { }
-
+        public WorkPlaceRepository(ApplicationDbContext context) : base(context) { }
     }
 }

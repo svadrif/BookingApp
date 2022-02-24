@@ -15,8 +15,11 @@ builder.Services.AddSwaggerGen();
 #region Repositories
 builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddTransient<IAppUserRepository, AppUserRepository>();
-//builder.Services.AddTransient<IMapRepository, MapRepository>();
-//builder.Services.AddTransient<IOfficeRepository, OfficeRepository>();
+builder.Services.AddTransient<IMapRepository, MapRepository>();
+builder.Services.AddTransient<IOfficeRepository, OfficeRepository>();
+builder.Services.AddTransient<IParkingPlaceRepository, ParkingPlaceRepository>();
+builder.Services.AddTransient<IVacationRepository, VacationRepository>();
+builder.Services.AddTransient<IWorkPlaceRepository, WorkPlaceRepository>();
 #endregion
 
 var app = builder.Build();

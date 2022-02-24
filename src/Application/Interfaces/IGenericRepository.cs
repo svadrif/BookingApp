@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Application.Interfaces
 {
-    public interface IGenericRepository<T>: IDisposable where T : BaseEntity<Guid>
+    public interface IGenericRepository<T>: IDisposable where T : class
     {
         Task Add(T entity);
         Task<List<T>> GetAll();

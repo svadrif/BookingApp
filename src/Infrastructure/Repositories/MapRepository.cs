@@ -11,6 +11,7 @@ namespace Infrastructure.Repositories
 {
     public class MapRepository : GenericRepository<Map>, IMapRepository
     {
+        public MapRepository(ApplicationDbContext context) : base(context) { }
         
     }
 }

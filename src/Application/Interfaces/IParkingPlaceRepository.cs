@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace Application.Interfaces
 {
-    public interface IOfficeRepository : IGenericRepository<Office>
+    public interface IParkingPlaceRepository : IGenericRepository<ParkingPlace>
     {
-        
     }
 }
