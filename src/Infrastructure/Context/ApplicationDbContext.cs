@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Domain.Common;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,10 +20,5 @@ namespace Infrastructure.Context
         public DbSet<ParkingPlace> ParkingPlaces { get; set; }
         public DbSet<Vacation> Vacations { get; set; }
         public DbSet<WorkPlace> WorkPlaces { get; set; }
-
-        public async Task<int> SaveChanges()
-        {
-            return await base.SaveChangesAsync();
-        }
     }
 }
