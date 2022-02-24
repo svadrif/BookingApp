@@ -1,7 +1,7 @@
 ﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace Application.TelegramBot;
+namespace TelegramBot.Services;
 
 public class HandleUpdateService
 {

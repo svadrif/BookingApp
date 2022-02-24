@@ -1,8 +1,8 @@
-using Application;
 using Application.Interfaces;
 using Infrastructure;
 using Infrastructure.Repositories;
 using Telegram.Bot;
+using TelegramBot;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,8 +14,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Dependency injections
-builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddTelegramBot();
 
 builder.Services.AddHttpClient("tgwebhook")
                 .AddTypedClient<ITelegramBotClient>(httpClient

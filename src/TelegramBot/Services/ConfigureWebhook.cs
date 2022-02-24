@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
 
-namespace Application.TelegramBot;
+namespace TelegramBot.Services;
 
 public class ConfigureWebhook : IHostedService
 {
