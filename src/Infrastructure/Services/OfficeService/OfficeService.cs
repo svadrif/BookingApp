@@ -15,7 +15,11 @@ namespace Infrastructure.Services.OfficeService
 
         public OfficeService(ApplicationDbContext dataContext,IMapper mapper)
         {
+            if (dataContext == null)
+                throw new ArgumentNullException("DbContext is null.");
             _dataContext = dataContext;
+            if (mapper == null)
+                throw new ArgumentNullException("DbContext is null.");
             _mapper = mapper;
         }
         public async Task<ServiceResponse<List<GetOfficeDTO>>>  AddOffice(AddOfficeDTO officeDto)
@@ -32,8 +36,8 @@ namespace Infrastructure.Services.OfficeService
             var serviceResponse = new ServiceResponse<List<GetOfficeDTO>>();
             _dataContext.Offices.Add(newOffice);
             await _dataContext.SaveChangesAsync();
-            var list = await _dataContext.Offices.ToListAsync();
-            serviceResponse.Data = list.Select(c=>_mapper.Map<GetOfficeDTO>(c)).ToList();
+            var officeList = await _dataContext.Offices.ToListAsync();
+            serviceResponse.Data = officeList.Select(c=>_mapper.Map<GetOfficeDTO>(c)).ToList();
             return serviceResponse;
         }
 
