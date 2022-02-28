@@ -1,7 +1,7 @@
 ﻿using Application.Interfaces;
 using Domain.Entities;
 
-namespace Infrastructure.Services.VacationService
+namespace Infrastructure.Services
 {
     public class VacationService : IVacationService
     {
@@ -34,9 +34,9 @@ namespace Infrastructure.Services.VacationService
             return await _vacationRepository.GetAll();
         }
 
-        public async Task<Vacation> GetById(Guid id)
+        public async Task<Vacation> GetById(Guid Id)
         {
-            return await _vacationRepository.GetById(id);
+            return await _vacationRepository.GetById(Id);
         }
 
         public async Task<bool> Remove(Vacation vacation)
@@ -57,9 +57,9 @@ namespace Infrastructure.Services.VacationService
             return vacation;
         }
 
-        public async Task<IEnumerable<Vacation>> Search(Guid userId)
+        public async Task<IEnumerable<Vacation>> Search(Guid UserId)
         {
-            return await _vacationRepository.Search(c => c.UserId.Contains(userId));
+            return await _vacationRepository.Search(c => c.UserId.Contains(UserId));
         }
     }
 }
