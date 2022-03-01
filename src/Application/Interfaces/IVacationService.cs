@@ -9,6 +9,6 @@ namespace Application.Interfaces
         Task<Vacation> AddAsync(Vacation vacation);
         Task<Vacation> UpdateAsync(Vacation vacation);
         Task<bool> RemoveAsync(Vacation vacation);
-        Task<IEnumerable<Vacation>> SearchAsync(Guid UserId);
+        Task<IEnumerable<Vacation>> SearchByUserIdAsync(Guid UserId);
     }
 }
