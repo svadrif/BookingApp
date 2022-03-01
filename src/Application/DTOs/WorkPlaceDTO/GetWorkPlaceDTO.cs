@@ -13,7 +13,6 @@ namespace Application.DTOs.WorkPlaceDTO
         public bool HasKeyboard { get; set; }
         public bool HasMouse { get; set; }
         public bool HasHeadset { get; set; }
-        public bool IsBlocked { get; set; }
         public Guid MapId { get; set; }
 
     }

@@ -28,6 +28,5 @@ namespace Application.DTOs.AppUserDTO
         public DateTime EmploymentStart { get; set; }
         public DateTime? EmploymentEnd { get; set; }
         public Guid? PrefferdWorkPlaceId { get; set; }
-        public bool isDeleted { get; set; }
     }
 }

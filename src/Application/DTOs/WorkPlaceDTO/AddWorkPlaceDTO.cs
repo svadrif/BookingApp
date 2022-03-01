@@ -15,7 +15,6 @@ namespace Application.DTOs.WorkPlaceDTO
         public bool HasKeyboard { get; set; }
         public bool HasMouse { get; set; }
         public bool HasHeadset { get; set; }
-        public bool IsBlocked { get; set; }
 
         [Required(ErrorMessage = "This field {0} is required")]
         public Guid MapId { get; set; }

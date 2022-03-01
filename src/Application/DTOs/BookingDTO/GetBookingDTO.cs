@@ -13,7 +13,6 @@ namespace Application.DTOs.BookingDTO
         public DateTime BookingEnd { get; set; }
         public bool IsRecurring { get; set; }
         public string Frequancy { get; set; }
-        public bool IsActive { get; set; }
         public Guid UserId { get; set; }
         public Guid? ParkingPlaceId { get; set; }
         public Guid WorkPlaceId { get; set; }
