@@ -17,38 +17,38 @@ namespace Infrastructure.Services
 
         public async Task<Vacation> AddAsync(Vacation vacation)
         {
-            if (_vacationRepository.Search(v => v.Id == vacation.Id).Result.Any())
+            if (_vacationRepository.SearchAsync(v => v.Id == vacation.Id).Result.Any())
                 return null;
 
-            await _vacationRepository.Add(vacation);
+            await _vacationRepository.AddAsync(vacation);
             return vacation;
         }
 
         public async Task<IEnumerable<Vacation>> GetAllAsync()
         {
-            return await _vacationRepository.GetAll();
+            return await _vacationRepository.GetAllAsync();
         }
 
         public async Task<Vacation> GetByIdAsync(Guid Id)
         {
-            return await _vacationRepository.GetById(Id);
+            return await _vacationRepository.GetByIdAsync(Id);
         }
 
         public async Task<bool> RemoveAsync(Vacation vacation)
         {
-            var appUsers = await _appUserService.Search(vacation.UserId);
+            var appUsers = await _appUserService.SearchAsync(vacation.UserId);
             if (appUsers.Any()) return false;
 
-            await _vacationRepository.Remove(vacation);
+            await _vacationRepository.RemoveAsync(vacation);
             return true;
         }
 
         public async Task<Vacation> UpdateAsync(Vacation vacation)
         {
-            if (_vacationRepository.Search(v => v.UserId == vacation.UserId && v.Id != vacation.Id).Result.Any())
+            if (_vacationRepository.SearchAsync(v => v.UserId == vacation.UserId && v.Id != vacation.Id).Result.Any())
                 return null;
 
-            await _vacationRepository.Update(vacation);
+            await _vacationRepository.UpdateAsync(vacation);
             return vacation;
         }
 
