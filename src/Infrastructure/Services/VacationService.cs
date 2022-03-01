@@ -1,4 +1,6 @@
-﻿using Application.Interfaces;
+﻿using Application.DTOs.VacationDTO;
+using Application.Interfaces;
+using AutoMapper;
 using Domain.Entities;
 
 namespace Infrastructure.Services
@@ -7,14 +9,18 @@ namespace Infrastructure.Services
     {
 
         private readonly IVacationRepository _vacationRepository;
+        private readonly IMapper _mapper;
 
-        public VacationService(IVacationRepository vacationRepository)
+        public VacationService(IVacationRepository vacationRepository, IMapper mapper)
         {
             _vacationRepository = vacationRepository;
+            _mapper = mapper;
         }
 
-        public async Task<Vacation> AddAsync(Vacation vacation)
+        public async Task<Vacation> AddAsync(AddVacationDTO vacationDTO)
         {
+            Vacation vacation = _mapper.Map<Vacation>(vacationDTO);
+            vacation.Id = Guid.NewGuid();
             await _vacationRepository.AddAsync(vacation);
             return vacation;
         }
@@ -31,6 +37,9 @@ namespace Infrastructure.Services
 
         public async Task<bool> RemoveAsync(Vacation vacation)
         {
+            if (await _vacationRepository.GetByIdAsync(vacation.Id) == null)
+                return false;
+
             await _vacationRepository.RemoveAsync(vacation);
             return true;
         }
@@ -46,6 +55,9 @@ namespace Infrastructure.Services
 
         public async Task<IEnumerable<Vacation>> SearchByUserIdAsync(Guid UserId)
         {
+            if (UserId == Guid.Empty)
+                return null; 
+
             return await _vacationRepository.SearchByUserIdAsync(c => c.UserId.Contains(UserId));
         }
     }
