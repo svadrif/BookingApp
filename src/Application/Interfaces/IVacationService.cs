@@ -2,7 +2,7 @@
 
 namespace Application.Interfaces
 {
-    public interface IVacationService : IDisposable
+    public interface IVacationService : 
     {
         Task<IEnumerable<Vacation>> GetAll();
         Task<Vacation> GetById(Guid Id);

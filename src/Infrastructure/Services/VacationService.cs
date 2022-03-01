@@ -24,11 +24,6 @@ namespace Infrastructure.Services
             return vacation;
         }
 
-        public void Dispose()
-        {
-            _vacationRepository?.Dispose();
-        }
-
         public async Task<IEnumerable<Vacation>> GetAll()
         {
             return await _vacationRepository.GetAll();
