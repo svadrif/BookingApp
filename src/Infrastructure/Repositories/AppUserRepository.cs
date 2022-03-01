@@ -14,21 +14,21 @@ namespace Infrastructure.Repositories
     {
         public AppUserRepository(ApplicationDbContext context) : base(context) { }
 
-        public override async Task<List<AppUser>> GetAll()
+        public override async Task<List<AppUser>> GetAllAsync()
         {
             return await _context.AppUsers.AsNoTracking()
                 .OrderBy(b => b.LastName)
                 .ToListAsync();
         }
 
-        public override async Task<AppUser> GetById(Guid id)
+        public override async Task<AppUser> GetByIdAsync(Guid id)
         {
             return await _context.AppUsers.AsNoTracking()
                 .Where(b => b.Id == id)
                 .FirstOrDefaultAsync();
         }        
 
-        public async Task<IEnumerable<AppUser>> SearchAppUser(string searchedValue)
+        public async Task<IEnumerable<AppUser>> SearchAppUserAsync(string searchedValue)
         {
             return await _context.AppUsers.AsNoTracking()                
                 .Where(b => b.UserName.Contains(searchedValue) ||

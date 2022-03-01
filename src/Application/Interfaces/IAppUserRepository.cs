@@ -9,6 +9,6 @@ namespace Application.Interfaces
 {
     public interface IAppUserRepository : IGenericRepository<AppUser>
     {                
-        Task<IEnumerable<AppUser>> SearchAppUser(string searchedValue);
+        Task<IEnumerable<AppUser>> SearchAppUserAsync(string searchedValue);
     }
 }
