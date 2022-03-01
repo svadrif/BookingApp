@@ -2,7 +2,7 @@
 
 namespace Application.Interfaces
 {
-    public interface IAppUserService : IDisposable
+    public interface IAppUserService
     {
         Task<IEnumerable<AppUser>> GetAll();
         Task<AppUser> GetById(Guid Id);

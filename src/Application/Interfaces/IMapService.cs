@@ -2,7 +2,7 @@
 
 namespace Application.Interfaces
 {
-    public interface IMapService: IDisposable
+    public interface IMapService
     {
         Task<IEnumerable<Map>> GetAll();
         Task<Map> GetById(Guid Id);

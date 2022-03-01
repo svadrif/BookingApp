@@ -2,7 +2,7 @@
 
 namespace Application.Interfaces
 {
-    public interface IWorkPlaceService : IDisposable
+    public interface IWorkPlaceService 
     {
         Task<IEnumerable<WorkPlace>> GetAll();
         Task<WorkPlace> GetById(Guid Id);

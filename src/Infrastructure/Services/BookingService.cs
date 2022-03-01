@@ -30,11 +30,6 @@ namespace Infrastructure.Services
             return booking;
         }
 
-        public void Dispose()
-        {
-            _bookingRepository?.Dispose();
-        }
-
         public async Task<IEnumerable<Booking>> GetAll()
         {
             return await _bookingRepository.GetAll();

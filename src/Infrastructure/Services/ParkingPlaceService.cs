@@ -22,11 +22,6 @@ namespace Infrastructure.Services
             return parkingPlace;
         }
 
-        public void Dispose()
-        {
-            _parkingPlaceRepository?.Dispose();
-        }
-
         public async Task<IEnumerable<ParkingPlace>> GetAll()
         {
             return await _parkingPlaceRepository.GetAll();

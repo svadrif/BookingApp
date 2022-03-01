@@ -25,11 +25,6 @@ namespace Infrastructure.Services
             return appUser;
         }
 
-        public void Dispose()
-        {
-            _appUserRepository?.Dispose();
-        }
-
         public async Task<IEnumerable<AppUser>> GetAll()
         {
             return await _appUserRepository.GetAll();

@@ -2,7 +2,7 @@
 
 namespace Application.Interfaces
 {
-    public interface IOfficeService : IDisposable
+    public interface IOfficeService 
     {
         Task<IEnumerable<Office>> GetAll();
         Task<Office> GetById(Guid Id);

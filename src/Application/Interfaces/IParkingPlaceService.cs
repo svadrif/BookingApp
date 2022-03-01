@@ -2,7 +2,7 @@
 
 namespace Application.Interfaces
 {
-    public interface IParkingPlaceService : IDisposable
+    public interface IParkingPlaceService 
     {
         Task<IEnumerable<ParkingPlace>> GetAll();
         Task<ParkingPlace> GetById(Guid Id);

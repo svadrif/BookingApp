@@ -20,11 +20,6 @@ namespace Infrastructure.Services
             return office;
         }
 
-        public void Dispose()
-        {
-            _officeRepository?.Dispose();
-        }
-
         public async Task<IEnumerable<Office>> GetAll()
         {
             return await _officeRepository.GetAll();

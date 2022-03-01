@@ -53,10 +53,5 @@ namespace Infrastructure.Services
             await _workPlaceRepository.Update(workPlace);
             return workPlace;
         }
-
-        public void Dispose()
-        {
-            _workPlaceRepository?.Dispose();
-        }
     }
 }

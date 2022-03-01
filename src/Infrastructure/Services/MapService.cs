@@ -21,11 +21,6 @@ namespace Infrastructure.Services
             return map;
         }
 
-        public void Dispose()
-        {
-            _mapRepository?.Dispose();
-        }
-
         public async Task<IEnumerable<Map>> GetAll()
         {
             return await _mapRepository.GetAll();

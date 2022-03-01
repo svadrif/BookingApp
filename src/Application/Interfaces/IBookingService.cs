@@ -2,7 +2,7 @@
 
 namespace Application.Interfaces
 {
-    public interface IBookingService : IDisposable
+    public interface IBookingService 
     {
         Task<IEnumerable<Booking>> GetAll();
         Task<Booking> GetById(Guid Id);
