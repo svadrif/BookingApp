@@ -14,9 +14,10 @@ namespace Infrastructure.Services
     {
         private readonly IAppUserRepository _appUserRepository;
         private readonly IMapper _mapper;
-        public AppUserService(IAppUserRepository appUserRepository)
+        public AppUserService(IAppUserRepository appUserRepository, IMapper mapper)
         {
             _appUserRepository = appUserRepository;
+            _mapper = mapper;
         }
 
         public async Task<AppUser> AddAsync(AddAppUserDTO appUserDTO)
