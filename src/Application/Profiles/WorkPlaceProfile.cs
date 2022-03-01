@@ -18,12 +18,8 @@ namespace Application.Profiles
                 .ForMember(dest => dest.HasMonitor, src => src.MapFrom(x => x.HasMonitor))
                 .ForMember(dest => dest.HasKeyboard, src => src.MapFrom(x => x.HasKeyboard))
                 .ForMember(dest => dest.HasMouse, src => src.MapFrom(x => x.HasMouse))
-                .ForMember(dest => dest.HasHeadset, src => src.MapFrom(x => x.HasHeadset))
-                .ForMember(dest => dest.IsBlocked, src => src.MapFrom(x => x.IsBlocked))
-                .ForMember(dest => dest.CreatedBy, src => src.MapFrom(x => x.CreatedBy))
-                .ForMember(dest => dest.CreatedDate, src => src.MapFrom(x => x.CreatedDate))
-                .ForMember(dest => dest.ModifiedBy, src => src.MapFrom(x => x.ModifiedBy))
-                .ForMember(dest => dest.ModifiedDate, src => src.MapFrom(x => x.ModifiedDate));
+                .ForMember(dest => dest.HasHeadset, src => src.MapFrom(x => x.HasHeadset));
+
 
             CreateMap<AddWorkPlaceDTO, WorkPlace>()
                 .ForMember(dest => dest.MapId, src => src.MapFrom(x => x.MapId))
@@ -34,8 +30,7 @@ namespace Application.Profiles
                 .ForMember(dest => dest.HasMonitor, src => src.MapFrom(x => x.HasMonitor))
                 .ForMember(dest => dest.HasKeyboard, src => src.MapFrom(x => x.HasKeyboard))
                 .ForMember(dest => dest.HasMouse, src => src.MapFrom(x => x.HasMouse))
-                .ForMember(dest => dest.HasHeadset, src => src.MapFrom(x => x.HasHeadset))
-                .ForMember(dest => dest.IsBlocked, src => src.MapFrom(x => x.IsBlocked));
+                .ForMember(dest => dest.HasHeadset, src => src.MapFrom(x => x.HasHeadset));
 
             CreateMap<UpdateWorkPlaceDTO, WorkPlace>()
                 .ForMember(dest => dest.Id, src => src.MapFrom(x => x.Id))

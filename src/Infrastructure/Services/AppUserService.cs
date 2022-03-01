@@ -1,4 +1,6 @@
-﻿using Application.Interfaces;
+﻿using Application.DTOs.AppUserDTO;
+using Application.Interfaces;
+using AutoMapper;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -11,16 +13,16 @@ namespace Infrastructure.Services
     public class AppUserService : IAppUserService
     {
         private readonly IAppUserRepository _appUserRepository;
+        private readonly IMapper _mapper;
         public AppUserService(IAppUserRepository appUserRepository)
         {
             _appUserRepository = appUserRepository;
         }
 
-        public async Task<AppUser> AddAsync(AppUser appUser)
+        public async Task<AppUser> AddAsync(AddAppUserDTO appUserDTO)
         {
-            if (_appUserRepository.SearchAsync(a => a.Id == appUser.Id).Result.Any())
-                return null;
-
+            AppUser appUser = _mapper.Map<AppUser>(appUserDTO);
+            appUser.Id = Guid.NewGuid();
             await _appUserRepository.AddAsync(appUser);
             return appUser;
         }
@@ -37,26 +39,27 @@ namespace Infrastructure.Services
 
         public async Task<bool> RemoveAsync(AppUser appUser)
         {
+            if (await _appUserRepository.GetByIdAsync(appUser.Id) == null)
+                return false;
+
             await _appUserRepository.RemoveAsync(appUser);
             return true;
         }
 
-        public async Task<IEnumerable<AppUser>> SearchAsync(Guid Id)
-        {
-            return await _appUserRepository.SearchAsync(c => c.Id.Contains(Id));
-        }
-
         public async Task<IEnumerable<AppUser>> SearchAppUserAsync(string searchedValue)
         {
+            if (string.IsNullOrEmpty(searchedValue))
+                return null;
+
             return await _appUserRepository.SearchAppUserAsync(searchedValue);
         }
 
         public async Task<AppUser> UpdateAsync(AppUser appUser)
         {
-            if (_appUserRepository.SearchAsync(a => a.TelegramId == appUser.TelegramId && a.Id != appUser.Id).Result.Any())
+            if (await _appUserRepository.GetByIdAsync(appUser.Id) == null)
                 return null;
 
-            await _appUserRepository.Update(appUser);
+            await _appUserRepository.UpdateAsync(appUser);
             return appUser;
         }
     }

@@ -9,7 +9,6 @@ namespace Application.Interfaces
         Task<AppUser> AddAsync(AppUser appUser);
         Task<AppUser> UpdateAsync(AppUser appUser);
         Task<bool> RemoveAsync(AppUser appUser);
-        Task<IEnumerable<AppUser>> SearchAsync(Guid Id);
         Task<IEnumerable<AppUser>> SearchAppUserAsync(string searchedValue);
     }
 }
