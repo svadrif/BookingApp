@@ -4,11 +4,11 @@ namespace Application.Interfaces
 {
     public interface IWorkPlaceService 
     {
-        Task<IEnumerable<WorkPlace>> GetAll();
-        Task<WorkPlace> GetById(Guid Id);
-        Task<WorkPlace> Add(WorkPlace workPlace);
-        Task<WorkPlace> Update(WorkPlace workPlace);
-        Task<bool> Remove(WorkPlace workPlace);
-        Task<IEnumerable<WorkPlace>> Search(Guid MapId);
+        Task<IEnumerable<WorkPlace>> GetAllAsync();
+        Task<WorkPlace> GetByIdAsync(Guid Id);
+        Task<WorkPlace> AddAsync(WorkPlace workPlace);
+        Task<WorkPlace> UpdateAsync(WorkPlace workPlace);
+        Task<bool> RemoveAsync(WorkPlace workPlace);
+        Task<IEnumerable<WorkPlace>> SearchAsync(Guid MapId);
     }
 }

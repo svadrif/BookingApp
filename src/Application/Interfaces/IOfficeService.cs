@@ -4,12 +4,12 @@ namespace Application.Interfaces
 {
     public interface IOfficeService 
     {
-        Task<IEnumerable<Office>> GetAll();
-        Task<Office> GetById(Guid Id);
-        Task<Office> Add(Office office);
-        Task<Office> Update(Office office);
-        Task<bool> Remove(Office office);
-        Task<IEnumerable<Office>> Search(Guid Id);
-        Task<IEnumerable<Office>> SearchOffice(string searchedValue);
+        Task<IEnumerable<Office>> GetAllAsync();
+        Task<Office> GetByIdAsync(Guid Id);
+        Task<Office> AddAsync(Office office);
+        Task<Office> UpdateAsync(Office office);
+        Task<bool> RemoveAsync(Office office);
+        Task<IEnumerable<Office>> SearchAsync(Guid Id);
+        Task<IEnumerable<Office>> SearchOfficeAsync(string searchedValue);
     }
 }

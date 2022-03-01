@@ -12,45 +12,45 @@ namespace Infrastructure.Services
             _mapRepository = mapRepository;
             _officeService = officeService;
         }
-        public async Task<Map> Add(Map map)
+        public async Task<Map> AddAsync(Map map)
         {
-            if (_mapRepository.Search(m => m.Id == map.Id).Result.Any())
+            if (_mapRepository.SearchAsync(m => m.Id == map.Id).Result.Any())
                 return null;
 
-            await _mapRepository.Add(map);
+            await _mapRepository.AddAsync(map);
             return map;
         }
 
-        public async Task<IEnumerable<Map>> GetAll()
+        public async Task<IEnumerable<Map>> GetAllAsync()
         {
-            return await _mapRepository.GetAll();
+            return await _mapRepository.GetAllAsync();
         }
 
-        public async Task<Map> GetById(Guid Id)
+        public async Task<Map> GetByIdAsync(Guid Id)
         {
-            return await _mapRepository.GetById(Id);
+            return await _mapRepository.GetByIdAsync(Id);
         }
 
-        public async Task<bool> Remove(Map map)
+        public async Task<bool> RemoveAsync(Map map)
         {
-            var offices = await _officeService.Search(map.OfficeId);
+            var offices = await _officeService.SearchAsync(map.OfficeId);
             if (offices.Any()) return false;
 
-            await _mapRepository.Remove(map);
+            await _mapRepository.RemoveAsync(map);
             return true;
         }
 
-        public async Task<IEnumerable<Map>> Search(Guid OfficeId)
+        public async Task<IEnumerable<Map>> SearchAsync(Guid OfficeId)
         {
-            return await _mapRepository.Search(c => c.OfficeId.Contains(OfficeId));
+            return await _mapRepository.SearchAsync(c => c.OfficeId.Contains(OfficeId));
         }
 
-        public async Task<Map> Update(Map map)
+        public async Task<Map> UpdateAsync(Map map)
         {
             if (_mapRepository.Search(m => m.OfficeId == map.OfficeId && m.Id != map.Id).Result.Any())
                 return null;
 
-            await _mapRepository.Update(map);
+            await _mapRepository.UpdateAsync(map);
             return map;
         }
     

@@ -16,44 +16,44 @@ namespace Infrastructure.Services
             _appUserRepository = appUserRepository;
         }
 
-        public async Task<AppUser> Add(AppUser appUser)
+        public async Task<AppUser> AddAsync(AppUser appUser)
         {
-            if (_appUserRepository.Search(a => a.Id == appUser.Id).Result.Any())
+            if (_appUserRepository.SearchAsync(a => a.Id == appUser.Id).Result.Any())
                 return null;
 
-            await _appUserRepository.Add(appUser);
+            await _appUserRepository.AddAsync(appUser);
             return appUser;
         }
 
-        public async Task<IEnumerable<AppUser>> GetAll()
+        public async Task<IEnumerable<AppUser>> GetAllAsync()
         {
-            return await _appUserRepository.GetAll();
+            return await _appUserRepository.GetAllAsync();
         }
 
-        public async Task<AppUser> GetById(Guid Id)
+        public async Task<AppUser> GetByIdAsync(Guid Id)
         {
-            return await _appUserRepository.GetById(Id);
+            return await _appUserRepository.GetByIdAsync(Id);
         }
 
-        public async Task<bool> Remove(AppUser appUser)
+        public async Task<bool> RemoveAsync(AppUser appUser)
         {
-            await _appUserRepository.Remove(appUser);
+            await _appUserRepository.RemoveAsync(appUser);
             return true;
         }
 
-        public async Task<IEnumerable<AppUser>> Search(Guid Id)
+        public async Task<IEnumerable<AppUser>> SearchAsync(Guid Id)
         {
-            return await _appUserRepository.Search(c => c.Id.Contains(Id));
+            return await _appUserRepository.SearchAsync(c => c.Id.Contains(Id));
         }
 
-        public async Task<IEnumerable<AppUser>> SearchAppUser(string searchedValue)
+        public async Task<IEnumerable<AppUser>> SearchAppUserAsync(string searchedValue)
         {
-            return await _appUserRepository.SearchAppUser(searchedValue);
+            return await _appUserRepository.SearchAppUserAsync(searchedValue);
         }
 
-        public async Task<AppUser> Update(AppUser appUser)
+        public async Task<AppUser> UpdateAsync(AppUser appUser)
         {
-            if (_appUserRepository.Search(a => a.TelegramId == appUser.TelegramId && a.Id != appUser.Id).Result.Any())
+            if (_appUserRepository.SearchAsync(a => a.TelegramId == appUser.TelegramId && a.Id != appUser.Id).Result.Any())
                 return null;
 
             await _appUserRepository.Update(appUser);

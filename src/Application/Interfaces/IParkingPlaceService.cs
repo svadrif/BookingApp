@@ -4,11 +4,11 @@ namespace Application.Interfaces
 {
     public interface IParkingPlaceService 
     {
-        Task<IEnumerable<ParkingPlace>> GetAll();
-        Task<ParkingPlace> GetById(Guid Id);
-        Task<ParkingPlace> Add(ParkingPlace parkingPlace);
-        Task<ParkingPlace> Update(ParkingPlace parkingPlace);
-        Task<bool> Remove(ParkingPlace parkingPlace);
-        Task<IEnumerable<ParkingPlace>> Search(Guid OfficeId);
+        Task<IEnumerable<ParkingPlace>> GetAllAsync();
+        Task<ParkingPlace> GetByIdAsync(Guid Id);
+        Task<ParkingPlace> AddAsync(ParkingPlace parkingPlace);
+        Task<ParkingPlace> UpdateAsync(ParkingPlace parkingPlace);
+        Task<bool> RemoveAsync(ParkingPlace parkingPlace);
+        Task<IEnumerable<ParkingPlace>> SearchAsync(Guid? OfficeId);
     }
 }

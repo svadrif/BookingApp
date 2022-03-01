@@ -12,45 +12,45 @@ namespace Infrastructure.Services
             _workPlaceRepository = workPlaceRepository;
             _mapService = mapService;
         }
-        public async Task<WorkPlace> Add(WorkPlace workPlace)
+        public async Task<WorkPlace> AddAsync(WorkPlace workPlace)
         {
-            if (_workPlaceRepository.Search(w => w.Id == workPlace.Id).Result.Any())
+            if (_workPlaceRepository.SearchAsync(w => w.Id == workPlace.Id).Result.Any())
                 return null;
 
-            await _workPlaceRepository.Add(workPlace);
+            await _workPlaceRepository.AddAsync(workPlace);
             return workPlace;
         }
 
-        public async Task<IEnumerable<WorkPlace>> GetAll()
+        public async Task<IEnumerable<WorkPlace>> GetAllAsync()
         {
-            return await _workPlaceRepository.GetAll();
+            return await _workPlaceRepository.GetAllAsync();
         }
 
-        public async Task<WorkPlace> GetById(Guid Id)
+        public async Task<WorkPlace> GetByIdAsync(Guid Id)
         {
-            return await _workPlaceRepository.GetById(Id);
+            return await _workPlaceRepository.GetByIdAsync(Id);
         }
 
-        public async Task<bool> Remove(WorkPlace workPlace)
+        public async Task<bool> RemoveAsync(WorkPlace workPlace)
         {
-            var maps = await _mapService.Search(workPlace.MapId);
+            var maps = await _mapService.SearchAsync(workPlace.MapId);
             if (maps.Any()) return false;
 
-            await _workPlaceRepository.Remove(workPlace);
+            await _workPlaceRepository.RemoveAsync(workPlace);
             return true;
         }
 
-        public async Task<IEnumerable<WorkPlace>> Search(Guid MapId)
+        public async Task<IEnumerable<WorkPlace>> SearchAsync(Guid MapId)
         {
-            return await _workPlaceRepository.Search(c => c.MapId.Contains(MapId));
+            return await _workPlaceRepository.SearchAsync(c => c.MapId.Contains(MapId));
         }
 
-        public async Task<WorkPlace> Update(WorkPlace workPlace)
+        public async Task<WorkPlace> UpdateAsync(WorkPlace workPlace)
         {
-            if (_workPlaceRepository.Search(w => w.MapId == workPlace.MapId && w.Id != workPlace.Id).Result.Any())
+            if (_workPlaceRepository.SearchAsync(w => w.MapId == workPlace.MapId && w.Id != workPlace.Id).Result.Any())
                 return null;
 
-            await _workPlaceRepository.Update(workPlace);
+            await _workPlaceRepository.UpdateAsync(workPlace);
             return workPlace;
         }
     }

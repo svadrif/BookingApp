@@ -11,47 +11,47 @@ namespace Infrastructure.Services
         {
             _officeRepository = officeRepository;
         }
-        public async Task<Office> Add(Office office)
+        public async Task<Office> AddAsync(Office office)
         {
-            if (_officeRepository.Search(o => o.Id == office.Id).Result.Any())
+            if (_officeRepository.SearchAsync(o => o.Id == office.Id).Result.Any())
                 return null;
 
-            await _officeRepository.Add(office);
+            await _officeRepository.AddAsync(office);
             return office;
         }
 
-        public async Task<IEnumerable<Office>> GetAll()
+        public async Task<IEnumerable<Office>> GetAllAsync()
         {
-            return await _officeRepository.GetAll();
+            return await _officeRepository.GetAllAsync();
         }
 
-        public async Task<Office> GetById(Guid Id)
+        public async Task<Office> GetByIdAsync(Guid Id)
         {
-            return await _officeRepository.GetById(Id);
+            return await _officeRepository.GetByIdAsync(Id);
         }
 
-        public async Task<bool> Remove(Office office)
+        public async Task<bool> RemoveAsync(Office office)
         {
-            await _officeRepository.Remove(office);
+            await _officeRepository.RemoveAsync(office);
             return true;
         }
 
-        public async Task<IEnumerable<Office>> Search(Guid Id)
+        public async Task<IEnumerable<Office>> SearchAsync(Guid Id)
         {
-            return await _officeRepository.Search(c => c.Id.Contains(Id));
+            return await _officeRepository.SearchAsync(c => c.Id.Contains(Id));
         }
 
-        public async Task<IEnumerable<Office>> SearchOffice(string searchedValue)
+        public async Task<IEnumerable<Office>> SearchOfficeAsync(string searchedValue)
         {
-            return await _officeRepository.SearchOffice(searchedValue);
+            return await _officeRepository.SearchOfficeAsync(searchedValue);
         }
 
-        public async Task<Office> Update(Office office)
+        public async Task<Office> UpdateAsync(Office office)
         {
-            if (_officeRepository.Search(o => o.Name == office.Name && o.Id != office.Id).Result.Any())
+            if (_officeRepository.SearchAsync(o => o.Name == office.Name && o.Id != office.Id).Result.Any())
                 return null;
 
-            await _officeRepository.Update(office);
+            await _officeRepository.UpdateAsync(office);
             return office;
         }
     }

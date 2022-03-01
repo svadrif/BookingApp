@@ -4,11 +4,11 @@ namespace Application.Interfaces
 {
     public interface IMapService
     {
-        Task<IEnumerable<Map>> GetAll();
-        Task<Map> GetById(Guid Id);
-        Task<Map> Add(Map map);
-        Task<Map> Update(Map map);
-        Task<bool> Remove(Map map);
-        Task<IEnumerable<Map>> Search(Guid OfficeId);
+        Task<IEnumerable<Map>> GetAllAsync();
+        Task<Map> GetByIdAsync(Guid Id);
+        Task<Map> AddAsync(Map map);
+        Task<Map> UpdateAsync(Map map);
+        Task<bool> RemoveAsync(Map map);
+        Task<IEnumerable<Map>> SearchAsync(Guid OfficeId);
     }
 }

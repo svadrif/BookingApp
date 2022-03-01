@@ -13,45 +13,45 @@ namespace Infrastructure.Services
             _parkingPlaceRepository = parkingPlaceRepository;
             _officeService = officeService;
         }
-        public async Task<ParkingPlace> Add(ParkingPlace parkingPlace)
+        public async Task<ParkingPlace> AddAsync(ParkingPlace parkingPlace)
         {
-            if (_parkingPlaceRepository.Search(p => p.Id = parkingPlace.Id).Result.Any())
+            if (_parkingPlaceRepository.SearchAsync(p => p.Id = parkingPlace.Id).Result.Any())
                 return null;
 
-            await _parkingPlaceRepository.Add(parkingPlace);
+            await _parkingPlaceRepository.AddAsync(parkingPlace);
             return parkingPlace;
         }
 
-        public async Task<IEnumerable<ParkingPlace>> GetAll()
+        public async Task<IEnumerable<ParkingPlace>> GetAllAsync()
         {
-            return await _parkingPlaceRepository.GetAll();
+            return await _parkingPlaceRepository.GetAllAsync();
         }
 
-        public async Task<ParkingPlace> GetById(Guid Id)
+        public async Task<ParkingPlace> GetByIdAsync(Guid Id)
         {
-            return await _parkingPlaceRepository.GetById(Id);
+            return await _parkingPlaceRepository.GetByIdAsync(Id);
         }
 
-        public async Task<bool> Remove(ParkingPlace parkingPlace)
+        public async Task<bool> RemoveAsync(ParkingPlace parkingPlace)
         {
-            var offices = await _officeService.Search(parkingPlace.OfficeId);
+            var offices = await _officeService.SearchAsync(parkingPlace.OfficeId);
             if (offices.Any()) return false;
 
-            await _parkingPlaceRepository.Remove(parkingPlace);
+            await _parkingPlaceRepository.RemoveAsync(parkingPlace);
             return true;
         }
 
-        public async Task<IEnumerable<ParkingPlace>> Search(Guid OfficeId)
+        public async Task<IEnumerable<ParkingPlace>> SearchAsync(Guid? OfficeId)
         {
-            return await _parkingPlaceRepository.Search(c => c.OfficeId.Contains(OfficeId));
+            return await _parkingPlaceRepository.SearchAsync(c => c.OfficeId.Contains(OfficeId));
         }
 
-        public async Task<ParkingPlace> Update(ParkingPlace parkingPlace)
+        public async Task<ParkingPlace> UpdateAsync(ParkingPlace parkingPlace)
         {
-            if (_parkingPlaceRepository.Search(p => p.OfficeId == parkingPlace.OfficeId && p.Id != parkingPlace.Id).Result.Any())
+            if (_parkingPlaceRepository.SearchAsync(p => p.OfficeId == parkingPlace.OfficeId && p.Id != parkingPlace.Id).Result.Any())
                 return null;
 
-            await _parkingPlaceRepository.Update(parkingPlace);
+            await _parkingPlaceRepository.UpdateAsync(parkingPlace);
             return parkingPlace;
         }
     }
