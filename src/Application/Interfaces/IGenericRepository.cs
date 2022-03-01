@@ -10,12 +10,12 @@ namespace Application.Interfaces
 {
     public interface IGenericRepository<T>: IDisposable where T : class
     {
-        Task Add(T entity);
-        Task<List<T>> GetAll();
-        Task<T> GetById(Guid id);
-        Task Update(T entity);
-        Task Remove(T entity);
-        Task<IEnumerable<T>> Search(Expression<Func<T, bool>> predicate);
-        Task<int> SaveChanges();
+        Task AddAsync(T entity);
+        Task<List<T>> GetAllAsync();
+        Task<T> GetByIdAsync(Guid id);
+        Task UpdateAsync(T entity);
+        Task RemoveAsync(T entity);
+        Task<IEnumerable<T>> SearchAsync(Expression<Func<T, bool>> predicate);
+        Task<int> SaveChangesAsync();
     }
 }

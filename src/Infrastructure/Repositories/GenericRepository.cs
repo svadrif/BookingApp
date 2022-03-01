@@ -21,40 +21,40 @@ namespace Infrastructure.Repositories
             _context = context;
             DbSet = context.Set<T>();
         }
-        public async Task<IEnumerable<T>> Search(Expression<Func<T, bool>> predicate)
+        public async Task<IEnumerable<T>> SearchAsync(Expression<Func<T, bool>> predicate)
         {
             return await DbSet.AsNoTracking().Where(predicate).ToListAsync();
         }
 
-        public virtual async Task<T> GetById(Guid id)
+        public virtual async Task<T> GetByIdAsync(Guid id)
         {
             return await DbSet.FindAsync(id);
         }
 
-        public virtual async Task<List<T>> GetAll()
+        public virtual async Task<List<T>> GetAllAsync()
         {
             return await DbSet.ToListAsync();
         }
 
-        public virtual async Task Add(T entity)
+        public virtual async Task AddAsync(T entity)
         {
             DbSet.Add(entity);
-            await SaveChanges();
+            await SaveChangesAsync();
         }
 
-        public virtual async Task Update(T entity)
+        public virtual async Task UpdateAsync(T entity)
         {
             DbSet.Update(entity);
-            await SaveChanges();
+            await SaveChangesAsync();
         }
 
-        public virtual async Task Remove(T entity)
+        public virtual async Task RemoveAsync(T entity)
         {
             DbSet.Remove(entity);
-            await SaveChanges();
+            await SaveChangesAsync();
         }
 
-        public async Task<int> SaveChanges()
+        public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();
         }
