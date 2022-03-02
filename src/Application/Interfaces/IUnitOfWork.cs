@@ -15,6 +15,6 @@ namespace Application.Interfaces
         IParkingPlaceRepository ParkingPlaces { get; }
         IVacationRepository Vacations { get; }
         IWorkPlaceRepository WorkPlaces { get; }
-        Task <int> Complete();
+        Task <int> CompleteAsync(CancellationToken cancellationToken = new CancellationToken());
     }
 }

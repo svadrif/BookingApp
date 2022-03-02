@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Domain.Common;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,9 +21,26 @@ namespace Infrastructure.Context
         public DbSet<Vacation> Vacations { get; set; }
         public DbSet<WorkPlace> WorkPlaces { get; set; }
 
-        public async Task<int> SaveChanges()
+        public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-            return await base.SaveChangesAsync();
+            foreach (Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<AuditableEntity> entry in ChangeTracker.Entries<AuditableEntity>())
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Entity.CreatedBy = Guid.Empty;
+                        entry.Entity.CreatedDate = DateTime.Now;
+                        break;
+
+                    case EntityState.Modified:
+                        entry.Entity.ModifiedBy = Guid.Empty;
+                        entry.Entity.ModifiedDate = DateTime.Now;
+                        break;
+                }
+            }
+            return await base.SaveChangesAsync(cancellationToken);
         }
+
+
     }
 }
