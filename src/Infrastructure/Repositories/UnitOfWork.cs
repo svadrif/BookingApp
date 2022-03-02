@@ -12,17 +12,6 @@ namespace Infrastructure.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _context;
-        public UnitOfWork(ApplicationDbContext context)
-        {
-            _context = context;
-            AppUsers = new AppUserRepository(_context);
-            Maps = new MapRepository(_context);
-            Offices = new OfficeRepository(_context);
-            Bookings = new BookingRepository(_context);
-            ParkingPlaces = new ParkingPlaceRepository(_context);
-            Vacations = new VacationRepository(_context);
-            WorkPlaces = new WorkPlaceRepository(_context);
-        }
         public IAppUserRepository AppUsers { get; private set; }
         public IMapRepository Maps { get; private set; }
         public IOfficeRepository Offices { get; private set; }
@@ -30,6 +19,26 @@ namespace Infrastructure.Repositories
         public IParkingPlaceRepository ParkingPlaces { get; private set; }
         public IVacationRepository Vacations { get; private set; }
         public IWorkPlaceRepository WorkPlaces { get; private set; }
+
+        public UnitOfWork(ApplicationDbContext context,
+            IAppUserRepository appUsers,
+            IMapRepository maps,
+            IOfficeRepository offices,
+            IBookingRepository bookings,
+            IParkingPlaceRepository parkingPlaces,
+            IVacationRepository vacations,
+            IWorkPlaceRepository workPlaces)
+        {
+            _context = context;
+            AppUsers = appUsers;
+            Maps = maps;
+            Offices = offices;
+            Bookings = bookings;
+            ParkingPlaces = parkingPlaces;
+            Vacations = vacations;
+            WorkPlaces = workPlaces;
+        }
+        
 
         public async Task <int> Complete()
         {
