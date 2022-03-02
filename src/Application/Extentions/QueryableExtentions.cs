@@ -45,7 +45,7 @@ public static class QueryableExtentions
             CurrentPage = query.CurrentPage,
             PageSize = query.PageSize,
             RowCount = await source.CountAsync(),
-            Results = await source.Skip(query.SkipCount).Take(query.PageSize).ProjectTo<TDto>(mapper.ConfigurationProvider).ToListAsync()
+            Results = await source.Skip(query.SkipCount()).Take(query.PageSize).ProjectTo<TDto>(mapper.ConfigurationProvider).ToListAsync()
         };
     }
 
