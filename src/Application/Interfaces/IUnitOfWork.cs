@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.Interfaces
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork 
     {
         IAppUserRepository AppUsers { get; }    
         IBookingRepository Bookings { get; }

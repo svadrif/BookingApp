@@ -14,7 +14,7 @@ namespace Infrastructure.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IApplicationDbContext _context;
         public IAppUserRepository AppUsers { get; private set; }
         public IMapRepository Maps { get; private set; }
         public IOfficeRepository Offices { get; private set; }
@@ -23,7 +23,7 @@ namespace Infrastructure.Repositories
         public IVacationRepository Vacations { get; private set; }
         public IWorkPlaceRepository WorkPlaces { get; private set; }
 
-        public UnitOfWork(ApplicationDbContext context,
+        public UnitOfWork(IApplicationDbContext context,
             IAppUserRepository appUsers,
             IMapRepository maps,
             IOfficeRepository offices,
@@ -41,15 +41,9 @@ namespace Infrastructure.Repositories
             Vacations = vacations;
             WorkPlaces = workPlaces;
         }
-
-
         public async Task<int> CompleteAsync(CancellationToken cancellationToken = new CancellationToken())
         {            
             return await _context.SaveChangesAsync(cancellationToken);
-        }
-        public void Dispose()
-        {
-            _context.Dispose();
-        }
+        }        
     }
 }

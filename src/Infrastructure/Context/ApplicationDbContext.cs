@@ -40,7 +40,5 @@ namespace Infrastructure.Context
             }
             return await base.SaveChangesAsync(cancellationToken);
         }
-
-
     }
 }

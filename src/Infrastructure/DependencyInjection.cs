@@ -12,10 +12,10 @@ namespace Infrastructure
     {
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            #region Repositories
-            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            #region Repositories            
             services.AddScoped<IAppUserRepository, AppUserRepository>();
             services.AddScoped<IMapRepository, MapRepository>();
+            services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IOfficeRepository, OfficeRepository>();
             services.AddScoped<IParkingPlaceRepository, ParkingPlaceRepository>();
             services.AddScoped<IVacationRepository, VacationRepository>();
