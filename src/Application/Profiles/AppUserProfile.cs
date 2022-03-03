@@ -1,6 +1,10 @@
-﻿using Application.DTOs.AppUserDTO;
+using Application.DTOs.AppUserDTO;
 using AutoMapper;
 using Domain.Entities;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Application.Profiles
 {
@@ -32,6 +36,7 @@ namespace Application.Profiles
                 .ForMember(dest => dest.EmploymentStart, src => src.MapFrom(x => x.EmploymentStart))
                 .ForMember(dest => dest.EmploymentEnd, src => src.MapFrom(x => x.EmploymentEnd))
                 .ForMember(dest => dest.PrefferdWorkPlaceId, src => src.MapFrom(x => x.PrefferdWorkPlaceId));
+                
 
             CreateMap<UpdateAppUserDTO, AppUser>()
                 .ForMember(dest => dest.Id, src => src.MapFrom(x => x.Id))
@@ -45,7 +50,7 @@ namespace Application.Profiles
                 .ForMember(dest => dest.EmploymentStart, src => src.MapFrom(x => x.EmploymentStart))
                 .ForMember(dest => dest.EmploymentEnd, src => src.MapFrom(x => x.EmploymentEnd))
                 .ForMember(dest => dest.PrefferdWorkPlaceId, src => src.MapFrom(x => x.PrefferdWorkPlaceId))
-                .ForMember(dest => dest.IsDeleted, src => src.MapFrom(x => x.IsDeleted));
+                .ForMember(dest => dest.isDeleted, src => src.MapFrom(x => x.isDeleted));
         }
     }
 }

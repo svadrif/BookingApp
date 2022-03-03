@@ -21,6 +21,7 @@ builder.Services.AddHttpClient("tgwebhook")
                 .AddTypedClient<ITelegramBotClient>(httpClient
                     => new TelegramBotClient(builder.Configuration["BotToken"], httpClient));
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -31,6 +32,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseRouting();
+//services.AddAutoMapper(typeof(Startup));
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
