@@ -50,7 +50,7 @@ namespace Application.Profiles
                 .ForMember(dest => dest.EmploymentStart, src => src.MapFrom(x => x.EmploymentStart))
                 .ForMember(dest => dest.EmploymentEnd, src => src.MapFrom(x => x.EmploymentEnd))
                 .ForMember(dest => dest.PrefferdWorkPlaceId, src => src.MapFrom(x => x.PrefferdWorkPlaceId))
-                .ForMember(dest => dest.isDeleted, src => src.MapFrom(x => x.isDeleted));
+                .ForMember(dest => dest.IsDeleted, src => src.MapFrom(x => x.IsDeleted));
         }
     }
 }
