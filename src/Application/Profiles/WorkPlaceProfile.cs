@@ -1,6 +1,6 @@
 ﻿using Application.DTOs.WorkPlaceDTO;
-using Domain.Entities;
 using AutoMapper;
+using Domain.Entities;
 
 namespace Application.Profiles
 {

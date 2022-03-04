@@ -10,7 +10,7 @@ namespace Domain.Entities
         public DateTimeOffset? VacationEnd { get; set; }
 
         /* EF Relation */
-        public AppUser User { get; set; }
         public Guid UserId { get; set; }
+        public AppUser User { get; set; }
     }
 }

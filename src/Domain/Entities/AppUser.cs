@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace Domain.Entities
 {
+
     public class AppUser : BaseEntity<Guid>
     {
         public long TelegramId { get; set; }
