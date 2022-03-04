@@ -9,8 +9,8 @@ namespace Application.DTOs.BookingDTO
     public class GetBookingDTO
     {
         public Guid Id { get; set; }
-        public DateTime BookingStart { get; set; }
-        public DateTime BookingEnd { get; set; }
+        public DateTimeOffset BookingStart { get; set; }
+        public DateTimeOffset BookingEnd { get; set; }
         public bool IsRecurring { get; set; }
         public string Frequancy { get; set; }
         public Guid UserId { get; set; }

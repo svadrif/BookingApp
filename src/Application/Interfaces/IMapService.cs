@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.DTOs.MapDTO;
+using Domain.Entities;
 
 namespace Application.Interfaces
 {
@@ -6,9 +7,9 @@ namespace Application.Interfaces
     {
         Task<IEnumerable<Map>> GetAllAsync();
         Task<Map> GetByIdAsync(Guid Id);
-        Task<Map> AddAsync(Map map);
+        Task<Map> AddAsync(AddMapDTO mapDTO);
         Task<Map> UpdateAsync(Map map);
         Task<bool> RemoveAsync(Map map);
-        Task<IEnumerable<Map>> SearchAsync(Guid OfficeId);
+        Task<IEnumerable<Map>> SearchByOfficeIdAsync(Guid OfficeId);
     }
 }

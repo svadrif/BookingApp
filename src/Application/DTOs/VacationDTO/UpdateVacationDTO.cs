@@ -6,8 +6,8 @@ namespace Application.DTOs.VacationDTO
     {
         [Required(ErrorMessage = "This field {0} is required")]
         public Guid Id { get; set; }
-        public DateTime VacationStart { get; set; }
-        public DateTime VacationEnd { get; set; }
+        public DateTimeOffset VacationStart { get; set; }
+        public DateTimeOffset VacationEnd { get; set; }
 
         [Required(ErrorMessage = "This field {0} is required")]
         public Guid UserId { get; set; }

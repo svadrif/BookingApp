@@ -1,4 +1,6 @@
-﻿using Application.Interfaces;
+﻿using Application.DTOs.MapDTO;
+using Application.Interfaces;
+using AutoMapper;
 using Domain.Entities;
 
 namespace Infrastructure.Services
@@ -6,17 +8,16 @@ namespace Infrastructure.Services
     public class MapService : IMapService
     {
         private readonly IMapRepository _mapRepository;
-        private readonly IOfficeService _officeService;
-        public MapService(IMapRepository mapRepository, IOfficeService officeService)
+        private readonly IMapper _mapper;
+        public MapService(IMapRepository mapRepository, IMapper mapper)
         {
             _mapRepository = mapRepository;
-            _officeService = officeService;
+            _mapper = mapper;
         }
-        public async Task<Map> AddAsync(Map map)
+        public async Task<Map> AddAsync(AddMapDTO mapDTO)
         {
-            if (_mapRepository.SearchAsync(m => m.Id == map.Id).Result.Any())
-                return null;
-
+            Map map = _mapper.Map<Map>(mapDTO);
+            map.Id = Guid.NewGuid();
             await _mapRepository.AddAsync(map);
             return map;
         }
@@ -33,21 +34,24 @@ namespace Infrastructure.Services
 
         public async Task<bool> RemoveAsync(Map map)
         {
-            var offices = await _officeService.SearchAsync(map.OfficeId);
-            if (offices.Any()) return false;
+            if (await _mapRepository.GetByIdAsync(map.Id) == null)
+                return false;
 
             await _mapRepository.RemoveAsync(map);
             return true;
         }
 
-        public async Task<IEnumerable<Map>> SearchAsync(Guid OfficeId)
+        public async Task<IEnumerable<Map>> SearchByOfficeIdAsync(Guid OfficeId)
         {
-            return await _mapRepository.SearchAsync(c => c.OfficeId.Contains(OfficeId));
+            if (OfficeId == Guid.Empty)
+                return null;
+
+            return await _mapRepository.SearchByOfficeIdAsync(c => c.OfficeId.Contains(OfficeId));
         }
 
         public async Task<Map> UpdateAsync(Map map)
         {
-            if (_mapRepository.Search(m => m.OfficeId == map.OfficeId && m.Id != map.Id).Result.Any())
+            if (_mapRepository.GetByIdAsync(map.Id) == null)
                 return null;
 
             await _mapRepository.UpdateAsync(map);

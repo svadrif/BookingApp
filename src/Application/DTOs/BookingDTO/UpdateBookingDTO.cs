@@ -11,8 +11,8 @@ namespace Application.DTOs.BookingDTO
     {
         [Required(ErrorMessage = "This field {0} is required")]
         public Guid Id { get; set; }
-        public DateTime BookingStart { get; set; }
-        public DateTime BookingEnd { get; set; }
+        public DateTimeOffset BookingStart { get; set; }
+        public DateTimeOffset BookingEnd { get; set; }
         public bool IsRecurring { get; set; }
 
         [Required(ErrorMessage = "This field {0} is required")]

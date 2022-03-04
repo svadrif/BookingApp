@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.DTOs.OfficeDTO;
+using Domain.Entities;
 
 namespace Application.Interfaces
 {
@@ -6,10 +7,9 @@ namespace Application.Interfaces
     {
         Task<IEnumerable<Office>> GetAllAsync();
         Task<Office> GetByIdAsync(Guid Id);
-        Task<Office> AddAsync(Office office);
+        Task<Office> AddAsync(AddOfficeDTO officeDTO);
         Task<Office> UpdateAsync(Office office);
         Task<bool> RemoveAsync(Office office);
-        Task<IEnumerable<Office>> SearchAsync(Guid Id);
         Task<IEnumerable<Office>> SearchOfficeAsync(string searchedValue);
     }
 }

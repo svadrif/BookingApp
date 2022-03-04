@@ -13,8 +13,8 @@ namespace Application.DTOs.AppUserDTO
         public string TelephoneNumber { get; set; }
         public string Email { get; set; }
         public Roles Role { get; set; }
-        public DateTime EmploymentStart { get; set; }
-        public DateTime? EmploymentEnd { get; set; }
+        public DateTimeOffset EmploymentStart { get; set; }
+        public DateTimeOffset? EmploymentEnd { get; set; }
         public Guid? PrefferdWorkPlaceId { get; set; }
     }
 }

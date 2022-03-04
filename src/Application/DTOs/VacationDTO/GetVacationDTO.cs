@@ -3,8 +3,8 @@
     public class GetVacationDTO
     {
         public Guid Id { get; set; }
-        public DateTime VacationStart { get; set; }
-        public DateTime VacationEnd { get; set; }
+        public DateTimeOffset VacationStart { get; set; }
+        public DateTimeOffset VacationEnd { get; set; }
         public Guid UserId { get; set; }
     }
 }

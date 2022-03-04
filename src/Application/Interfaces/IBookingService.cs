@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.DTOs.BookingDTO;
+using Domain.Entities;
 
 namespace Application.Interfaces
 {
@@ -6,9 +7,9 @@ namespace Application.Interfaces
     {
         Task<IEnumerable<Booking>> GetAllAsync();
         Task<Booking> GetByIdAsync(Guid Id);
-        Task<Booking> AddAsync(Booking booking);
+        Task<Booking> AddAsync(AddBookingDTO bookingDTO);
         Task<Booking> UpdateAsync(Booking booking);
         Task<bool> RemoveAsync(Booking booking);
-        Task<IEnumerable<Booking>> SearchAsync(Guid UserId);
+        Task<IEnumerable<Booking>> SearchByUserIdAsync(Guid UserId);
     }
 }

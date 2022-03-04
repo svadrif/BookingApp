@@ -1,4 +1,6 @@
-﻿using Application.Interfaces;
+﻿using Application.DTOs.OfficeDTO;
+using Application.Interfaces;
+using AutoMapper;
 using Domain.Entities;
 
 namespace Infrastructure.Services
@@ -6,16 +8,17 @@ namespace Infrastructure.Services
     public class OfficeService : IOfficeService
     {
         private readonly IOfficeRepository _officeRepository;
-
-        public OfficeService(IOfficeRepository officeRepository)
+        private readonly IMapper _mapper;
+        public OfficeService(IOfficeRepository officeRepository, IMapper mapper)
         {
             _officeRepository = officeRepository;
+            _mapper = mapper;
         }
-        public async Task<Office> AddAsync(Office office)
-        {
-            if (_officeRepository.SearchAsync(o => o.Id == office.Id).Result.Any())
-                return null;
 
+        public async Task<Office> AddAsync(AddOfficeDTO officeDTO)
+        {
+            Office office = _mapper.Map<Office>(officeDTO);
+            office.Id = Guid.NewGuid();
             await _officeRepository.AddAsync(office);
             return office;
         }
@@ -32,23 +35,24 @@ namespace Infrastructure.Services
 
         public async Task<bool> RemoveAsync(Office office)
         {
+            if (await _officeRepository.GetByIdAsync(office.Id) == null)
+                return false;
+
             await _officeRepository.RemoveAsync(office);
             return true;
         }
 
-        public async Task<IEnumerable<Office>> SearchAsync(Guid Id)
-        {
-            return await _officeRepository.SearchAsync(c => c.Id.Contains(Id));
-        }
-
         public async Task<IEnumerable<Office>> SearchOfficeAsync(string searchedValue)
         {
+            if (string.IsNullOrEmpty(searchedValue))
+                return null;
+
             return await _officeRepository.SearchOfficeAsync(searchedValue);
         }
 
         public async Task<Office> UpdateAsync(Office office)
         {
-            if (_officeRepository.SearchAsync(o => o.Name == office.Name && o.Id != office.Id).Result.Any())
+            if (await _officeRepository.GetByIdAsync(office.Id) == null)
                 return null;
 
             await _officeRepository.UpdateAsync(office);

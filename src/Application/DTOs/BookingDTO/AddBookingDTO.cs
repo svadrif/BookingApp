@@ -10,8 +10,8 @@ namespace Application.DTOs.BookingDTO
     public class AddBookingDTO
     {
         [Required(ErrorMessage = "This field {0} is required")]
-        public DateTime BookingStart { get; set; }
-        public DateTime BookingEnd { get; set; }
+        public DateTimeOffset BookingStart { get; set; }
+        public DateTimeOffset BookingEnd { get; set; }
         public bool IsRecurring { get; set; }
 
         [Required(ErrorMessage = "This field {0} is required")]
