@@ -21,11 +21,6 @@ builder.Services.AddHttpClient("tgwebhook")
                 .AddTypedClient<ITelegramBotClient>(httpClient
                     => new TelegramBotClient(builder.Configuration["BotToken"], httpClient));
 
-#region Repositories
-builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-builder.Services.AddTransient<IAppUserRepository, AppUserRepository>();
-#endregion
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
