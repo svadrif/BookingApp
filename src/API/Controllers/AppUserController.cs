@@ -3,8 +3,14 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Context;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace API.Controllers
 {
@@ -14,10 +20,13 @@ namespace API.Controllers
     {
         private readonly IAppUserService _appUserService;
         private readonly IMapper _mapper;
-        public AppUserController(IAppUserService appUserService, IMapper mapper)
+        private readonly IOptions<AppSettings> _appSettings;
+
+        public AppUserController(IAppUserService appUserService, IMapper mapper, IOptions<AppSettings> appSettings)
         {
             _appUserService = appUserService; 
             _mapper = mapper;
+            _appSettings = appSettings;
         }
 
         [HttpGet("get-all-appusers")]
@@ -43,7 +52,7 @@ namespace API.Controllers
                 return BadRequest("Data is not Valid");
 
             var user = await _appUserService.AddAsync(addAppUserDTO);
-
+            
             if (user == null) 
                 return BadRequest("null");
 
@@ -77,6 +86,44 @@ namespace API.Controllers
             IEnumerable<AppUser> user = await _appUserService.SearchAppUserAsync(anyUsersCradential);
 
             return Ok(user);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("get-token")]
+        public async Task<ActionResult<AppUserAuthInfo>> Login(Guid id)
+        {
+            AppUserAuthInfo userAuth = new AppUserAuthInfo();
+
+            if (id == null) return BadRequest("null");
+
+            AppUser appUser = await _appUserService.GetByIdAsync(id);
+
+            if(appUser != null)
+            {
+                var key = Encoding.ASCII.GetBytes(_appSettings.Value.SecretKey);
+
+                JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+                SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(
+                        new Claim[]
+                        {
+                            new Claim(ClaimTypes.NameIdentifier, appUser.Id.ToString()),
+                            new Claim(ClaimTypes.GivenName, appUser.FirstName),
+                            new Claim(ClaimTypes.Name, appUser.LastName),
+                            new Claim(ClaimTypes.Role, appUser.Role.ToString())
+                        }),
+                    Expires = DateTime.UtcNow.AddDays(2),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
+
+                var token  = handler.CreateToken(descriptor);
+                userAuth.Token = handler.WriteToken(token);
+                userAuth.GetAppUserDTO = _mapper.Map<GetAppUserDTO>(appUser);
+            }
+            if (string.IsNullOrEmpty(userAuth.Token)) return Unauthorized("UnAuthorized");
+
+            return Ok(userAuth);
         }
     }
 }
