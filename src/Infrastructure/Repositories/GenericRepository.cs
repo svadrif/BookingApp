@@ -21,9 +21,9 @@ namespace Infrastructure.Repositories
             _context = context;
             DbSet = context.Set<T>();
         }
-        public async Task<IEnumerable<T>> SearchAsync(Expression<Func<T, bool>> predicate)
+        public IQueryable<T> Search(Expression<Func<T, bool>> predicate)
         {
-            return await DbSet.AsNoTracking().Where(predicate).ToListAsync();
+            return DbSet.AsNoTracking().Where(predicate);
         }
 
         public virtual async Task<T> GetByIdAsync(Guid id)
@@ -31,9 +31,9 @@ namespace Infrastructure.Repositories
             return await DbSet.FindAsync(id);
         }
 
-        public virtual async Task<List<T>> GetAllAsync()
+        public virtual IQueryable<T> GetAll()
         {
-            return await DbSet.ToListAsync();
+            return DbSet.AsNoTracking();
         }
 
         public virtual async Task AddAsync(T entity)

@@ -11,11 +11,11 @@ namespace Application.Interfaces
     public interface IGenericRepository<T> where T : class
     {
         Task AddAsync(T entity);
-        Task<List<T>> GetAllAsync();
+        IQueryable<T> GetAll();
         Task<T> GetByIdAsync(Guid id);
         Task UpdateAsync(T entity);
         Task RemoveAsync(T entity);
-        Task<IEnumerable<T>> SearchAsync(Expression<Func<T, bool>> predicate);
+        IQueryable<T> Search(Expression<Func<T, bool>> predicate);
         Task<int> SaveChangesAsync();
     }
 }
