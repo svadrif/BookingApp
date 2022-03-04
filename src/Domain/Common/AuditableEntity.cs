@@ -2,6 +2,7 @@
 
 namespace Domain.Common
 {
+
     public class AuditableEntity
     {
         public Guid CreatedBy { get; set; }
