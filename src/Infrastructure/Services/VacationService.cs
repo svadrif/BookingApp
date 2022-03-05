@@ -8,57 +8,62 @@ namespace Infrastructure.Services
     public class VacationService : IVacationService
     {
 
-        private readonly IVacationRepository _vacationRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public VacationService(IVacationRepository vacationRepository, IMapper mapper)
+        public VacationService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _vacationRepository = vacationRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
-        public async Task<Vacation> AddAsync(AddVacationDTO vacationDTO)
+        public async Task<Guid> AddAsync(AddVacationDTO vacationDTO)
         {
             Vacation vacation = _mapper.Map<Vacation>(vacationDTO);
-            vacation.Id = Guid.NewGuid();
-            await _vacationRepository.AddAsync(vacation);
-            return vacation;
+            await _unitOfWork.Vacations.AddAsync(vacation);
+            return vacation.Id;
         }
 
-        public async Task<IEnumerable<Vacation>> GetAllAsync()
+        public async Task<IEnumerable<GetVacationDTO>> GetAllAsync()
         {
-            return await _vacationRepository.GetAllAsync();
+            var vacations = await _unitOfWork.Vacations.GetAllAsync();
+            return await _mapper.Map<IEnumerable<GetVacationDTO>>(vacations);
         }
 
-        public async Task<Vacation> GetByIdAsync(Guid Id)
+        public async Task<GetVacationDTO> GetByIdAsync(Guid Id)
         {
-            return await _vacationRepository.GetByIdAsync(Id);
+            var vacation = await _unitOfWork.Vacations.GetByIdAsync(Id);
+            return await _mapper.Map<GetVacationDTO>(vacation);
         }
 
-        public async Task<bool> RemoveAsync(Vacation vacation)
+        public async Task<bool> RemoveAsync(Guid Id)
         {
-            if (await _vacationRepository.GetByIdAsync(vacation.Id) == null)
+            var vacation = await _unitOfWork.Vacations.GetByIdAsync(Id);
+            if (vacation == null)
                 return false;
-
-            await _vacationRepository.RemoveAsync(vacation);
+          
+            await _unitOfWork.Vacations.RemoveAsync(vacation);
             return true;
         }
 
-        public async Task<Vacation> UpdateAsync(Vacation vacation)
+        public async Task<GetVacationDTO> UpdateAsync(UpdateVacationDTO vacationDTO)
         {
-            if (await _vacationRepository.GetByIdAsync(vacation.Id) == null)
+            var vacation = await _unitOfWork.Vacations.GetByIdAsync(vacationDTO.Id);
+            if (vacation == null)
                 return null;
 
-            await _vacationRepository.UpdateAsync(vacation);
-            return vacation;
+            _mapper.Map(vacationDTO, vacation);
+            await _unitOfWork.Vacations.UpdateAsync(vacation);
+            return await _mapper.Map<GetVacationDTO>(vacation);
         }
 
-        public async Task<IEnumerable<Vacation>> SearchByUserIdAsync(Guid UserId)
+        public async Task<IEnumerable<GetVacationDTO>> SearchByUserIdAsync(Guid UserId)
         {
-            if (UserId == Guid.Empty)
-                return null; 
+            var vacations = await _unitOfWork.Vacations.SearchAsync(c => c.UserId.Contains(UserId));
+            if (vacations == null)
+                return null;
 
-            return await _vacationRepository.SearchByUserIdAsync(c => c.UserId.Contains(UserId));
+            return await _mapper.Map<IEnumerable<GetVacationDTO>>(vacations);
         }
     }
 }
