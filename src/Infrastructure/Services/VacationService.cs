@@ -59,7 +59,7 @@ namespace Infrastructure.Services
 
         public async Task<IEnumerable<GetVacationDTO>> SearchByUserIdAsync(Guid UserId)
         {
-            var vacations = await _unitOfWork.Vacations.SearchAsync(c => c.UserId.Contains(UserId));
+            var vacations = await _unitOfWork.Vacations.Search(c => c.UserId.Contains(UserId));
             if (vacations == null)
                 return null;
 
