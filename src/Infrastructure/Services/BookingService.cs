@@ -25,13 +25,13 @@ namespace Infrastructure.Services
         public async Task<IEnumerable<GetBookingDTO>> GetAllAsync()
         {
             var bookings = await _unitOfWork.Bookings.GetAllAsync();
-            return await _mapper.Map<IEnumerable<GetBookingDTO>>(bookings);
+            return _mapper.Map<IEnumerable<GetBookingDTO>>(bookings);
         }
 
         public async Task<GetBookingDTO> GetByIdAsync(Guid Id)
         {
             var booking = await _unitOfWork.Bookings.GetByIdAsync(Id);
-            return await _mapper.Map<GetBookingDTO>(booking);
+            return _mapper.Map<GetBookingDTO>(booking);
         }
 
         public async Task<bool> RemoveAsync(Guid Id)
@@ -50,7 +50,7 @@ namespace Infrastructure.Services
             if (bookings = null)
                 return null; 
            
-            return await _mapper.Map<IEnumerable<GetBookingDTO>>(bookings);
+            return _mapper.Map<IEnumerable<GetBookingDTO>>(bookings);
         }
 
         public async Task<GetBookingDTO> UpdateAsync(UpdateBookingDTO bookingDTO)
@@ -61,7 +61,7 @@ namespace Infrastructure.Services
 
             _mapper.Map(bookingDTO, booking);
             await _unitOfWork.Bookings.UpdateAsync(booking);
-            return await _mapper.Map<GetBookingDTO>(booking);
+            return _mapper.Map<GetBookingDTO>(booking);
         }
     }
 }

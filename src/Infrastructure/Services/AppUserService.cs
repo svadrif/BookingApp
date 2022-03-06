@@ -25,13 +25,13 @@ namespace Infrastructure.Services
         public async Task<IEnumerable<GetAppUserDTO>> GetAllAsync()
         {
             var appUsers = await _unitOfWork.AppUsers.GetAllAsync();
-            return await _mapper.Map<IEnumerable<GetAppUserDTO>>(appUsers);
+            return _mapper.Map<IEnumerable<GetAppUserDTO>>(appUsers);
         }
 
         public async Task<GetAppUserDTO> GetByIdAsync(Guid Id)
         {
             var appUsers = await _unitOfWork.AppUsers.GetByIdAsync(Id);
-            return await _mapper.Map<GetAppUserDTO>(appUsers);
+            return _mapper.Map<GetAppUserDTO>(appUsers);
         }
 
         public async Task<bool> RemoveAsync(Guid Id)
@@ -52,7 +52,7 @@ namespace Infrastructure.Services
 
             _mapper.Map(appUserDTO, appUser);
             await _unitOfWork.AppUsers.UpdateAsync(appUser);
-            return await _mapper.Map<GetAppUserDTO>(appUser);
+            return _mapper.Map<GetAppUserDTO>(appUser);
         }
     }
 }
