@@ -7,55 +7,60 @@ namespace Infrastructure.Services
 {
     public class WorkPlaceService : IWorkPlaceService
     {
-        private readonly IWorkPlaceRepository _workPlaceRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public WorkPlaceService(IWorkPlaceRepository workPlaceRepository, IMapper mapper)
+        public WorkPlaceService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _workPlaceRepository = workPlaceRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<WorkPlace> AddAsync(AddWorkPlaceDTO workPlaceDTO)
+        public async Task<Guid> AddAsync(AddWorkPlaceDTO workPlaceDTO)
         {
             WorkPlace workPlace = _mapper.Map<WorkPlace>(workPlaceDTO);
-            workPlace.Id = Guid.NewGuid();
-            await _workPlaceRepository.AddAsync(workPlace);
-            return workPlace;
+            await _unitOfWork.WorkPlaces.AddAsync(workPlace);
+            return workPlace.Id;
         }
 
-        public async Task<IEnumerable<WorkPlace>> GetAllAsync()
+        public async Task<IEnumerable<GetWorkPlaceDTO>> GetAllAsync()
         {
-            return await _workPlaceRepository.GetAllAsync();
+            var workPalces = await _unitOfWork.WorkPlaces.GetAllAsync();
+            return _mapper.Map<GetWorkPlaceDTO>(workPalces);
         }
 
-        public async Task<WorkPlace> GetByIdAsync(Guid Id)
+        public async Task<GetWorkPlaceDTO> GetByIdAsync(Guid Id)
         {
-            return await _workPlaceRepository.GetByIdAsync(Id);
+            var workPlace = _unitOfWork.WorkPlaces.GetByIdAsync(Id);
+            return _mapper.Map<GetWorkPlaceDTO>(workPlace);
         }
 
-        public async Task<bool> RemoveAsync(WorkPlace workPlace)
+        public async Task<bool> RemoveAsync(Guid Id)
         {
-            if (await _workPlaceRepository.GetByIdAsync(workPlace.Id) == null)
+            var workPlace = await _unitOfWork.WorkPlaces.GetByIdAsync(Id);
+            if (workPlace == null)
                 return false;
 
-            await _workPlaceRepository.RemoveAsync(workPlace);
+            await _unitOfWork.WorkPlaces.RemoveAsync(workPlace);
             return true;
         }
 
-        public async Task<IEnumerable<WorkPlace>> SearchByMapIdAsync(Guid MapId)
+        public async Task<IEnumerable<GetWorkPlaceDTO>> SearchByMapIdAsync(Guid MapId)
         {
-            if (MapId == Guid.Empty)
+            var workPlaces = await _unitOfWork.WorkPlaces.Search(c => c.MapId.Contains(MapId));
+            if (workPlaces == null)
                 return null;
 
-            return await _workPlaceRepository.SearchByMapIdAsync(c => c.MapId.Contains(MapId));
+            return _mapper.Map<IEnumerable<GetWorkPlaceDTO>>(workPlaces);
         }
 
-        public async Task<WorkPlace> UpdateAsync(WorkPlace workPlace)
+        public async Task<GetWorkPlaceDTO> UpdateAsync(UpdateWorkPlaceDTO workPlaceDTO)
         {
-            if (_workPlaceRepository.GetByIdAsync(workPlace.Id) == null)
+            var workPlace = await _unitOfWork.WorkPlaces.GetByIdAsync(workPlaceDTO.Id);
+            if (workPlace == null)
                 return null;
 
-            await _workPlaceRepository.UpdateAsync(workPlace);
-            return workPlace;
+            _mapper.Map(workPlaceDTO, workPlace);
+            await _unitOfWork.WorkPlaces.UpdateAsync(workPlace);
+            return _mapper.Map<GetWorkPlaceDTO>(workPlace);
         }
     }
 }
