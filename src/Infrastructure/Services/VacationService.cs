@@ -27,13 +27,13 @@ namespace Infrastructure.Services
         public async Task<IEnumerable<GetVacationDTO>> GetAllAsync()
         {
             var vacations = await _unitOfWork.Vacations.GetAllAsync();
-            return await _mapper.Map<IEnumerable<GetVacationDTO>>(vacations);
+            return _mapper.Map<IEnumerable<GetVacationDTO>>(vacations);
         }
 
         public async Task<GetVacationDTO> GetByIdAsync(Guid Id)
         {
             var vacation = await _unitOfWork.Vacations.GetByIdAsync(Id);
-            return await _mapper.Map<GetVacationDTO>(vacation);
+            return _mapper.Map<GetVacationDTO>(vacation);
         }
 
         public async Task<bool> RemoveAsync(Guid Id)
@@ -54,7 +54,7 @@ namespace Infrastructure.Services
 
             _mapper.Map(vacationDTO, vacation);
             await _unitOfWork.Vacations.UpdateAsync(vacation);
-            return await _mapper.Map<GetVacationDTO>(vacation);
+            return _mapper.Map<GetVacationDTO>(vacation);
         }
 
         public async Task<IEnumerable<GetVacationDTO>> SearchByUserIdAsync(Guid UserId)
@@ -63,7 +63,7 @@ namespace Infrastructure.Services
             if (vacations == null)
                 return null;
 
-            return await _mapper.Map<IEnumerable<GetVacationDTO>>(vacations);
+            return _mapper.Map<IEnumerable<GetVacationDTO>>(vacations);
         }
     }
 }
