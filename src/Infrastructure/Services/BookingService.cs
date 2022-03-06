@@ -7,56 +7,61 @@ namespace Infrastructure.Services
 {
     public class BookingService : IBookingService
     {
-        private readonly IBookingRepository _bookingRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public BookingService(IBookingRepository bookingRepository, IMapper mapper)
+        public BookingService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _bookingRepository = bookingRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<Booking> AddAsync(AddBookingDTO bookingDTO)
+        public async Task<Guid> AddAsync(AddBookingDTO bookingDTO)
         {
             Booking booking = _mapper.Map<Booking>(bookingDTO);
-            booking.Id = Guid.NewGuid();
-            await _bookingRepository.AddAsync(booking);
-            return booking;
+            await _unitOfWork.Bookings.AddAsync(booking);
+            return booking.Id;
         }
 
-        public async Task<IEnumerable<Booking>> GetAllAsync()
+        public async Task<IEnumerable<GetBookingDTO>> GetAllAsync()
         {
-            return await _bookingRepository.GetAllAsync();
+            var bookings = await _unitOfWork.Bookings.GetAllAsync();
+            return await _mapper.Map<IEnumerable<GetBookingDTO>>(bookings);
         }
 
-        public async Task<Booking> GetByIdAsync(Guid Id)
+        public async Task<GetBookingDTO> GetByIdAsync(Guid Id)
         {
-            return await _bookingRepository.GetByIdAsync(Id);
+            var booking = await _unitOfWork.Bookings.GetByIdAsync(Id);
+            return await _mapper.Map<GetBookingDTO>(booking);
         }
 
-        public async Task<bool> RemoveAsync(Booking booking)
+        public async Task<bool> RemoveAsync(Guid Id)
         {
-            if (await _bookingRepository.GetByIdAsync(booking.Id) == null)
+            var booking = await _unitOfWork.Bookings.GetByIdAsync(Id);
+            if (booking == null)
                 return false;
 
-            await _bookingRepository.RemoveAsync(booking);
+            await _unitOfWork.Bookings.RemoveAsync(booking);
             return true;
         }
 
-        public async Task<IEnumerable<Booking>> SearchByUserIdAsync(Guid UserId)
+        public async Task<IEnumerable<GetBookingDTO>> SearchByUserIdAsync(Guid UserId)
         {
-            if (UserId == Guid.Empty)
+            var bookings = await _unitOfWork.Bookings.Search(c => c.UserId.Contains(UserId));
+            if (bookings = null)
                 return null; 
-
-            return await _bookingRepository.SearchByUserIdAsync(c => c.UserId.Contains(UserId));
+           
+            return await _mapper.Map<IEnumerable<GetBookingDTO>>(bookings);
         }
 
-        public async Task<Booking> UpdateAsync(Booking booking)
+        public async Task<GetBookingDTO> UpdateAsync(UpdateBookingDTO bookingDTO)
         {
-            if (_bookingRepository.GetByIdAsync(booking.Id) == null)
+            var booking = await _unitOfWork.Bookings.GetByIdAsync(bookingDTO.Id);
+            if (booking == null)
                 return null;
 
-            await _bookingRepository.UpdateAsync(booking);
-            return booking;
+            _mapper.Map(bookingDTO, booking);
+            await _unitOfWork.Bookings.UpdateAsync(booking);
+            return await _mapper.Map<GetBookingDTO>(booking);
         }
     }
 }

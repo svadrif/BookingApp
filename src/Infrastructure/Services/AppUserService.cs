@@ -7,56 +7,52 @@ namespace Infrastructure.Services
 {
     public class AppUserService : IAppUserService
     {
-        private readonly IAppUserRepository _appUserRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public AppUserService(IAppUserRepository appUserRepository, IMapper mapper)
+        public AppUserService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _appUserRepository = appUserRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
-        public async Task<AppUser> AddAsync(AddAppUserDTO appUserDTO)
+        public async Task<Guid> AddAsync(AddAppUserDTO appUserDTO)
         {
             AppUser appUser = _mapper.Map<AppUser>(appUserDTO);
-            appUser.Id = Guid.NewGuid();
-            await _appUserRepository.AddAsync(appUser);
-            return appUser;
+            await _unitOfWork.AppUsers.AddAsync(appUser);
+            return appUser.Id;
         }
 
-        public async Task<IEnumerable<AppUser>> GetAllAsync()
+        public async Task<IEnumerable<GetAppUserDTO>> GetAllAsync()
         {
-            return await _appUserRepository.GetAllAsync();
+            var appUsers = await _unitOfWork.AppUsers.GetAllAsync();
+            return await _mapper.Map<IEnumerable<GetAppUserDTO>>(appUsers);
         }
 
-        public async Task<AppUser> GetByIdAsync(Guid Id)
+        public async Task<GetAppUserDTO> GetByIdAsync(Guid Id)
         {
-            return await _appUserRepository.GetByIdAsync(Id);
+            var appUsers = await _unitOfWork.AppUsers.GetByIdAsync(Id);
+            return await _mapper.Map<GetAppUserDTO>(appUsers);
         }
 
-        public async Task<bool> RemoveAsync(AppUser appUser)
+        public async Task<bool> RemoveAsync(Guid Id)
         {
-            if (await _appUserRepository.GetByIdAsync(appUser.Id) == null)
+            var appUser = await _unitOfWork.AppUsers.GetByIdAsync(Id);
+            if (await appUser == null)
                 return false;
 
-            await _appUserRepository.RemoveAsync(appUser);
+            await _unitOfWork.AppUsers.RemoveAsync(appUser);
             return true;
         }
 
-        public async Task<IEnumerable<AppUser>> SearchAppUserAsync(string searchedValue)
+        public async Task<GetAppUserDTO> UpdateAsync(UpdateAppUserDTO appUserDTO)
         {
-            if (string.IsNullOrEmpty(searchedValue))
+            var appUser = await _unitOfWork.AppUsers.GetByIdAsync(appUserDTO.Id);
+            if (appUser == null)
                 return null;
 
-            return await _appUserRepository.SearchAppUserAsync(searchedValue);
-        }
-
-        public async Task<AppUser> UpdateAsync(AppUser appUser)
-        {
-            if (await _appUserRepository.GetByIdAsync(appUser.Id) == null)
-                return null;
-
-            await _appUserRepository.UpdateAsync(appUser);
-            return appUser;
+            _mapper.Map(appUserDTO, appUser);
+            await _unitOfWork.AppUsers.UpdateAsync(appUser);
+            return await _mapper.Map<GetAppUserDTO>(appUser);
         }
     }
 }
