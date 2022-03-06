@@ -7,56 +7,52 @@ namespace Infrastructure.Services
 {
     public class OfficeService : IOfficeService
     {
-        private readonly IOfficeRepository _officeRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public OfficeService(IOfficeRepository officeRepository, IMapper mapper)
+        public OfficeService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _officeRepository = officeRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
-        public async Task<Office> AddAsync(AddOfficeDTO officeDTO)
+        public async Task<Guid> AddAsync(AddOfficeDTO officeDTO)
         {
             Office office = _mapper.Map<Office>(officeDTO);
-            office.Id = Guid.NewGuid();
-            await _officeRepository.AddAsync(office);
-            return office;
+            await _unitOfWork.Offices.AddAsync(office);
+            return office.Id;
         }
 
-        public async Task<IEnumerable<Office>> GetAllAsync()
+        public async Task<IEnumerable<GetOfficeDTO>> GetAllAsync()
         {
-            return await _officeRepository.GetAllAsync();
+            var offices = await _unitOfWork.Offices.GetAllAsync();
+            return _mapper.Map<IEnumerable<GetOfficeDTO>>(offices);
         }
 
-        public async Task<Office> GetByIdAsync(Guid Id)
+        public async Task<GetOfficeDTO> GetByIdAsync(Guid Id)
         {
-            return await _officeRepository.GetByIdAsync(Id);
+            var office = await _unitOfWork.Offices.GetByIdAsync(Id);
+            return _mapper.Map<GetOfficeDTO>(office);
         }
 
-        public async Task<bool> RemoveAsync(Office office)
+        public async Task<bool> RemoveAsync(Guid Id)
         {
-            if (await _officeRepository.GetByIdAsync(office.Id) == null)
+            var office = await _unitOfWork.Offices.GetByIdAsync(Id);
+            if (office == null)
                 return false;
 
-            await _officeRepository.RemoveAsync(office);
+            await _unitOfWork.Offices.RemoveAsync(office);
             return true;
-        }
+        }    
 
-        public async Task<IEnumerable<Office>> SearchOfficeAsync(string searchedValue)
+        public async Task<GetOfficeDTO> UpdateAsync(UpdateOfficeDTO officeDTO)
         {
-            if (string.IsNullOrEmpty(searchedValue))
+            var office = await _unitOfWork.Offices.UpdateAsync(officeDTO.Id);
+            if (office == null)
                 return null;
 
-            return await _officeRepository.SearchOfficeAsync(searchedValue);
-        }
-
-        public async Task<Office> UpdateAsync(Office office)
-        {
-            if (await _officeRepository.GetByIdAsync(office.Id) == null)
-                return null;
-
-            await _officeRepository.UpdateAsync(office);
-            return office;
+            _mapper.Map(officeDTO, office);
+            await _unitOfWork.Offices.UpdateAsync(office);
+            return _mapper.Map<GetOfficeDTO>(office);
         }
     }
 }
