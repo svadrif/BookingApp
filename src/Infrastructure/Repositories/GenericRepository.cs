@@ -21,9 +21,10 @@ namespace Infrastructure.Repositories
             _context = context;
             DbSet = context.Set<T>();
         }
-        public IQueryable<T> Search(Expression<Func<T, bool>> predicate)
+        public IQueryable<T> Search(Expression<Func<T, bool>> predicate, bool tracking)
         {
-            return DbSet.AsNoTracking().Where(predicate);
+            return !tracking ? DbSet.Where(predicate).AsNoTracking() 
+                             : DbSet.Where(predicate);
         }
 
         public virtual async Task<T> GetByIdAsync(Guid id)
@@ -31,9 +32,10 @@ namespace Infrastructure.Repositories
             return await DbSet.FindAsync(id);
         }
 
-        public virtual IQueryable<T> GetAll()
+        public virtual IQueryable<T> GetAll(bool tracking)
         {
-            return DbSet.AsNoTracking();
+            return !tracking ? DbSet.AsNoTracking() 
+                             : DbSet;
         }
 
         public virtual async Task AddAsync(T entity)
