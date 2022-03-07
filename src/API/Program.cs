@@ -20,7 +20,6 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -77,6 +76,23 @@ builder.Services.AddAuthentication(options =>
     };
 });
 //****************************************************************************************
+// Dependency injections
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddTelegramBot();
+
+builder.Services.AddHttpClient("tgwebhook")
+                .AddTypedClient<ITelegramBotClient>(httpClient
+                    => new TelegramBotClient(builder.Configuration["BotToken"], httpClient));
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AnyOrigin", builder =>
+    {
+        builder
+            .AllowAnyOrigin()
+            .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -87,11 +103,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseRouting();
-//services.AddAutoMapper(typeof(Startup));
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+
+app.UseRouting();
+
+app.UseCors("AnyOrigin");
 
 app.UseAuthorization();
 

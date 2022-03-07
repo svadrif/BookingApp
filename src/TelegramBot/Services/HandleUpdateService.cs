@@ -14,7 +14,8 @@ public class HandleUpdateService
 
     public async Task Handle(Update update)
     {
-
+        await _botClient.SendTextMessageAsync(chatId: update.Message.Chat.Id,
+                                              text: "the bot is working");
     }
 }
 
