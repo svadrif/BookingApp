@@ -7,7 +7,7 @@ namespace Application.DTOs.WorkPlaceDTO
         public Guid Id { get; set; }
         public string Number { get; set; }
         public SeatsType Type { get; set; }
-        public bool NextToWindow { get; set; }
+        public bool IsNextToWindow { get; set; }
         public bool HasPC { get; set; }
         public bool HasMonitor { get; set; }
         public bool HasKeyboard { get; set; }
