@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace Application.Interfaces
 {
-    public interface IAppUserRepository : IGenericRepository<AppUser>
+    public interface IParkingPlaceRepository : IGenericRepository<ParkingPlace>
     {
-        Task<AppUser> GetByTelegramId(long telegramId, bool tracking);
     }
 }
