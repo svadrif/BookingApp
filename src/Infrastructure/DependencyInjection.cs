@@ -1,9 +1,11 @@
 ﻿using Application.Interfaces;
 using Infrastructure.Context;
 using Infrastructure.Services;
+using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 
 namespace Infrastructure
 {
@@ -11,6 +13,18 @@ namespace Infrastructure
     {
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
+            #region Repositories            
+            services.AddScoped<IAppUserRepository, AppUserRepository>();
+            services.AddScoped<IMapRepository, MapRepository>();
+            services.AddScoped<IBookingRepository, BookingRepository>();
+            services.AddScoped<IOfficeRepository, OfficeRepository>();
+            services.AddScoped<IParkingPlaceRepository, ParkingPlaceRepository>();
+            services.AddScoped<IVacationRepository, VacationRepository>();
+            services.AddScoped<IWorkPlaceRepository, WorkPlaceRepository>();
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            #endregion
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     configuration.GetConnectionString("DefaultConnection"),
