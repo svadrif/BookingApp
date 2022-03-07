@@ -5,8 +5,8 @@ namespace Domain.Entities
 {
     public class Booking : BaseEntity<Guid>
     {
-        public DateTime BookingStart { get; set; }
-        public DateTime BookingEnd { get; set; }
+        public DateTimeOffset BookingStart { get; set; }
+        public DateTimeOffset BookingEnd { get; set; }
         public bool IsRecurring { get; set; }
         public string Frequancy { get; set; }
         public bool IsActive { get; set; }

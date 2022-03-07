@@ -1,35 +1,65 @@
 ﻿using Application.Interfaces;
+using Domain.Common;
 using Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public abstract class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         protected readonly ApplicationDbContext _context;
-        public GenericRepository(ApplicationDbContext context)
+        protected readonly DbSet<T> DbSet;
+
+        protected GenericRepository(ApplicationDbContext context)
         {
             _context = context;
+            DbSet = context.Set<T>();
         }
-        public void Add(T entity)
+        public IQueryable<T> Search(Expression<Func<T, bool>> predicate, bool tracking)
         {
-            _context.Set<T>().Add(entity);
-        }        
-        public IEnumerable<T> GetAll()
-        {
-            return _context.Set<T>().ToList();
+            return !tracking ? DbSet.Where(predicate).AsNoTracking() 
+                             : DbSet.Where(predicate);
         }
-        public T GetById(int id)
+
+        public virtual async Task<T> GetByIdAsync(Guid id)
         {
-            return _context.Set<T>().Find(id);
+            return await DbSet.FindAsync(id);
         }
-        public void Remove(T entity)
+
+        public virtual IQueryable<T> GetAll(bool tracking)
         {
-            _context.Set<T>().Remove(entity);
-        }        
+            return !tracking ? DbSet.AsNoTracking() 
+                             : DbSet;
+        }
+
+        public virtual async Task AddAsync(T entity)
+        {
+            DbSet.Add(entity);
+            await SaveChangesAsync();
+        }
+
+        public virtual async Task UpdateAsync(T entity)
+        {
+            DbSet.Update(entity);
+            await SaveChangesAsync();
+        }
+
+        public virtual async Task RemoveAsync(T entity)
+        {
+            DbSet.Remove(entity);
+            await SaveChangesAsync();
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await _context.SaveChangesAsync();
+        }
+        
     }
 }
