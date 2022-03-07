@@ -7,56 +7,61 @@ namespace Infrastructure.Services
 {
     public class ParkingPlaceService : IParkingPlaceService
     {
-        private readonly IParkingPlaceRepository _parkingPlaceRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public ParkingPlaceService(IParkingPlaceRepository parkingPlaceRepository, IMapper mapper)
+        public ParkingPlaceService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _parkingPlaceRepository = parkingPlaceRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<ParkingPlace> AddAsync(AddParkingPlaceDTO parkingPlaceDTO)
+        public async Task<Guid> AddAsync(AddParkingPlaceDTO parkingPlaceDTO)
         {
             ParkingPlace parkingPlace = _mapper.Map<ParkingPlace>(parkingPlaceDTO);
-            parkingPlace.Id = Guid.NewGuid();
-            await _parkingPlaceRepository.AddAsync(parkingPlace);
-            return parkingPlace;
+            await _unitOfWork.ParkingPlaces.AddAsync(parkingPlace);
+            return parkingPlace.Id;
         }
 
-        public async Task<IEnumerable<ParkingPlace>> GetAllAsync()
+        public async Task<IEnumerable<GetParkingPlaceDTO>> GetAllAsync()
         {
-            return await _parkingPlaceRepository.GetAllAsync();
+            var parkingPlaces = await _unitOfWork.ParkingPlaces.GetAllAsync();
+            return _mapper.Map<IEnumerable<GetParkingPlaceDTO>>(parkingPlaces);
         }
 
-        public async Task<ParkingPlace> GetByIdAsync(Guid Id)
+        public async Task<GetParkingPlaceDTO> GetByIdAsync(Guid Id)
         {
-            return await _parkingPlaceRepository.GetByIdAsync(Id);
+            var parkingPlace = await _unitOfWork.ParkingPlaces.GetByIdAsync(Id);
+            return _mapper.Map<GetParkingPlaceDTO>(parkingPlace);
         }
 
-        public async Task<bool> RemoveAsync(ParkingPlace parkingPlace)
+        public async Task<bool> RemoveAsync(Guid Id)
         {
-            if (await _parkingPlaceRepository.GetByIdAsync(parkingPlace.Id) == null)
+            var parkingPlace = await _unitOfWork.ParkingPlaces.GetByIdAsync(Id);
+            if (parkingPlace == null)
                 return false;
 
-            await _parkingPlaceRepository.RemoveAsync(parkingPlace);
+            await _unitOfWork.ParkingPlaces.RemoveAsync(parkingPlace);
             return true;
         }
 
-        public async Task<IEnumerable<ParkingPlace>> SearchByOfficeIdAsync(Guid? OfficeId)
+        public async Task<IEnumerable<GetParkingPlaceDTO>> SearchByOfficeIdAsync(Guid? OfficeId)
         {
-            if (OfficeId == Guid.Empty)
+            var parkingPlaces = await _unitOfWork.ParkingPlaces.Search(c => c.OfficeId.Contains(OfficeId));
+            if (parkingPlaces == null)
                 return null;
 
-            return await _parkingPlaceRepository.SearchBYOfficeIdAsync(c => c.OfficeId.Contains(OfficeId));
+            return _mapper.Map<IEnumerable<GetParkingPlaceDTO>>(parkingPlaces);
         }
 
-        public async Task<ParkingPlace> UpdateAsync(ParkingPlace parkingPlace)
+        public async Task<GetParkingPlaceDTO> UpdateAsync(UpdateParkingPlaceDTO parkingPlaceDTO)
         {
-            if (_parkingPlaceRepository.GetByIdAsync(parkingPlace.Id) == null)
+            var parkingPlace = await _unitOfWork.ParkingPlaces.GetByIdAsync(parkingPlaceDTO.Id);
+            if (parkingPlace == null)
                 return null;
 
-            await _parkingPlaceRepository.UpdateAsync(parkingPlace);
-            return parkingPlace;
+            _mapper.Map(parkingPlaceDTO, parkingPlace);
+            await _unitOfWork.ParkingPlaces.UpdateAsync(parkingPlace);
+            return _mapper.Map<GetParkingPlaceDTO>(parkingPlace);
         }
     }
 }
