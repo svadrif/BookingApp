@@ -1,14 +1,11 @@
-﻿using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.Pagination;
+using Domain.Entities;
 
 namespace Application.Interfaces
 {
     public interface IAppUserRepository : IGenericRepository<AppUser>
     {
         Task<AppUser> GetByTelegramId(long telegramId, bool tracking);
+        Task<PagedList<AppUser>> GetPagedAsync(PagedQueryBase query, bool tracking);
     }
 }

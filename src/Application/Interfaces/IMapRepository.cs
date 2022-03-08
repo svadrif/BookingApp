@@ -1,14 +1,10 @@
-﻿using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.Pagination;
+using Domain.Entities;
 
 namespace Application.Interfaces
 {
     public interface IMapRepository : IGenericRepository<Map>
     {
-
+        Task<PagedList<Map>> GetPagedAsync(PagedQueryBase query, bool tracking);
     }
 }

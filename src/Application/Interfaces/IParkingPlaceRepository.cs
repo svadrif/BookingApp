@@ -1,13 +1,10 @@
-﻿using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.Pagination;
+using Domain.Entities;
 
 namespace Application.Interfaces
 {
     public interface IParkingPlaceRepository : IGenericRepository<ParkingPlace>
     {
+        Task<PagedList<ParkingPlace>> GetPagedAsync(PagedQueryBase query, bool tracking);
     }
 }
