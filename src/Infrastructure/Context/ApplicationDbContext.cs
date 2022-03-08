@@ -20,5 +20,25 @@ namespace Infrastructure.Context
         public DbSet<ParkingPlace> ParkingPlaces { get; set; }
         public DbSet<Vacation> Vacations { get; set; }
         public DbSet<WorkPlace> WorkPlaces { get; set; }
+
+        public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+        {
+            foreach (Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<AuditableEntity> entry in ChangeTracker.Entries<AuditableEntity>())
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Entity.CreatedBy = Guid.Empty;
+                        entry.Entity.CreatedDate = DateTime.Now;
+                        break;
+
+                    case EntityState.Modified:
+                        entry.Entity.ModifiedBy = Guid.Empty;
+                        entry.Entity.ModifiedDate = DateTime.Now;
+                        break;
+                }
+            }
+            return await base.SaveChangesAsync(cancellationToken);
+        }
     }
 }

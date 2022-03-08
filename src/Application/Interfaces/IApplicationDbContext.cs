@@ -12,5 +12,7 @@ namespace Application.Interfaces
         DbSet<ParkingPlace> ParkingPlaces { get; set; }
         DbSet<Vacation> Vacations { get; set; }
         DbSet<WorkPlace> WorkPlaces { get; set; }
+
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken());
     }
 }
