@@ -3,8 +3,7 @@ using Domain.Entities;
 
 namespace Application.Interfaces
 {
-    public interface IOfficeRepository : IGenericRepository<Office>
+    public interface IOfficeRepository : IGenericRepository<Office>, IPageable<Office>
     {
-        Task<PagedList<Office>> GetPagedAsync(PagedQueryBase query, bool tracking);
     }
 }

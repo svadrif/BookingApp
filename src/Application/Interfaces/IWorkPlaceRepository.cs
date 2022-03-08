@@ -1,10 +1,8 @@
-﻿using Application.Pagination;
-using Domain.Entities;
+﻿using Domain.Entities;
 
 namespace Application.Interfaces
 {
-    public interface IWorkPlaceRepository : IGenericRepository<WorkPlace>
+    public interface IWorkPlaceRepository : IGenericRepository<WorkPlace>, IPageable<WorkPlace>
     {
-        Task<PagedList<WorkPlace>> GetPagedAsync(PagedQueryBase query, bool tracking);
     }
 }

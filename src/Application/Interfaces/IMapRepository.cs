@@ -1,10 +1,8 @@
-﻿using Application.Pagination;
-using Domain.Entities;
+﻿using Domain.Entities;
 
 namespace Application.Interfaces
 {
-    public interface IMapRepository : IGenericRepository<Map>
+    public interface IMapRepository : IGenericRepository<Map>, IPageable<Map>
     {
-        Task<PagedList<Map>> GetPagedAsync(PagedQueryBase query, bool tracking);
     }
 }
