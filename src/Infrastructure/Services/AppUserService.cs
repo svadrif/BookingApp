@@ -19,6 +19,7 @@ namespace Infrastructure.Services
         {
             AppUser appUser = _mapper.Map<AppUser>(appUserDTO);
             await _unitOfWork.AppUsers.AddAsync(appUser);
+            await _unitOfWork.CompleteAsync();
             return appUser.Id;
         }
 
@@ -37,10 +38,11 @@ namespace Infrastructure.Services
         public async Task<bool> RemoveAsync(Guid Id)
         {
             var appUser = await _unitOfWork.AppUsers.GetByIdAsync(Id);
-            if (await appUser == null)
+            if (appUser == null)
                 return false;
 
-            await _unitOfWork.AppUsers.RemoveAsync(appUser);
+            _unitOfWork.AppUsers.Remove(appUser);
+            await _unitOfWork.CompleteAsync();
             return true;
         }
 
@@ -51,7 +53,8 @@ namespace Infrastructure.Services
                 return null;
 
             _mapper.Map(appUserDTO, appUser);
-            await _unitOfWork.AppUsers.UpdateAsync(appUser);
+            _unitOfWork.AppUsers.Update(appUser);
+            await _unitOfWork.CompleteAsync();
             return _mapper.Map<GetAppUserDTO>(appUser);
         }
     }

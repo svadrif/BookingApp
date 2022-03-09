@@ -14,10 +14,12 @@ namespace Infrastructure.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+
         public async Task<Guid> AddAsync(AddWorkPlaceDTO workPlaceDTO)
         {
             WorkPlace workPlace = _mapper.Map<WorkPlace>(workPlaceDTO);
             await _unitOfWork.WorkPlaces.AddAsync(workPlace);
+            await _unitOfWork.CompleteAsync();
             return workPlace.Id;
         }
 
@@ -39,7 +41,8 @@ namespace Infrastructure.Services
             if (workPlace == null)
                 return false;
 
-            await _unitOfWork.WorkPlaces.RemoveAsync(workPlace);
+            _unitOfWork.WorkPlaces.Remove(workPlace);
+            await _unitOfWork.CompleteAsync();
             return true;
         }
 
@@ -59,7 +62,8 @@ namespace Infrastructure.Services
                 return null;
 
             _mapper.Map(workPlaceDTO, workPlace);
-            await _unitOfWork.WorkPlaces.UpdateAsync(workPlace);
+            _unitOfWork.WorkPlaces.Update(workPlace);
+            await _unitOfWork.CompleteAsync();
             return _mapper.Map<GetWorkPlaceDTO>(workPlace);
         }
     }
