@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Infrastructure.Context;
+using Infrastructure.Services;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +35,11 @@ namespace Infrastructure
 
             services.AddScoped(typeof(IVacationService), typeof(VacationService));
             services.AddScoped(typeof(IAppUserService), typeof(AppUserService));
+            services.AddScoped(typeof(IBookingService), typeof(BookingService));
             services.AddScoped(typeof(IWorkPlaceService), typeof(WorkPlaceService));
+            services.AddScoped(typeof(IMapService), typeof(MapService));
+            services.AddScoped(typeof(IOfficeService), typeof(OfficeService));
+            services.AddScoped(typeof(IParkingPlaceService),typeof(ParkingPlaceService));
         }
     }
 }

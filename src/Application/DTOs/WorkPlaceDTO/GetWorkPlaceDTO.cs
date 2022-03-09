@@ -1,12 +1,10 @@
-﻿using Domain.Common;
-using Domain.Enums;
-using System;
-using System.Collections.Generic;
+﻿using Domain.Enums;
 
-namespace Domain.Entities
+namespace Application.DTOs.WorkPlaceDTO
 {
-    public class WorkPlace : BaseEntity<Guid>
+    public class GetWorkPlaceDTO
     {
+        public Guid Id { get; set; }
         public string Number { get; set; }
         public SeatsType Type { get; set; }
         public bool IsNextToWindow { get; set; }
@@ -15,12 +13,7 @@ namespace Domain.Entities
         public bool HasKeyboard { get; set; }
         public bool HasMouse { get; set; }
         public bool HasHeadset { get; set; }
-        public bool IsBlocked { get; set; }
-
-        /* EF Relation */
-        public IEnumerable<Booking> Bookings { get; set; }
-
-        public Map Map { get; set; }
         public Guid MapId { get; set; }
+
     }
 }
