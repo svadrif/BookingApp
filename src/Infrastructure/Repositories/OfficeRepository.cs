@@ -1,11 +1,8 @@
-﻿using Application.Interfaces;
+﻿using Application.Extentions;
+using Application.Interfaces;
+using Application.Pagination;
 using Domain.Entities;
 using Infrastructure.Context;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
@@ -13,5 +10,9 @@ namespace Infrastructure.Repositories
     {
         public OfficeRepository(ApplicationDbContext context) : base(context) { }
 
+        public async Task<PagedList<Office>> GetPagedAsync(PagedQueryBase query, bool tracking)
+        {
+            return await GetAll(tracking).ToPagedListAsync(query);
+        }
     }
 }

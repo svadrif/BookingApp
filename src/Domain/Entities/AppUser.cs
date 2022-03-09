@@ -13,7 +13,7 @@ namespace Domain.Entities
         public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string TelephoneNumber { get; set; }
+        public string TelephoneNumber { get; set; } 
         public string Email { get; set; }
         public Roles Role { get; set; }
         public DateTimeOffset EmploymentStart { get; set; }

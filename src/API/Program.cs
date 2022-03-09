@@ -1,8 +1,10 @@
 using Application.Interfaces;
-using Infrastructure;
-using Infrastructure.Repositories;
 using Telegram.Bot;
 using TelegramBot;
+using Application.Profiles;
+using Infrastructure;
+using Microsoft.OpenApi.Models;
+using Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +13,14 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+    {
+        c.SwaggerDoc("v1",new OpenApiInfo {Title = "BookingApp API", Version = "v1" });
+        c.CustomSchemaIds(type => type.ToString());
+    });
+builder.Services.AddAutoMapper(typeof(VacationProfile));
+builder.Services.AddAutoMapper(typeof(WorkPlaceProfile));
+
 
 // Dependency injections
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -26,13 +35,18 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+    });
 }
+    app.UseHttpsRedirection();
 
 app.UseRouting();
 
-app.UseAuthorization();
+    app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
@@ -42,4 +56,4 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 
-app.Run();
+    app.Run();
