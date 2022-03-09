@@ -25,8 +25,8 @@ namespace Infrastructure.Services
 
         public async Task<IEnumerable<GetWorkPlaceDTO>> GetAllAsync()
         {
-            var workPalces = await _unitOfWork.WorkPlaces.GetAllAsync();
-            return _mapper.Map<GetWorkPlaceDTO>(workPalces);
+            var workPlaces = _unitOfWork.WorkPlaces.GetAll(false);
+            return _mapper.Map<IEnumerable<GetWorkPlaceDTO>>(workPlaces);
         }
 
         public async Task<GetWorkPlaceDTO> GetByIdAsync(Guid Id)
@@ -48,7 +48,7 @@ namespace Infrastructure.Services
 
         public async Task<IEnumerable<GetWorkPlaceDTO>> SearchByMapIdAsync(Guid MapId)
         {
-            var workPlaces = await _unitOfWork.WorkPlaces.Search(c => c.MapId.Contains(MapId));
+            var workPlaces = _unitOfWork.WorkPlaces.Search(c => c.MapId.Equals(MapId), false);
             if (workPlaces == null)
                 return null;
 

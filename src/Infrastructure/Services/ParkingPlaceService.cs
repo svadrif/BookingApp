@@ -26,7 +26,7 @@ namespace Infrastructure.Services
 
         public async Task<IEnumerable<GetParkingPlaceDTO>> GetAllAsync()
         {
-            var parkingPlaces = await _unitOfWork.ParkingPlaces.GetAllAsync();
+            var parkingPlaces = _unitOfWork.ParkingPlaces.GetAll(false);
             return _mapper.Map<IEnumerable<GetParkingPlaceDTO>>(parkingPlaces);
         }
 
@@ -49,7 +49,7 @@ namespace Infrastructure.Services
 
         public async Task<IEnumerable<GetParkingPlaceDTO>> SearchByOfficeIdAsync(Guid? OfficeId)
         {
-            var parkingPlaces = await _unitOfWork.ParkingPlaces.Search(c => c.OfficeId.Contains(OfficeId));
+            var parkingPlaces = _unitOfWork.ParkingPlaces.Search(c => c.OfficeId.Equals(OfficeId), false);
             if (parkingPlaces == null)
                 return null;
 
