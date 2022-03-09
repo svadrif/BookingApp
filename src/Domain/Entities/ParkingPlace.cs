@@ -10,9 +10,8 @@ namespace Domain.Entities
         public string Number { get; set; }
 
         /* EF Relation */
-        public IEnumerable<Booking> Bookings { get; set; }
-
-        public Office Office { get; set; }
         public Guid OfficeId { get; set; }
+        public Office Office { get; set; }
+        public IEnumerable<Booking> Bookings { get; set; }
     }
 }

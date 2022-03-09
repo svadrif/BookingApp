@@ -8,7 +8,7 @@ namespace Application.Interfaces
         DbSet<AppUser> AppUsers { get; set; }
         DbSet<Booking> Bookings { get; set; }
         DbSet<Map> Maps { get; set; }
-        DbSet<Office> Office { get; set; }
+        DbSet<Office> Offices { get; set; }
         DbSet<ParkingPlace> ParkingPlaces { get; set; }
         DbSet<Vacation> Vacations { get; set; }
         DbSet<WorkPlace> WorkPlaces { get; set; }

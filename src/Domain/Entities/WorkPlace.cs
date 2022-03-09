@@ -18,9 +18,9 @@ namespace Domain.Entities
         public bool IsBlocked { get; set; }
 
         /* EF Relation */
+        public Guid MapId { get; set; }
+        public Map Map { get; set; }
         public IEnumerable<Booking> Bookings { get; set; }
 
-        public Map Map { get; set; }
-        public Guid MapId { get; set; }
     }
 }

@@ -14,7 +14,6 @@ namespace Domain.Entities
 
         /* EF Relation */
         public IEnumerable<Map> Maps { get; set; }
-
         public IEnumerable<ParkingPlace> ParkingPlaces { get; set; }
 
     }
