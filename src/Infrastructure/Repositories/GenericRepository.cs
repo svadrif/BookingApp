@@ -1,13 +1,7 @@
 ﻿using Application.Interfaces;
-using Domain.Common;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
@@ -21,9 +15,10 @@ namespace Infrastructure.Repositories
             _context = context;
             DbSet = context.Set<T>();
         }
+
         public IQueryable<T> Search(Expression<Func<T, bool>> predicate, bool tracking)
         {
-            return !tracking ? DbSet.Where(predicate).AsNoTracking() 
+            return !tracking ? DbSet.Where(predicate).AsNoTracking()
                              : DbSet.Where(predicate);
         }
 
@@ -34,7 +29,7 @@ namespace Infrastructure.Repositories
 
         public virtual IQueryable<T> GetAll(bool tracking)
         {
-            return !tracking ? DbSet.AsNoTracking() 
+            return !tracking ? DbSet.AsNoTracking()
                              : DbSet;
         }
 
@@ -60,6 +55,6 @@ namespace Infrastructure.Repositories
         {
             return await _context.SaveChangesAsync();
         }
-        
+
     }
 }
