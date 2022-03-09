@@ -19,6 +19,7 @@ namespace Infrastructure.Services
         {
             Office office = _mapper.Map<Office>(officeDTO);
             await _unitOfWork.Offices.AddAsync(office);
+            await _unitOfWork.CompleteAsync();
             return office.Id;
         }
 
@@ -40,18 +41,20 @@ namespace Infrastructure.Services
             if (office == null)
                 return false;
 
-            await _unitOfWork.Offices.RemoveAsync(office);
+            _unitOfWork.Offices.Remove(office);
+            await _unitOfWork.CompleteAsync();
             return true;
-        }    
+        }
 
         public async Task<GetOfficeDTO> UpdateAsync(UpdateOfficeDTO officeDTO)
         {
-            var office = await _unitOfWork.Offices.UpdateAsync(officeDTO.Id);
+            var office = await _unitOfWork.Offices.GetByIdAsync(officeDTO.Id);
             if (office == null)
                 return null;
 
             _mapper.Map(officeDTO, office);
-            await _unitOfWork.Offices.UpdateAsync(office);
+            _unitOfWork.Offices.Update(office);
+            await _unitOfWork.CompleteAsync();
             return _mapper.Map<GetOfficeDTO>(office);
         }
     }

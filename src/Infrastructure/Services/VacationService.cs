@@ -21,6 +21,7 @@ namespace Infrastructure.Services
         {
             Vacation vacation = _mapper.Map<Vacation>(vacationDTO);
             await _unitOfWork.Vacations.AddAsync(vacation);
+            await _unitOfWork.CompleteAsync();
             return vacation.Id;
         }
 
@@ -41,8 +42,9 @@ namespace Infrastructure.Services
             var vacation = await _unitOfWork.Vacations.GetByIdAsync(Id);
             if (vacation == null)
                 return false;
-          
-            await _unitOfWork.Vacations.RemoveAsync(vacation);
+
+            _unitOfWork.Vacations.Remove(vacation);
+            await _unitOfWork.CompleteAsync();
             return true;
         }
 
@@ -53,7 +55,8 @@ namespace Infrastructure.Services
                 return null;
 
             _mapper.Map(vacationDTO, vacation);
-            await _unitOfWork.Vacations.UpdateAsync(vacation);
+            _unitOfWork.Vacations.Update(vacation);
+            await _unitOfWork.CompleteAsync();
             return _mapper.Map<GetVacationDTO>(vacation);
         }
 
