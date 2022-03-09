@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Infrastructure.Context;
 using Infrastructure.Repositories;
+using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +31,10 @@ namespace Infrastructure
                     b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
+
+            services.AddScoped(typeof(IVacationService), typeof(VacationService));
+            services.AddScoped(typeof(IAppUserService), typeof(AppUserService));
+            services.AddScoped(typeof(IWorkPlaceService), typeof(WorkPlaceService));
         }
     }
 }

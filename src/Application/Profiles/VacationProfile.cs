@@ -1,5 +1,12 @@
-﻿using AutoMapper;
+using Application.Dtos.Vacation;
+using Application.DTOs.WorePlaceDTO;
+using AutoMapper;
 using Domain.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Application.Profiles
 {
@@ -11,7 +18,7 @@ namespace Application.Profiles
                 .ForMember(dest => dest.Id, src => src.MapFrom(x => x.Id))
                 .ForMember(dest => dest.UserId, src => src.MapFrom(x => x.UserId))
                 .ForMember(dest => dest.VacationStart, src => src.MapFrom(x => x.VacationStart))
-                .ForMember(dest => dest.VacationEnd, src => src.MapFrom(x => x.VacationEnd)); 
+                .ForMember(dest => dest.VacationEnd, src => src.MapFrom(x => x.VacationEnd));
 
             CreateMap<AddVacationDTO, Vacation>()
                 .ForMember(dest => dest.UserId, src => src.MapFrom(x => x.UserId))
