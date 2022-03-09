@@ -1,14 +1,4 @@
 ﻿using Application.Interfaces;
-using Domain.Common;
-using Infrastructure.Context;
-using Infrastructure.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
@@ -41,9 +31,10 @@ namespace Infrastructure.Repositories
             Vacations = vacations;
             WorkPlaces = workPlaces;
         }
+
         public async Task<int> CompleteAsync(CancellationToken cancellationToken = new CancellationToken())
-        {            
+        {
             return await _context.SaveChangesAsync(cancellationToken);
-        }        
+        }
     }
 }

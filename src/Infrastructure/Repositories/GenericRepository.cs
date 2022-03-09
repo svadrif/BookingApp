@@ -35,26 +35,17 @@ namespace Infrastructure.Repositories
 
         public virtual async Task AddAsync(T entity)
         {
-            DbSet.Add(entity);
-            await SaveChangesAsync();
+            await DbSet.AddAsync(entity);
         }
 
-        public virtual async Task UpdateAsync(T entity)
+        public virtual void Update(T entity)
         {
             DbSet.Update(entity);
-            await SaveChangesAsync();
         }
 
-        public virtual async Task RemoveAsync(T entity)
+        public virtual void Remove(T entity)
         {
             DbSet.Remove(entity);
-            await SaveChangesAsync();
         }
-
-        public async Task<int> SaveChangesAsync()
-        {
-            return await _context.SaveChangesAsync();
-        }
-
     }
 }
