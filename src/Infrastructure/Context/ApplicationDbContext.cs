@@ -29,12 +29,12 @@ namespace Infrastructure.Context
                 {
                     case EntityState.Added:
                         entry.Entity.CreatedBy = Guid.Empty;
-                        entry.Entity.CreatedDate = DateTime.Now;
+                        entry.Entity.CreatedDate = DateTimeOffset.Now;
                         break;
 
                     case EntityState.Modified:
                         entry.Entity.ModifiedBy = Guid.Empty;
-                        entry.Entity.ModifiedDate = DateTime.Now;
+                        entry.Entity.ModifiedDate = DateTimeOffset.Now;
                         break;
                 }
             }
