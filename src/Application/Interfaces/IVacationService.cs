@@ -2,7 +2,7 @@
 
 namespace Application.Interfaces
 {
-    public interface IVacationService  
+    public interface IVacationService
     {
         Task<IEnumerable<GetVacationDTO>> GetAllAsync();
         Task<GetVacationDTO> GetByIdAsync(Guid Id);

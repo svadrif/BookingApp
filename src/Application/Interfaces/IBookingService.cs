@@ -1,9 +1,8 @@
 ﻿using Application.DTOs.BookingDTO;
-using Domain.Entities;
 
 namespace Application.Interfaces
 {
-    public interface IBookingService 
+    public interface IBookingService
     {
         Task<IEnumerable<GetBookingDTO>> GetAllAsync();
         Task<GetBookingDTO> GetByIdAsync(Guid Id);

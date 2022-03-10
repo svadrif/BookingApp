@@ -1,9 +1,8 @@
 ﻿using Application.DTOs.WorkPlaceDTO;
-using Domain.Entities;
 
 namespace Application.Interfaces
 {
-    public interface IWorkPlaceService 
+    public interface IWorkPlaceService
     {
         Task<IEnumerable<GetWorkPlaceDTO>> GetAllAsync();
         Task<GetWorkPlaceDTO> GetByIdAsync(Guid Id);
