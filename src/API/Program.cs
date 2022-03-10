@@ -11,6 +11,7 @@ using Infrastructure.Repositories;
 Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .Enrich.FromLogContext()
+            .WriteTo.File("log.txt", rollingInterval: RollingInterval.Day)
             .WriteTo.Console()
             .CreateBootstrapLogger();
 
