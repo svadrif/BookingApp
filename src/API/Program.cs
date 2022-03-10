@@ -1,3 +1,5 @@
+using Serilog;
+using Serilog.Events;
 using Application.Interfaces;
 using Telegram.Bot;
 using TelegramBot;
@@ -6,7 +8,21 @@ using Infrastructure;
 using Microsoft.OpenApi.Models;
 using Infrastructure.Repositories;
 
+Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+            .Enrich.FromLogContext()
+            .WriteTo.Console()
+            .CreateBootstrapLogger();
+
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Reading AppSettings + Enebles Serilog
+// Full setup of serilog. We read log settings from appsettings.json
+builder.Host.UseSerilog((context, services, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration)
+    .ReadFrom.Services(services)
+    .Enrich.FromLogContext());
 
 // Add services to the container.
 builder.Services.AddControllers().AddNewtonsoftJson();
@@ -31,6 +47,13 @@ builder.Services.AddHttpClient("tgwebhook")
                     => new TelegramBotClient(builder.Configuration["BotToken"], httpClient));
 
 var app = builder.Build();
+
+// Logging every request
+// Configure the HTTP request pipeline.
+app.UseSerilogRequestLogging(configure =>
+{
+    configure.MessageTemplate = "HTTP {RequestMethod} {RequestPath} ({UserId}) responded {StatusCode} in {Elapsed:0.0000}ms";
+}); // We want to log all HTTP requests
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
