@@ -8,7 +8,7 @@ namespace Domain.Entities
         public DateTimeOffset BookingStart { get; set; }
         public DateTimeOffset BookingEnd { get; set; }
         public bool IsRecurring { get; set; }
-        public string Frequancy { get; set; }
+        public string Frequancy { get; set; } = string.Empty;
         public bool IsActive { get; set; }
 
         /* EF Relation */
