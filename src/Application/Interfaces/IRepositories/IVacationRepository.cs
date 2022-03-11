@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
 
-namespace Application.Interfaces
+namespace Application.Interfaces.IRepositories
 {
     public interface IVacationRepository : IGenericRepository<Vacation>, IPageable<Vacation>
     {

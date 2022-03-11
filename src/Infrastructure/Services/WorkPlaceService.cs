@@ -1,5 +1,7 @@
 ﻿using Application.DTOs.WorkPlaceDTO;
-using Application.Interfaces;
+using Application.Interfaces.IServices;
+using Application.Interfaces.IRepositories;
+using Application.Pagination;
 using AutoMapper;
 using Domain.Entities;
 
@@ -23,10 +25,11 @@ namespace Infrastructure.Services
             return workPlace.Id;
         }
 
-        public async Task<IEnumerable<GetWorkPlaceDTO>> GetAllAsync()
+        public async Task<PagedList<GetWorkPlaceDTO>> GetPagedAsync(PagedQueryBase query)
         {
-            var workPlaces = _unitOfWork.WorkPlaces.GetAll(false);
-            return _mapper.Map<IEnumerable<GetWorkPlaceDTO>>(workPlaces);
+            var workPlaces = await _unitOfWork.WorkPlaces.GetPagedAsync(query);
+            var workPlacesDTO = new PagedList<GetWorkPlaceDTO>(_mapper.Map<List<GetWorkPlaceDTO>>(workPlaces), workPlaces.TotalCount, workPlaces.CurrentPage, workPlaces.PageSize);
+            return workPlacesDTO;
         }
 
         public async Task<GetWorkPlaceDTO> GetByIdAsync(Guid Id)

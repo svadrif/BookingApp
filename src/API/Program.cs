@@ -1,10 +1,11 @@
-using Application.Interfaces;
+using Application;
+using Application.DTOs.AppUserDTO;
+using Infrastructure;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
 using Telegram.Bot;
 using TelegramBot;
-using Application.Profiles;
-using Infrastructure;
-using Microsoft.OpenApi.Models;
-using Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,15 +16,14 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
     {
-        c.SwaggerDoc("v1",new OpenApiInfo {Title = "BookingApp API", Version = "v1" });
-        c.CustomSchemaIds(type => type.ToString());
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "BookingApp API", Version = "v1" });
+        c.CustomSchemaIds(type => type.ToString());      
     });
-builder.Services.AddAutoMapper(typeof(VacationProfile));
-builder.Services.AddAutoMapper(typeof(WorkPlaceProfile));
-
 
 // Dependency injections
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddApplication();
+
 builder.Services.AddTelegramBot();
 
 builder.Services.AddHttpClient("tgwebhook")
@@ -42,11 +42,11 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
     });
 }
-    app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseRouting();
 
-    app.UseAuthorization();
+app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
@@ -56,4 +56,4 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 
-    app.Run();
+app.Run();

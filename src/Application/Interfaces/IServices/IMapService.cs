@@ -1,10 +1,11 @@
 ﻿using Application.DTOs.MapDTO;
+using Application.Pagination;
 
-namespace Application.Interfaces
+namespace Application.Interfaces.IServices
 {
     public interface IMapService
     {
-        Task<IEnumerable<GetMapDTO>> GetAllAsync();
+        Task<PagedList<GetMapDTO>> GetPagedAsync(PagedQueryBase query);
         Task<GetMapDTO> GetByIdAsync(Guid Id);
         Task<Guid> AddAsync(AddMapDTO mapDTO);
         Task<GetMapDTO> UpdateAsync(UpdateMapDTO mapDTO);

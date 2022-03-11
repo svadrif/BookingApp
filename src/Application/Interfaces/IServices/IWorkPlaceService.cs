@@ -1,10 +1,11 @@
 ﻿using Application.DTOs.WorkPlaceDTO;
+using Application.Pagination;
 
-namespace Application.Interfaces
+namespace Application.Interfaces.IServices
 {
     public interface IWorkPlaceService
     {
-        Task<IEnumerable<GetWorkPlaceDTO>> GetAllAsync();
+        Task<PagedList<GetWorkPlaceDTO>> GetPagedAsync(PagedQueryBase query);
         Task<GetWorkPlaceDTO> GetByIdAsync(Guid Id);
         Task<Guid> AddAsync(AddWorkPlaceDTO workPlaceDTO);
         Task<GetWorkPlaceDTO> UpdateAsync(UpdateWorkPlaceDTO workPlaceDTO);
