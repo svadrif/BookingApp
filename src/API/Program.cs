@@ -34,10 +34,59 @@ builder.Services.AddSwaggerGen(c =>
     {
         c.SwaggerDoc("v1",new OpenApiInfo {Title = "BookingApp API", Version = "v1" });
         c.CustomSchemaIds(type => type.ToString());
+        c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+            Description = "Add with Bearer _______",
+            Name = "Authorization",
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.ApiKey,
+            Scheme = "Bearer"
+        });
+        c.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+            },
+            Array.Empty<string>()
+        },
     });
+});
 builder.Services.AddAutoMapper(typeof(VacationProfile));
 builder.Services.AddAutoMapper(typeof(WorkPlaceProfile));
 
+IConfigurationSection appSettingsSection = builder.Configuration.GetSection("AppSettings");
+builder.Services.Configure<AppSettings>(appSettingsSection);
+AppSettings appSettings = appSettingsSection.Get<AppSettings>();
+var secretKey = Encoding.ASCII.GetBytes(appSettings.SecretKey);
+
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        // указывает, будет ли валидироваться издатель при валидации токена
+        ValidateIssuer = false,
+        // будет ли валидироваться потребитель токена
+        ValidateAudience = false,
+        // будет ли валидироваться время существования
+        ValidateLifetime = true,
+        // установка ключа безопасности
+        IssuerSigningKey = new SymmetricSecurityKey(secretKey),
+        // валидация ключа безопасности
+        ValidateIssuerSigningKey = true,
+    };
+});
 
 // Dependency injections
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -46,6 +95,16 @@ builder.Services.AddTelegramBot();
 builder.Services.AddHttpClient("tgwebhook")
                 .AddTypedClient<ITelegramBotClient>(httpClient
                     => new TelegramBotClient(builder.Configuration["BotToken"], httpClient));
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AnyOrigin", builder =>
+    {
+        builder
+            .AllowAnyOrigin()
+            .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -66,11 +125,15 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
     });
 }
-    app.UseHttpsRedirection();
+app.UseHttpsRedirection();
+
+app.UseAuthentication();   
 
 app.UseRouting();
 
-    app.UseAuthorization();
+app.UseCors("AnyOrigin");
+
+app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
