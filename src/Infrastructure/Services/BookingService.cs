@@ -1,6 +1,6 @@
 ﻿using Application.DTOs.BookingDTO;
-using Application.Interfaces.IServices;
 using Application.Interfaces.IRepositories;
+using Application.Interfaces.IServices;
 using Application.Pagination;
 using AutoMapper;
 using Domain.Entities;

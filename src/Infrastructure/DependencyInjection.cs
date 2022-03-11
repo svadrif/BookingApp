@@ -1,6 +1,6 @@
-﻿using Application.Interfaces.IRepositories;
+﻿using Application.Interfaces;
+using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
-using Application.Interfaces;
 using Infrastructure.Context;
 using Infrastructure.Repositories;
 using Infrastructure.Services;

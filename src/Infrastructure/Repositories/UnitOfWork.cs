@@ -1,5 +1,5 @@
-﻿using Application.Interfaces.IRepositories;
-using Application.Interfaces;
+﻿using Application.Interfaces;
+using Application.Interfaces.IRepositories;
 
 namespace Infrastructure.Repositories
 {

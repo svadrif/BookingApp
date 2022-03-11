@@ -1,13 +1,8 @@
 using Application;
-using Application.DTOs.AppUserDTO;
+using Infrastructure;
+using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
-using Application.Interfaces;
-using Application.Profiles;
-using Infrastructure;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using System.Text;
 using Telegram.Bot;
 using TelegramBot;
 
@@ -36,7 +31,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
     {
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "BookingApp API", Version = "v1" });
-        c.CustomSchemaIds(type => type.ToString());      
+        c.CustomSchemaIds(type => type.ToString());
     });
 
 // Dependency injections
