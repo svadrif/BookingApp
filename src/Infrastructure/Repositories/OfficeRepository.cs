@@ -14,6 +14,7 @@ namespace Infrastructure.Repositories
         public async Task<PagedList<Office>> GetPagedAsync(PagedQueryBase query, bool tracking = false)
         {
             return await GetAll(tracking)
+                        .Sort(query.SortOn, query.SortDirection)
                         .ToPagedListAsync(query);
         }
 
@@ -28,6 +29,7 @@ namespace Infrastructure.Repositories
         {
             return await Search(x => x.City == city,
                                 tracking)
+                        .Sort(query.SortOn, query.SortDirection)
                         .ToPagedListAsync(query);
         }
 
@@ -35,6 +37,7 @@ namespace Infrastructure.Repositories
         {
             return await Search(x => x.Country == country,
                                 tracking)
+                        .Sort(query.SortOn, query.SortDirection)
                         .ToPagedListAsync(query);
         }
     }
