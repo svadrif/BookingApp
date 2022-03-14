@@ -29,7 +29,8 @@ namespace Infrastructure.Services
         public async Task<PagedList<GetVacationDTO>> GetPagedAsync(PagedQueryBase query)
         {
             var vacations = await _unitOfWork.Vacations.GetPagedAsync(query);
-            var vacationsDTO = new PagedList<GetVacationDTO>(_mapper.Map<List<GetVacationDTO>>(vacations), vacations.TotalCount, vacations.CurrentPage, vacations.PageSize);
+            var mapVacations = _mapper.Map<List<GetVacationDTO>>(vacations);
+            var vacationsDTO = new PagedList<GetVacationDTO>(mapVacations, vacations.TotalCount, vacations.CurrentPage, vacations.PageSize);
             return vacationsDTO;
         }
 

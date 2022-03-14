@@ -28,7 +28,8 @@ namespace Infrastructure.Services
         public async Task<PagedList<GetOfficeDTO>> GetPagedAsync(PagedQueryBase query)
         {
             var offices = await _unitOfWork.Offices.GetPagedAsync(query);
-            var officesDTO = new PagedList<GetOfficeDTO>(_mapper.Map<List<GetOfficeDTO>>(offices), offices.TotalCount, offices.CurrentPage, offices.PageSize);
+            var mapOffices = _mapper.Map<List<GetOfficeDTO>>(offices);
+            var officesDTO = new PagedList<GetOfficeDTO>(mapOffices, offices.TotalCount, offices.CurrentPage, offices.PageSize);
             return officesDTO;
         }
 

@@ -28,7 +28,8 @@ namespace Infrastructure.Services
         public async Task<PagedList<GetAppUserDTO>> GetPagedAsync(PagedQueryBase query)
         {
             var appUsers = await _unitOfWork.AppUsers.GetPagedAsync(query);
-            var appUsersDTO = new PagedList<GetAppUserDTO>(_mapper.Map<List<GetAppUserDTO>>(appUsers), appUsers.TotalCount, appUsers.CurrentPage, appUsers.PageSize);
+            var mapUsers = _mapper.Map<List<GetAppUserDTO>>(appUsers);
+            var appUsersDTO = new PagedList<GetAppUserDTO>(mapUsers, appUsers.TotalCount, appUsers.CurrentPage, appUsers.PageSize);
             return appUsersDTO;
         }
 

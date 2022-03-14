@@ -29,7 +29,8 @@ namespace Infrastructure.Services
         public async Task<PagedList<GetBookingDTO>> GetPagedAsync(PagedQueryBase query)
         {
             var bookings = await _unitOfWork.Bookings.GetPagedAsync(query);
-            var bookingsDTO = new PagedList<GetBookingDTO>(_mapper.Map<List<GetBookingDTO>>(bookings), bookings.TotalCount, bookings.CurrentPage, bookings.PageSize);
+            var mapBookings = _mapper.Map<List<GetBookingDTO>>(bookings);
+            var bookingsDTO = new PagedList<GetBookingDTO>(mapBookings, bookings.TotalCount, bookings.CurrentPage, bookings.PageSize);
             return bookingsDTO;
         }
 

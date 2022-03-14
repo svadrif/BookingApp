@@ -29,7 +29,8 @@ namespace Infrastructure.Services
         public async Task<PagedList<GetParkingPlaceDTO>> GetPagedAsync(PagedQueryBase query)
         {
             var parkingPlaces = await _unitOfWork.ParkingPlaces.GetPagedAsync(query);
-            var parkingPlacesDTO = new PagedList<GetParkingPlaceDTO>(_mapper.Map<List<GetParkingPlaceDTO>>(parkingPlaces), parkingPlaces.TotalCount, parkingPlaces.CurrentPage, parkingPlaces.PageSize);
+            var mapParkingPlaces = _mapper.Map<List<GetParkingPlaceDTO>>(parkingPlaces);
+            var parkingPlacesDTO = new PagedList<GetParkingPlaceDTO>(mapParkingPlaces, parkingPlaces.TotalCount, parkingPlaces.CurrentPage, parkingPlaces.PageSize);
             return parkingPlacesDTO;
         }
 
