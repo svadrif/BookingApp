@@ -25,7 +25,7 @@ namespace Infrastructure.Services
 
         public async Task<IEnumerable<GetAppUserDTO>> GetAllAsync()
         {
-            var appUsers = await _unitOfWork.AppUsers.GetAllAsync();
+            var appUsers = _unitOfWork.AppUsers.GetAll(false);
             return _mapper.Map<IEnumerable<GetAppUserDTO>>(appUsers);
         }
 

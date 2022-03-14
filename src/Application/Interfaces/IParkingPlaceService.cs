@@ -1,9 +1,8 @@
 ﻿using Application.DTOs.ParkingPlaceDTO;
-using Domain.Entities;
 
 namespace Application.Interfaces
 {
-    public interface IParkingPlaceService 
+    public interface IParkingPlaceService
     {
         Task<IEnumerable<GetParkingPlaceDTO>> GetAllAsync();
         Task<GetParkingPlaceDTO> GetByIdAsync(Guid Id);

@@ -1,12 +1,6 @@
-using Application.Dtos.Vacation;
-using Application.DTOs.WorePlaceDTO;
+using Application.DTOs.VacationDTO;
 using AutoMapper;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Profiles
 {
