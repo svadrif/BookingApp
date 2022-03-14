@@ -10,9 +10,17 @@ namespace Infrastructure.Repositories
     {
         public ParkingPlaceRepository(ApplicationDbContext context) : base(context) { }
 
-        public async Task<PagedList<ParkingPlace>> GetPagedAsync(PagedQueryBase query, bool tracking)
+        public async Task<PagedList<ParkingPlace>> GetPagedAsync(PagedQueryBase query, bool tracking = false)
         {
-            return await GetAll(tracking).ToPagedListAsync(query);
+            return await GetAll(tracking)
+                        .ToPagedListAsync(query);
+        }
+
+        public async Task<PagedList<ParkingPlace>> GetPagedByOfficeIdAsync(Guid officeId, PagedQueryBase query, bool tracking = false)
+        {
+            return await Search(x => x.OfficeId == officeId,
+                                tracking)
+                        .ToPagedListAsync(query);
         }
     }
 }

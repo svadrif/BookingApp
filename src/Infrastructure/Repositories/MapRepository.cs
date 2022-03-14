@@ -10,9 +10,25 @@ namespace Infrastructure.Repositories
     {
         public MapRepository(ApplicationDbContext context) : base(context) { }
 
-        public async Task<PagedList<Map>> GetPagedAsync(PagedQueryBase query, bool tracking)
+        public async Task<PagedList<Map>> GetPagedAsync(PagedQueryBase query, bool tracking = false)
         {
-            return await GetAll(tracking).ToPagedListAsync(query);
+            return await GetAll(tracking)
+                        .ToPagedListAsync(query);
+        }
+
+        public async Task<PagedList<Map>> GetPagedByAttributesAsync(bool hasKitchen, bool hasConfRoom, PagedQueryBase query, bool tracking = false)
+        {
+            return await Search(x => x.HasKitchen == hasKitchen
+                                && x.HasConfRoom == hasConfRoom,
+                                tracking)
+                        .ToPagedListAsync(query);
+        }
+
+        public async Task<PagedList<Map>> GetPagedByOfficeIdAsync(Guid officeId, PagedQueryBase query, bool tracking = false)
+        {
+            return await Search(x => x.OfficeId == officeId,
+                                tracking)
+                        .ToPagedListAsync(query);
         }
     }
 }

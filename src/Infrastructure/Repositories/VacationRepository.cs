@@ -10,9 +10,17 @@ namespace Infrastructure.Repositories
     {
         public VacationRepository(ApplicationDbContext context) : base(context) { }
 
-        public async Task<PagedList<Vacation>> GetPagedAsync(PagedQueryBase query, bool tracking)
+        public async Task<PagedList<Vacation>> GetPagedAsync(PagedQueryBase query, bool tracking = false)
         {
-            return await GetAll(tracking).ToPagedListAsync(query);
+            return await GetAll(tracking)
+                        .ToPagedListAsync(query);
+        }
+
+        public async Task<PagedList<Vacation>> GetPagedByUserIdAsync(Guid userId, PagedQueryBase query, bool tracking = false)
+        {
+            return await Search(x => x.UserId == userId,
+                                tracking)
+                        .ToPagedListAsync(query);
         }
     }
 }
