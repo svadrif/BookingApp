@@ -1,10 +1,5 @@
 ﻿using Domain.Enums;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.DTOs.AppUserDTO
 {
@@ -25,7 +20,7 @@ namespace Application.DTOs.AppUserDTO
         public string TelephoneNumber { get; set; }
 
         [Required(ErrorMessage = "This field {0} is required")]
-        [EmailAddress (ErrorMessage = "Not correct addres")]
+        [EmailAddress(ErrorMessage = "Not correct addres")]
         public string Email { get; set; }
         public Roles Role { get; set; }
 

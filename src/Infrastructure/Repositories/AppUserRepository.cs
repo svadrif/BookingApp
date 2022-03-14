@@ -11,14 +11,25 @@ namespace Infrastructure.Repositories
     {
         public AppUserRepository(ApplicationDbContext context) : base(context) { }
 
-        public async Task<AppUser> GetByTelegramId(long telegramId, bool tracking = false)
+        public async Task<AppUser> GetByTelegramIdAsync(long telegramId, bool tracking = false)
         {
-            return await base.Search(x => x.TelegramId == telegramId, tracking).FirstOrDefaultAsync();
+            return await Search(x => x.TelegramId == telegramId,
+                                tracking)
+                        .FirstOrDefaultAsync();
         }
 
-        public async Task<PagedList<AppUser>> GetPagedAsync(PagedQueryBase query, bool tracking)
+        public async Task<AppUser> GetByEmailAsync(string email, bool tracking = false)
         {
-            return await GetAll(tracking).ToPagedListAsync(query);
+            return await Search(x => x.Email == email,
+                                tracking)
+                        .FirstOrDefaultAsync();
+        }
+
+        public async Task<PagedList<AppUser>> GetPagedAsync(PagedQueryBase query, bool tracking = false)
+        {
+
+            return await GetAll(tracking)
+                        .ToPagedListAsync(query);
         }
     }
 }

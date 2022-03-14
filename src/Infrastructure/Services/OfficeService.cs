@@ -25,7 +25,7 @@ namespace Infrastructure.Services
 
         public async Task<IEnumerable<GetOfficeDTO>> GetAllAsync()
         {
-            var offices = await _unitOfWork.Offices.GetAllAsync();
+            var offices = _unitOfWork.Offices.GetAll(false);
             return _mapper.Map<IEnumerable<GetOfficeDTO>>(offices);
         }
 

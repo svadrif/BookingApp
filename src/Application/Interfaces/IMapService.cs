@@ -1,5 +1,4 @@
 ﻿using Application.DTOs.MapDTO;
-using Domain.Entities;
 
 namespace Application.Interfaces
 {
