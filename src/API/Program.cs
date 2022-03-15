@@ -7,6 +7,11 @@ using Application.Profiles;
 using Infrastructure;
 using Microsoft.OpenApi.Models;
 using Infrastructure.Repositories;
+using Application.DTOs.AppUserDTO;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Application;
 
 Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -57,8 +62,6 @@ builder.Services.AddSwaggerGen(c =>
         },
     });
 });
-builder.Services.AddAutoMapper(typeof(VacationProfile));
-builder.Services.AddAutoMapper(typeof(WorkPlaceProfile));
 
 IConfigurationSection appSettingsSection = builder.Configuration.GetSection("AppSettings");
 builder.Services.Configure<AppSettings>(appSettingsSection);
@@ -90,11 +93,13 @@ builder.Services.AddAuthentication(options =>
 
 // Dependency injections
 builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddTelegramBot();
+builder.Services.AddApplication();
 
-builder.Services.AddHttpClient("tgwebhook")
+//builder.Services.AddTelegramBot();
+
+/*builder.Services.AddHttpClient("tgwebhook")
                 .AddTypedClient<ITelegramBotClient>(httpClient
-                    => new TelegramBotClient(builder.Configuration["BotToken"], httpClient));
+                    => new TelegramBotClient(builder.Configuration["BotToken"], httpClient));*/
 
 builder.Services.AddCors(options =>
 {
@@ -137,9 +142,9 @@ app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapControllerRoute(name: "tgwebhook",
+/*    endpoints.MapControllerRoute(name: "tgwebhook",
                                  pattern: $"api/TelegramBot",
-                                 new { controller = "TelegramBot", action = "Post" });
+                                 new { controller = "TelegramBot", action = "Post" });*/
     endpoints.MapControllers();
 });
 
