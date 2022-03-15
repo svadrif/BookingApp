@@ -1,10 +1,11 @@
 ﻿using Application.DTOs.BookingDTO;
+using Application.Pagination;
 
-namespace Application.Interfaces
+namespace Application.Interfaces.IServices
 {
     public interface IBookingService
     {
-        Task<IEnumerable<GetBookingDTO>> GetAllAsync();
+        Task<PagedList<GetBookingDTO>> GetPagedAsync(PagedQueryBase query);
         Task<GetBookingDTO> GetByIdAsync(Guid Id);
         Task<Guid> AddAsync(AddBookingDTO bookingDTO);
         Task<GetBookingDTO> UpdateAsync(UpdateBookingDTO bookingDTO);

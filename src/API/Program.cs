@@ -1,3 +1,6 @@
+using Application;
+using Infrastructure;
+using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
 using Application.Interfaces;
@@ -37,7 +40,7 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
     {
-        c.SwaggerDoc("v1",new OpenApiInfo {Title = "BookingApp API", Version = "v1" });
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "BookingApp API", Version = "v1" });
         c.CustomSchemaIds(type => type.ToString());
         c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
         {
@@ -148,4 +151,4 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 
-    app.Run();
+app.Run();

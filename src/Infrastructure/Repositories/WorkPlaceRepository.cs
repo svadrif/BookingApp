@@ -1,5 +1,5 @@
 ﻿using Application.Extentions;
-using Application.Interfaces;
+using Application.Interfaces.IRepositories;
 using Application.Pagination;
 using Domain.Entities;
 using Infrastructure.Context;
@@ -12,7 +12,9 @@ namespace Infrastructure.Repositories
 
         public async Task<PagedList<WorkPlace>> GetPagedAsync(PagedQueryBase query, bool tracking = false)
         {
-            return await GetAll(tracking).ToPagedListAsync(query);
+            return await GetAll(tracking)
+                        .Sort(query.SortOn, query.SortDirection)
+                        .ToPagedListAsync(query);
         }
 
         public async Task<PagedList<WorkPlace>> GetPagedByAttributesAsync(bool isNextToWindow, bool hasPc, bool hasMonitor, bool hasKeyboard,
@@ -25,6 +27,7 @@ namespace Infrastructure.Repositories
                                 && x.HasMouse == hasMouse
                                 && x.HasHeadset == hasHeadset,
                                 tracking)
+                        .Sort(query.SortOn, query.SortDirection)
                         .ToPagedListAsync(query);
         }
 
@@ -32,6 +35,7 @@ namespace Infrastructure.Repositories
         {
             return await Search(x => x.MapId == mapId,
                                 tracking)
+                        .Sort(query.SortOn, query.SortDirection)
                         .ToPagedListAsync(query);
         }
     }

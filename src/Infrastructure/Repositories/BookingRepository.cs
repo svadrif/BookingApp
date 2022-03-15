@@ -1,5 +1,5 @@
 ﻿using Application.Extentions;
-using Application.Interfaces;
+using Application.Interfaces.IRepositories;
 using Application.Pagination;
 using Domain.Entities;
 using Infrastructure.Context;
@@ -13,6 +13,7 @@ namespace Infrastructure.Repositories
         public async Task<PagedList<Booking>> GetPagedAsync(PagedQueryBase query, bool tracking = false)
         {
             return await GetAll(tracking)
+                        .Sort(query.SortOn, query.SortDirection)
                         .ToPagedListAsync(query);
         }
 
@@ -20,6 +21,7 @@ namespace Infrastructure.Repositories
         {
             return await Search(x => x.UserId == userId,
                                 tracking)
+                        .Sort(query.SortOn, query.SortDirection)
                         .ToPagedListAsync(query);
         }
 
@@ -27,6 +29,7 @@ namespace Infrastructure.Repositories
         {
             return await Search(x => x.WorkPlaceId == WorkPlaceId,
                                 tracking)
+                        .Sort(query.SortOn, query.SortDirection)
                         .ToPagedListAsync(query);
         }
 
@@ -35,6 +38,7 @@ namespace Infrastructure.Repositories
             return await Search(x => x.BookingStart > bookingDate
                                 || x.BookingEnd < bookingDate,
                                 tracking)
+                        .Sort(query.SortOn, query.SortDirection)
                         .ToPagedListAsync(query);
         }
 
@@ -43,6 +47,7 @@ namespace Infrastructure.Repositories
             return await Search(x => x.BookingStart > bookingEnd
                                 || x.BookingEnd < bookingStart,
                                 tracking)
+                        .Sort(query.SortOn, query.SortDirection)
                         .ToPagedListAsync(query);
         }
     }

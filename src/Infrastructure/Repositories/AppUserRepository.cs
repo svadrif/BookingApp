@@ -1,5 +1,5 @@
 ﻿using Application.Extentions;
-using Application.Interfaces;
+using Application.Interfaces.IRepositories;
 using Application.Pagination;
 using Domain.Entities;
 using Infrastructure.Context;
@@ -29,7 +29,9 @@ namespace Infrastructure.Repositories
         {
 
             return await GetAll(tracking)
+                        .Sort(query.SortOn, query.SortDirection)
                         .ToPagedListAsync(query);
         }
+
     }
 }

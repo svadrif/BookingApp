@@ -1,5 +1,7 @@
 ﻿using Application.DTOs.AppUserDTO;
-using Application.Interfaces;
+using Application.Interfaces.IRepositories;
+using Application.Interfaces.IServices;
+using Application.Pagination;
 using AutoMapper;
 using Domain.Entities;
 
@@ -23,10 +25,12 @@ namespace Infrastructure.Services
             return appUser.Id;
         }
 
-        public async Task<IEnumerable<GetAppUserDTO>> GetAllAsync()
+        public async Task<PagedList<GetAppUserDTO>> GetPagedAsync(PagedQueryBase query)
         {
-            var appUsers = _unitOfWork.AppUsers.GetAll(false);
-            return _mapper.Map<IEnumerable<GetAppUserDTO>>(appUsers);
+            var appUsers = await _unitOfWork.AppUsers.GetPagedAsync(query);
+            var mapUsers = _mapper.Map<List<GetAppUserDTO>>(appUsers);
+            var appUsersDTO = new PagedList<GetAppUserDTO>(mapUsers, appUsers.TotalCount, appUsers.CurrentPage, appUsers.PageSize);
+            return appUsersDTO;
         }
 
         public async Task<GetAppUserDTO> GetByIdAsync(Guid Id)

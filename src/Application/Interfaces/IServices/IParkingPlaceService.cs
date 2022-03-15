@@ -1,10 +1,11 @@
 ﻿using Application.DTOs.ParkingPlaceDTO;
+using Application.Pagination;
 
-namespace Application.Interfaces
+namespace Application.Interfaces.IServices
 {
     public interface IParkingPlaceService
     {
-        Task<IEnumerable<GetParkingPlaceDTO>> GetAllAsync();
+        Task<PagedList<GetParkingPlaceDTO>> GetPagedAsync(PagedQueryBase query);
         Task<GetParkingPlaceDTO> GetByIdAsync(Guid Id);
         Task<Guid> AddAsync(AddParkingPlaceDTO parkingPlaceDTO);
         Task<GetParkingPlaceDTO> UpdateAsync(UpdateParkingPlaceDTO parkingPlaceDTO);
