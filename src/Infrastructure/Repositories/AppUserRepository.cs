@@ -29,6 +29,7 @@ namespace Infrastructure.Repositories
         {
 
             return await GetAll(tracking)
+                        .Sort(query.SortOn, query.SortDirection)
                         .ToPagedListAsync(query);
         }
 

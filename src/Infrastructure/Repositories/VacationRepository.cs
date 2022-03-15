@@ -13,6 +13,7 @@ namespace Infrastructure.Repositories
         public async Task<PagedList<Vacation>> GetPagedAsync(PagedQueryBase query, bool tracking = false)
         {
             return await GetAll(tracking)
+                        .Sort(query.SortOn, query.SortDirection)
                         .ToPagedListAsync(query);
         }
 
@@ -20,6 +21,7 @@ namespace Infrastructure.Repositories
         {
             return await Search(x => x.UserId == userId,
                                 tracking)
+                        .Sort(query.SortOn, query.SortDirection)
                         .ToPagedListAsync(query);
         }
     }
