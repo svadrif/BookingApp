@@ -1,20 +1,9 @@
 using Application;
+using Application.Authentication;
 using Infrastructure;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
-using Application.Interfaces;
-using Telegram.Bot;
-using TelegramBot;
-using Application.Profiles;
-using Infrastructure;
-using Microsoft.OpenApi.Models;
-using Infrastructure.Repositories;
-using Application.DTOs.AppUserDTO;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using Application;
 
 Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -23,6 +12,7 @@ Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
             .CreateBootstrapLogger();
 
+JwtSettings _jwtSettings = new JwtSettings();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +22,7 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
     .ReadFrom.Configuration(context.Configuration)
     .ReadFrom.Services(services)
     .Enrich.FromLogContext());
+builder.Configuration.Bind(_jwtSettings);
 
 // Add services to the container.
 builder.Services.AddControllers().AddNewtonsoftJson();
@@ -39,60 +30,36 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "BookingApp API", Version = "v1" });
+    c.CustomSchemaIds(type => type.ToString());
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "BookingApp API", Version = "v1" });
-        c.CustomSchemaIds(type => type.ToString());
-        c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-        {
-            Description = "Add with Bearer _______",
-            Name = "Authorization",
-            In = ParameterLocation.Header,
-            Type = SecuritySchemeType.ApiKey,
-            Scheme = "Bearer"
-        });
-        c.AddSecurityRequirement(new OpenApiSecurityRequirement
-        {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                },
-            },
-            Array.Empty<string>()
-        },
+        Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
+                      Enter 'Bearer' [space] and then your token in the text input below.
+                      \r\n\r\nExample: 'Bearer 12345abcdef'",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
     });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    },
+                },
+                Array.Empty<string>()
+            },
+        });
 });
-
-IConfigurationSection appSettingsSection = builder.Configuration.GetSection("AppSettings");
-builder.Services.Configure<AppSettings>(appSettingsSection);
-AppSettings appSettings = appSettingsSection.Get<AppSettings>();
-var secretKey = Encoding.ASCII.GetBytes(appSettings.SecretKey);
 
 builder.Services.AddAuthorization();
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        // указывает, будет ли валидироваться издатель при валидации токена
-        ValidateIssuer = false,
-        // будет ли валидироваться потребитель токена
-        ValidateAudience = false,
-        // будет ли валидироваться время существования
-        ValidateLifetime = true,
-        // установка ключа безопасности
-        IssuerSigningKey = new SymmetricSecurityKey(secretKey),
-        // валидация ключа безопасности
-        ValidateIssuerSigningKey = true,
-    };
-});
 
 // Dependency injections
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -110,7 +77,8 @@ builder.Services.AddCors(options =>
     {
         builder
             .AllowAnyOrigin()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowAnyHeader();
     });
 });
 
@@ -135,7 +103,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseHttpsRedirection();
 
-app.UseAuthentication();   
+app.UseAuthentication();
 
 app.UseRouting();
 
@@ -145,9 +113,9 @@ app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
-/*    endpoints.MapControllerRoute(name: "tgwebhook",
-                                 pattern: $"api/TelegramBot",
-                                 new { controller = "TelegramBot", action = "Post" });*/
+    /*    endpoints.MapControllerRoute(name: "tgwebhook",
+                                     pattern: $"api/TelegramBot",
+                                     new { controller = "TelegramBot", action = "Post" });*/
     endpoints.MapControllers();
 });
 

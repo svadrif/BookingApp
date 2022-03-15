@@ -1,13 +1,16 @@
-﻿using Application.Interfaces;
+﻿using Application.Authentication;
+using Application.Interfaces;
 using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
 using Infrastructure.Context;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Infrastructure
 {
@@ -34,6 +37,7 @@ namespace Infrastructure
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
 
+            #region Services
             services.AddScoped(typeof(IVacationService), typeof(VacationService));
             services.AddScoped(typeof(IAppUserService), typeof(AppUserService));
             services.AddScoped(typeof(IBookingService), typeof(BookingService));
@@ -41,6 +45,37 @@ namespace Infrastructure
             services.AddScoped(typeof(IMapService), typeof(MapService));
             services.AddScoped(typeof(IOfficeService), typeof(OfficeService));
             services.AddScoped(typeof(IParkingPlaceService), typeof(ParkingPlaceService));
+            services.AddTransient<IAuthenticationService, AuthenticationService>();
+            #endregion
+
+            #region JWToken
+            services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        // указывает, будет ли валидироваться издатель при валидации токена
+                        ValidateIssuer = true,
+                        // будет ли валидироваться потребитель токена
+                        ValidateAudience = true,
+                        // будет ли валидироваться время существования
+                        ValidateLifetime = true,
+                        // установка ключа безопасности
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:secretKey"])),
+                        // валидация ключа безопасности
+                        ValidateIssuerSigningKey = true,
+                        ClockSkew = TimeSpan.Zero,
+                        ValidIssuer = configuration["JwtSettings:Issuer"],
+                        ValidAudience = configuration["JwtSettings:Audience"],
+                    };
+                });
+            #endregion
         }
     }
 }
