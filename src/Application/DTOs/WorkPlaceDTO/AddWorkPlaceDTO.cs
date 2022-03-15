@@ -6,7 +6,7 @@ namespace Application.DTOs.WorkPlaceDTO
     public class AddWorkPlaceDTO
     {
         [Required(ErrorMessage = "This field {0} is required")]
-        [StringLength(150, ErrorMessage = "The field {0} must be between {2} and {1} characters", MinimumLength = 2)]
+        [StringLength(150, ErrorMessage = "The field {0} must be between {2} and {1} characters", MinimumLength = 1)]
         public string Number { get; set; }
         public SeatsType Type { get; set; }
         public bool IsNextToWindow { get; set; }

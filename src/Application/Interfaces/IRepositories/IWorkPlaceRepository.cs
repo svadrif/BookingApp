@@ -1,7 +1,7 @@
 ﻿using Application.Pagination;
 using Domain.Entities;
 
-namespace Application.Interfaces
+namespace Application.Interfaces.IRepositories
 {
     public interface IWorkPlaceRepository : IGenericRepository<WorkPlace>, IPageable<WorkPlace>
     {

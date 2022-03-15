@@ -1,7 +1,7 @@
 ﻿using Application.Pagination;
 using Domain.Entities;
 
-namespace Application.Interfaces
+namespace Application.Interfaces.IRepositories
 {
     public interface IBookingRepository : IGenericRepository<Booking>, IPageable<Booking>
     {

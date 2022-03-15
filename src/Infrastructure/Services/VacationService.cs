@@ -1,5 +1,7 @@
 ﻿using Application.DTOs.VacationDTO;
-using Application.Interfaces;
+using Application.Interfaces.IRepositories;
+using Application.Interfaces.IServices;
+using Application.Pagination;
 using AutoMapper;
 using Domain.Entities;
 
@@ -7,7 +9,6 @@ namespace Infrastructure.Services
 {
     public class VacationService : IVacationService
     {
-
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
@@ -25,10 +26,12 @@ namespace Infrastructure.Services
             return vacation.Id;
         }
 
-        public async Task<IEnumerable<GetVacationDTO>> GetAllAsync()
+        public async Task<PagedList<GetVacationDTO>> GetPagedAsync(PagedQueryBase query)
         {
-            var vacations = _unitOfWork.Vacations.GetAll(false);
-            return _mapper.Map<IEnumerable<GetVacationDTO>>(vacations);
+            var vacations = await _unitOfWork.Vacations.GetPagedAsync(query);
+            var mapVacations = _mapper.Map<List<GetVacationDTO>>(vacations);
+            var vacationsDTO = new PagedList<GetVacationDTO>(mapVacations, vacations.TotalCount, vacations.CurrentPage, vacations.PageSize);
+            return vacationsDTO;
         }
 
         public async Task<GetVacationDTO> GetByIdAsync(Guid Id)

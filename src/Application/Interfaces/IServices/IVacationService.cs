@@ -1,10 +1,11 @@
 ﻿using Application.DTOs.VacationDTO;
+using Application.Pagination;
 
-namespace Application.Interfaces
+namespace Application.Interfaces.IServices
 {
     public interface IVacationService
     {
-        Task<IEnumerable<GetVacationDTO>> GetAllAsync();
+        Task<PagedList<GetVacationDTO>> GetPagedAsync(PagedQueryBase query);
         Task<GetVacationDTO> GetByIdAsync(Guid Id);
         Task<Guid> AddAsync(AddVacationDTO vacationDTO);
         Task<GetVacationDTO> UpdateAsync(UpdateVacationDTO vacationDTO);

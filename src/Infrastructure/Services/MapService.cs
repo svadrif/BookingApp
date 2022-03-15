@@ -1,5 +1,7 @@
 ﻿using Application.DTOs.MapDTO;
-using Application.Interfaces;
+using Application.Interfaces.IRepositories;
+using Application.Interfaces.IServices;
+using Application.Pagination;
 using AutoMapper;
 using Domain.Entities;
 
@@ -23,10 +25,12 @@ namespace Infrastructure.Services
             return map.Id;
         }
 
-        public async Task<IEnumerable<GetMapDTO>> GetAllAsync()
+        public async Task<PagedList<GetMapDTO>> GetPagedAsync(PagedQueryBase query)
         {
-            var maps = _unitOfWork.Maps.GetAll(false);
-            return _mapper.Map<IEnumerable<GetMapDTO>>(maps);
+            var maps = await _unitOfWork.Maps.GetPagedAsync(query);
+            var mapMaps = _mapper.Map<List<GetMapDTO>>(maps);
+            var mapsDTO = new PagedList<GetMapDTO>(mapMaps, maps.TotalCount, maps.CurrentPage, maps.PageSize);
+            return mapsDTO;
         }
 
         public async Task<GetMapDTO> GetByIdAsync(Guid Id)

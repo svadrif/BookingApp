@@ -1,10 +1,11 @@
 ﻿using Application.DTOs.AppUserDTO;
+using Application.Pagination;
 
-namespace Application.Interfaces
+namespace Application.Interfaces.IServices
 {
     public interface IAppUserService
     {
-        Task<IEnumerable<GetAppUserDTO>> GetAllAsync();
+        Task<PagedList<GetAppUserDTO>> GetPagedAsync(PagedQueryBase query);
         Task<GetAppUserDTO> GetByIdAsync(Guid Id);
         Task<Guid> AddAsync(AddAppUserDTO appUserDTO);
         Task<GetAppUserDTO> UpdateAsync(UpdateAppUserDTO appUserDTO);

@@ -1,5 +1,7 @@
 ﻿using Application.DTOs.ParkingPlaceDTO;
-using Application.Interfaces;
+using Application.Interfaces.IRepositories;
+using Application.Interfaces.IServices;
+using Application.Pagination;
 using AutoMapper;
 using Domain.Entities;
 
@@ -24,10 +26,12 @@ namespace Infrastructure.Services
             return parkingPlace.Id;
         }
 
-        public async Task<IEnumerable<GetParkingPlaceDTO>> GetAllAsync()
+        public async Task<PagedList<GetParkingPlaceDTO>> GetPagedAsync(PagedQueryBase query)
         {
-            var parkingPlaces = _unitOfWork.ParkingPlaces.GetAll(false);
-            return _mapper.Map<IEnumerable<GetParkingPlaceDTO>>(parkingPlaces);
+            var parkingPlaces = await _unitOfWork.ParkingPlaces.GetPagedAsync(query);
+            var mapParkingPlaces = _mapper.Map<List<GetParkingPlaceDTO>>(parkingPlaces);
+            var parkingPlacesDTO = new PagedList<GetParkingPlaceDTO>(mapParkingPlaces, parkingPlaces.TotalCount, parkingPlaces.CurrentPage, parkingPlaces.PageSize);
+            return parkingPlacesDTO;
         }
 
         public async Task<GetParkingPlaceDTO> GetByIdAsync(Guid Id)

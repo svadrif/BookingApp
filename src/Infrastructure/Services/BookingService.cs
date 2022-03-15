@@ -1,5 +1,7 @@
 ﻿using Application.DTOs.BookingDTO;
-using Application.Interfaces;
+using Application.Interfaces.IRepositories;
+using Application.Interfaces.IServices;
+using Application.Pagination;
 using AutoMapper;
 using Domain.Entities;
 
@@ -24,10 +26,12 @@ namespace Infrastructure.Services
             return booking.Id;
         }
 
-        public async Task<IEnumerable<GetBookingDTO>> GetAllAsync()
+        public async Task<PagedList<GetBookingDTO>> GetPagedAsync(PagedQueryBase query)
         {
-            var bookings = _unitOfWork.Bookings.GetAll(false);
-            return _mapper.Map<IEnumerable<GetBookingDTO>>(bookings);
+            var bookings = await _unitOfWork.Bookings.GetPagedAsync(query);
+            var mapBookings = _mapper.Map<List<GetBookingDTO>>(bookings);
+            var bookingsDTO = new PagedList<GetBookingDTO>(mapBookings, bookings.TotalCount, bookings.CurrentPage, bookings.PageSize);
+            return bookingsDTO;
         }
 
         public async Task<GetBookingDTO> GetByIdAsync(Guid Id)

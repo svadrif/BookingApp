@@ -1,5 +1,5 @@
 ﻿using Application.Extentions;
-using Application.Interfaces;
+using Application.Interfaces.IRepositories;
 using Application.Pagination;
 using Domain.Entities;
 using Infrastructure.Context;
