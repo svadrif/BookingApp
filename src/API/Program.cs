@@ -4,6 +4,8 @@ using Infrastructure;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
+using Telegram.Bot;
+using TelegramBot;
 
 Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -65,11 +67,11 @@ builder.Services.AddAuthorization();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 
-//builder.Services.AddTelegramBot();
+builder.Services.AddTelegramBot();
 
-/*builder.Services.AddHttpClient("tgwebhook")
+builder.Services.AddHttpClient("tgwebhook")
                 .AddTypedClient<ITelegramBotClient>(httpClient
-                    => new TelegramBotClient(builder.Configuration["BotToken"], httpClient));*/
+                    => new TelegramBotClient(builder.Configuration["BotToken"], httpClient));
 
 builder.Services.AddCors(options =>
 {
@@ -113,9 +115,9 @@ app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
-    /*    endpoints.MapControllerRoute(name: "tgwebhook",
-                                     pattern: $"api/TelegramBot",
-                                     new { controller = "TelegramBot", action = "Post" });*/
+    endpoints.MapControllerRoute(name: "tgwebhook",
+                                    pattern: $"api/TelegramBot",
+                                    new { controller = "TelegramBot", action = "Post" });
     endpoints.MapControllers();
 });
 
