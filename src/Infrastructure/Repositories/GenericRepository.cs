@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces.IRepositories;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
 namespace Infrastructure.Repositories
@@ -9,10 +10,14 @@ namespace Infrastructure.Repositories
     {
         protected readonly ApplicationDbContext _context;
         protected readonly DbSet<T> DbSet;
+        protected readonly ILogger _logger;
 
-        protected GenericRepository(ApplicationDbContext context)
+        protected GenericRepository(
+            ApplicationDbContext context,
+            ILogger logger)
         {
             _context = context;
+            _logger = logger;
             DbSet = context.Set<T>();
         }
 

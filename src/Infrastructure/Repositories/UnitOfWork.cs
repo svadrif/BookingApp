@@ -1,11 +1,13 @@
 ﻿using Application.Interfaces;
 using Application.Interfaces.IRepositories;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
         private readonly IApplicationDbContext _context;
+        private readonly ILogger _logger;
         public IAppUserRepository AppUsers { get; private set; }
         public IMapRepository Maps { get; private set; }
         public IOfficeRepository Offices { get; private set; }
@@ -21,7 +23,8 @@ namespace Infrastructure.Repositories
             IBookingRepository bookings,
             IParkingPlaceRepository parkingPlaces,
             IVacationRepository vacations,
-            IWorkPlaceRepository workPlaces)
+            IWorkPlaceRepository workPlaces,
+            ILoggerFactory loggerFactory)
         {
             _context = context;
             AppUsers = appUsers;
@@ -31,6 +34,7 @@ namespace Infrastructure.Repositories
             ParkingPlaces = parkingPlaces;
             Vacations = vacations;
             WorkPlaces = workPlaces;
+            _logger = loggerFactory.CreateLogger("db_logs");
         }
 
         public async Task<int> CompleteAsync(CancellationToken cancellationToken = new CancellationToken())
