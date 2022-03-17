@@ -51,9 +51,6 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("LastCommandId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -224,6 +221,30 @@ namespace Infrastructure.Migrations
                     b.ToTable("ParkingPlaces");
                 });
 
+            modelBuilder.Entity("Domain.Entities.State", b =>
+                {
+                    b.Property<Guid>("StateId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("LastCommand")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StateNumber")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("StateId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("States");
+                });
+
             modelBuilder.Entity("Domain.Entities.Vacation", b =>
                 {
                     b.Property<Guid>("Id")
@@ -349,6 +370,17 @@ namespace Infrastructure.Migrations
                     b.Navigation("Office");
                 });
 
+            modelBuilder.Entity("Domain.Entities.State", b =>
+                {
+                    b.HasOne("Domain.Entities.AppUser", "AppUser")
+                        .WithOne("State")
+                        .HasForeignKey("Domain.Entities.State", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+                });
+
             modelBuilder.Entity("Domain.Entities.Vacation", b =>
                 {
                     b.HasOne("Domain.Entities.AppUser", "User")
@@ -374,6 +406,9 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.AppUser", b =>
                 {
                     b.Navigation("Bookings");
+
+                    b.Navigation("State")
+                        .IsRequired();
 
                     b.Navigation("Vacations");
                 });

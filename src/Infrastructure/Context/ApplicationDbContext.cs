@@ -13,6 +13,7 @@ namespace Infrastructure.Context
 
         }
 
+        public DbSet<State> States { get; set; }
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Map> Maps { get; set; }
