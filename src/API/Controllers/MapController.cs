@@ -1,11 +1,12 @@
 ﻿using Application.DTOs.MapDTO;
 using Application.Interfaces.IServices;
 using Application.Pagination;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MapController : ControllerBase
@@ -17,6 +18,7 @@ namespace API.Controllers
             _mapService = mapService;
         }
 
+        [Authorize(Roles = "MapEditor")]
         [HttpPost]
         public async Task<IActionResult> AddMap([FromBody] AddMapDTO newMap)
         {
@@ -45,6 +47,7 @@ namespace API.Controllers
             return Ok(map);
         }
 
+        [Authorize(Roles = "MapEditor")]
         [HttpPut("{id:Guid}")]
         public async Task<IActionResult> UpdateMap([FromRoute] Guid id, [FromBody] UpdateMapDTO updatedMap)
         {
@@ -52,6 +55,7 @@ namespace API.Controllers
             return Ok(map);
         }
 
+        [Authorize(Roles = "MapEditor")]
         [HttpDelete("{id:Guid}")]
         public async Task<IActionResult> DeleteMap([FromRoute] Guid id)
         {

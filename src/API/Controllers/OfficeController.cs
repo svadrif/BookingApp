@@ -1,10 +1,12 @@
 ﻿using Application.DTOs.OfficeDTO;
 using Application.Interfaces.IServices;
 using Application.Pagination;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class OfficeController : ControllerBase
@@ -16,6 +18,7 @@ namespace API.Controllers
             _officeService = officeService;
         }
 
+        [Authorize(Roles = "MapEditor")]
         [HttpPost]
         public async Task<IActionResult> AddOffice([FromBody] AddOfficeDTO newOffice)
         {
@@ -37,6 +40,7 @@ namespace API.Controllers
             return Ok(office);
         }
 
+        [Authorize(Roles = "MapEditor")]
         [HttpDelete("{id:Guid}")]
         public async Task<IActionResult> DeleteOffice([FromRoute] Guid id)
         {
