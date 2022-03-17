@@ -44,6 +44,7 @@ namespace API.Controllers
         [HttpPut("{id:Guid}")]
         public async Task<IActionResult> UpdateVacation([FromRoute] Guid id, [FromBody] UpdateVacationDTO updateVacation)
         {
+            updateVacation.Id = id;
             var vacation = await _vacationService.UpdateAsync(updateVacation);
             return Ok(vacation);
         }

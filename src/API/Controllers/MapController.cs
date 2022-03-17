@@ -51,6 +51,7 @@ namespace API.Controllers
         [HttpPut("{id:Guid}")]
         public async Task<IActionResult> UpdateMap([FromRoute] Guid id, [FromBody] UpdateMapDTO updatedMap)
         {
+            updatedMap.Id = id;
             var map = await _mapService.UpdateAsync(updatedMap);
             return Ok(map);
         }

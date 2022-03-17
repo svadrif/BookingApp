@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Application.DTOs.OfficeDTO
 {
     public class UpdateOfficeDTO
     {
         [Required(ErrorMessage = "This field {0} is required")]
+        [JsonIgnore]
         public Guid Id { get; set; }
 
         [Required(ErrorMessage = "This field {0} is required")]

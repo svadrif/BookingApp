@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Application.DTOs.BookingDTO
 {
     public class UpdateBookingDTO
     {
         [Required(ErrorMessage = "This field {0} is required")]
+        [JsonIgnore]
         public Guid Id { get; set; }
         public DateTimeOffset BookingStart { get; set; }
         public DateTimeOffset BookingEnd { get; set; }

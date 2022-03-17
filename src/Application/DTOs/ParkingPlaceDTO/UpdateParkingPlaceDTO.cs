@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Application.DTOs.ParkingPlaceDTO
 {
     public class UpdateParkingPlaceDTO
     {
         [Required(ErrorMessage = "This field {0} is required")]
+        [JsonIgnore]
         public Guid Id { get; set; }
 
         [Required(ErrorMessage = "This field {0} is required")]
