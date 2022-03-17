@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -10,7 +11,7 @@ namespace Domain.Entities
     {
         public Guid StateId { get; set; }
         public string LastCommand { get; set; } = string.Empty;
-        public int StateNumber { get; set; }
+        public UserState StateNumber { get; set; }
 
         /* EF Relation */
         [ForeignKey("AppUser")]
