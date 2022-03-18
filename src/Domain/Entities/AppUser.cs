@@ -7,9 +7,8 @@ namespace Domain.Entities
 {
 
     public class AppUser : BaseEntity<Guid>
-    {
+    {      
         public long TelegramId { get; set; }
-        public Guid LastCommandId { get; set; }
         public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -24,6 +23,7 @@ namespace Domain.Entities
         /* EF Relation */
         public IEnumerable<Vacation> Vacations { get; set; }
         public IEnumerable<Booking> Bookings { get; set; }
+        public State State { get; set; }
 
     }
 }

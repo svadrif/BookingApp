@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Infrastructure.Migrations
 {
-    public partial class Initial : Migration
+    public partial class EditMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,21 +15,20 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TelegramId = table.Column<long>(type: "bigint", nullable: false),
-                    LastCommandId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TelephoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Role = table.Column<int>(type: "int", nullable: false),
-                    EmploymentStart = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EmploymentEnd = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EmploymentStart = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    EmploymentEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     PrefferdWorkPlaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    isDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     ModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -36,7 +36,7 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Office",
+                name: "Offices",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -47,7 +47,27 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Office", x => x.Id);
+                    table.PrimaryKey("PK_Offices", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "States",
+                columns: table => new
+                {
+                    StateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LastCommand = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StateNumber = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_States", x => x.StateId);
+                    table.ForeignKey(
+                        name: "FK_States_AppUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AppUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -55,8 +75,8 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    VacationStart = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    VacationEnd = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    VacationStart = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    VacationEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -80,17 +100,17 @@ namespace Infrastructure.Migrations
                     HasConfRoom = table.Column<bool>(type: "bit", nullable: false),
                     OfficeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     ModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Maps", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Maps_Office_OfficeId",
+                        name: "FK_Maps_Offices_OfficeId",
                         column: x => x.OfficeId,
-                        principalTable: "Office",
+                        principalTable: "Offices",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -107,9 +127,9 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_ParkingPlaces", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ParkingPlaces_Office_OfficeId",
+                        name: "FK_ParkingPlaces_Offices_OfficeId",
                         column: x => x.OfficeId,
-                        principalTable: "Office",
+                        principalTable: "Offices",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -121,7 +141,7 @@ namespace Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Number = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
-                    NextToWindow = table.Column<bool>(type: "bit", nullable: false),
+                    IsNextToWindow = table.Column<bool>(type: "bit", nullable: false),
                     HasPC = table.Column<bool>(type: "bit", nullable: false),
                     HasMonitor = table.Column<bool>(type: "bit", nullable: false),
                     HasKeyboard = table.Column<bool>(type: "bit", nullable: false),
@@ -130,9 +150,9 @@ namespace Infrastructure.Migrations
                     IsBlocked = table.Column<bool>(type: "bit", nullable: false),
                     MapId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     ModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -150,8 +170,8 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    BookingStart = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BookingEnd = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BookingStart = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    BookingEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     IsRecurring = table.Column<bool>(type: "bit", nullable: false),
                     Frequancy = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
@@ -159,9 +179,9 @@ namespace Infrastructure.Migrations
                     ParkingPlaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     WorkPlaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     ModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -211,6 +231,12 @@ namespace Infrastructure.Migrations
                 column: "OfficeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_States_UserId",
+                table: "States",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Vacations_UserId",
                 table: "Vacations",
                 column: "UserId");
@@ -225,6 +251,9 @@ namespace Infrastructure.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Bookings");
+
+            migrationBuilder.DropTable(
+                name: "States");
 
             migrationBuilder.DropTable(
                 name: "Vacations");
@@ -242,7 +271,7 @@ namespace Infrastructure.Migrations
                 name: "Maps");
 
             migrationBuilder.DropTable(
-                name: "Office");
+                name: "Offices");
         }
     }
 }
