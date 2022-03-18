@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220217075040_Initial")]
-    partial class Initial
+    [Migration("20220317173123_EditMigration")]
+    partial class EditMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,25 +33,25 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("EmploymentEnd")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("EmploymentEnd")
+                        .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTime>("EmploymentStart")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("EmploymentStart")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("LastCommandId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -60,8 +60,8 @@ namespace Infrastructure.Migrations
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("ModifiedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<Guid?>("PrefferdWorkPlaceId")
                         .HasColumnType("uniqueidentifier");
@@ -80,9 +80,6 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.ToTable("AppUsers");
@@ -94,17 +91,17 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("BookingEnd")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("BookingEnd")
+                        .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTime>("BookingStart")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("BookingStart")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Frequancy")
                         .IsRequired()
@@ -119,8 +116,8 @@ namespace Infrastructure.Migrations
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("ModifiedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<Guid?>("ParkingPlaceId")
                         .HasColumnType("uniqueidentifier");
@@ -151,8 +148,8 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<int>("Floor")
                         .HasColumnType("int");
@@ -166,8 +163,8 @@ namespace Infrastructure.Migrations
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("ModifiedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<Guid>("OfficeId")
                         .HasColumnType("uniqueidentifier");
@@ -203,7 +200,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Office");
+                    b.ToTable("Offices");
                 });
 
             modelBuilder.Entity("Domain.Entities.ParkingPlace", b =>
@@ -226,6 +223,30 @@ namespace Infrastructure.Migrations
                     b.ToTable("ParkingPlaces");
                 });
 
+            modelBuilder.Entity("Domain.Entities.State", b =>
+                {
+                    b.Property<Guid>("StateId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("LastCommand")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StateNumber")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("StateId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("States");
+                });
+
             modelBuilder.Entity("Domain.Entities.Vacation", b =>
                 {
                     b.Property<Guid>("Id")
@@ -235,11 +256,11 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("VacationEnd")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("VacationEnd")
+                        .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTime?>("VacationStart")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("VacationStart")
+                        .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
 
@@ -257,8 +278,8 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("HasHeadset")
                         .HasColumnType("bit");
@@ -278,17 +299,17 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("IsBlocked")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsNextToWindow")
+                        .HasColumnType("bit");
+
                     b.Property<Guid>("MapId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("NextToWindow")
-                        .HasColumnType("bit");
+                    b.Property<DateTimeOffset?>("ModifiedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Number")
                         .IsRequired()
@@ -351,6 +372,17 @@ namespace Infrastructure.Migrations
                     b.Navigation("Office");
                 });
 
+            modelBuilder.Entity("Domain.Entities.State", b =>
+                {
+                    b.HasOne("Domain.Entities.AppUser", "AppUser")
+                        .WithOne("State")
+                        .HasForeignKey("Domain.Entities.State", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+                });
+
             modelBuilder.Entity("Domain.Entities.Vacation", b =>
                 {
                     b.HasOne("Domain.Entities.AppUser", "User")
@@ -376,6 +408,9 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.AppUser", b =>
                 {
                     b.Navigation("Bookings");
+
+                    b.Navigation("State")
+                        .IsRequired();
 
                     b.Navigation("Vacations");
                 });
