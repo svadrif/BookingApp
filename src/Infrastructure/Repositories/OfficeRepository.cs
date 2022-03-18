@@ -4,12 +4,13 @@ using Application.Pagination;
 using Domain.Entities;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace Infrastructure.Repositories
 {
     public class OfficeRepository : GenericRepository<Office>, IOfficeRepository
     {
-        public OfficeRepository(ApplicationDbContext context) : base(context) { }
+        public OfficeRepository(ApplicationDbContext context, ILogger logger) : base(context, logger) { }
 
         public async Task<PagedList<Office>> GetPagedAsync(PagedQueryBase query, bool tracking = false)
         {

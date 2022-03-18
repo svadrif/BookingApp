@@ -4,7 +4,7 @@ using Application.Pagination;
 using Domain.Entities;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace Infrastructure.Repositories
 {
@@ -17,9 +17,17 @@ namespace Infrastructure.Repositories
 
         public async Task<AppUser> GetByTelegramIdAsync(long telegramId, bool tracking = false)
         {
-            return await Search(x => x.TelegramId == telegramId,
-                                tracking)
-                        .FirstOrDefaultAsync();
+            try
+            {
+                return await Search(x => x.TelegramId == telegramId,
+                                    tracking)
+                            .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "{Repo} GetByTelegramIdAsync method has generated an error", typeof(AppUserRepository));
+                return new AppUser();
+            }
         }
 
         public async Task<AppUser> GetByEmailAsync(string email, bool tracking = false)
@@ -32,7 +40,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Repo} GetByEmailAsync method has generated an error", typeof(AppUserRepository));
+                Log.Error(ex, "{Repo} GetByEmailAsync method has generated an error", typeof(AppUserRepository));
                 return new AppUser();
             }
         }
@@ -47,7 +55,7 @@ namespace Infrastructure.Repositories
             }
             catch(Exception ex)
             {
-                _logger.LogError(ex, "{Repo} GetPagedAsync method has generated an error", typeof(AppUserRepository));
+                Log.Error(ex, "{Repo} GetPagedAsync method has generated an error", typeof(AppUserRepository));
                 return new PagedList<AppUser>(new List<AppUser>(),0,0,0);
             }
         }

@@ -1,7 +1,7 @@
 ﻿using Application.Interfaces.IRepositories;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using System.Linq.Expressions;
 
 namespace Infrastructure.Repositories

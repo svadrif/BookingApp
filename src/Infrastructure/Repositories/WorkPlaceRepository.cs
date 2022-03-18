@@ -3,12 +3,13 @@ using Application.Interfaces.IRepositories;
 using Application.Pagination;
 using Domain.Entities;
 using Infrastructure.Context;
+using Serilog;
 
 namespace Infrastructure.Repositories
 {
     public class WorkPlaceRepository : GenericRepository<WorkPlace>, IWorkPlaceRepository
     {
-        public WorkPlaceRepository(ApplicationDbContext context) : base(context) { }
+        public WorkPlaceRepository(ApplicationDbContext context, ILogger logger) : base(context, logger) { }
 
         public async Task<PagedList<WorkPlace>> GetPagedAsync(PagedQueryBase query, bool tracking = false)
         {

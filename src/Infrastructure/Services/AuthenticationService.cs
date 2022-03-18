@@ -29,8 +29,6 @@ namespace Infrastructure.Services
         {
             AppUserAuthResponse response = new AppUserAuthResponse();
 
-            if (Id == Guid.Empty) return null;
-
             var appUser = await _unitOfWork.AppUsers.GetByIdAsync(Id);
 
             if (appUser != null)

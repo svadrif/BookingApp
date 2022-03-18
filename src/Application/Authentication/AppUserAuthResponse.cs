@@ -6,5 +6,7 @@ namespace Application.Authentication
     {
         public GetAppUserDTO GetAppUserDTO { get; set; }
         public string JWToken { get; set; } = string.Empty;
+        public bool Success { get; set; }
+        public List<string> Errors { get; set; }
     }
 }

@@ -3,12 +3,13 @@ using Application.Interfaces.IRepositories;
 using Application.Pagination;
 using Domain.Entities;
 using Infrastructure.Context;
+using Serilog;
 
 namespace Infrastructure.Repositories
 {
     public class BookingRepository : GenericRepository<Booking>, IBookingRepository
     {
-        public BookingRepository(ApplicationDbContext context) : base(context) { }
+        public BookingRepository(ApplicationDbContext context, ILogger logger) : base(context, logger) { }
 
         public async Task<PagedList<Booking>> GetPagedAsync(PagedQueryBase query, bool tracking = false)
         {

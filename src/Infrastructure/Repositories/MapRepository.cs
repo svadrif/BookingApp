@@ -3,12 +3,13 @@ using Application.Interfaces.IRepositories;
 using Application.Pagination;
 using Domain.Entities;
 using Infrastructure.Context;
+using Serilog;
 
 namespace Infrastructure.Repositories
 {
     public class MapRepository : GenericRepository<Map>, IMapRepository
     {
-        public MapRepository(ApplicationDbContext context) : base(context) { }
+        public MapRepository(ApplicationDbContext context, ILogger logger) : base(context, logger) { }
 
         public async Task<PagedList<Map>> GetPagedAsync(PagedQueryBase query, bool tracking = false)
         {

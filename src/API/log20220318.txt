@@ -1,0 +1,8 @@
+2022-03-18 03:52:06.095 +03:00 [INF] Starting an app
+2022-03-18 04:16:01.946 +03:00 [INF] Starting an app
+2022-03-18 04:25:02.762 +03:00 [INF] Starting an app
+2022-03-18 04:36:15.502 +03:00 [INF] Starting an app
+2022-03-18 04:39:58.991 +03:00 [INF] Starting an app
+2022-03-18 04:40:36.681 +03:00 [INF] Starting an app
+2022-03-18 04:47:37.192 +03:00 [INF] Starting an app
+2022-03-18 04:48:19.006 +03:00 [INF] Starting an app
