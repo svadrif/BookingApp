@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Domain.Enums
 {
-    public class UserState
+    public enum UserState
     {
         SelectingAction,
 
