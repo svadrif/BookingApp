@@ -12,10 +12,10 @@ namespace TelegramBot.Helpers
 
             foreach (var button in buttons)
             {
-                currentColumn++;
                 columns.Add(button);
+                currentColumn++;
 
-                if (currentColumn >= totalColumns)
+                if (currentColumn < totalColumns)
                 {
                     continue;
                 }
