@@ -26,6 +26,7 @@ namespace Infrastructure
             services.AddScoped<IParkingPlaceRepository, ParkingPlaceRepository>();
             services.AddScoped<IVacationRepository, VacationRepository>();
             services.AddScoped<IWorkPlaceRepository, WorkPlaceRepository>();
+            services.AddScoped<IStateRepository, StateRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             #endregion
@@ -45,6 +46,7 @@ namespace Infrastructure
             services.AddScoped(typeof(IMapService), typeof(MapService));
             services.AddScoped(typeof(IOfficeService), typeof(OfficeService));
             services.AddScoped(typeof(IParkingPlaceService), typeof(ParkingPlaceService));
+            services.AddScoped(typeof(IStateService), typeof(StateService));
             services.AddTransient<IAuthenticationService, AuthenticationService>();
             #endregion
 
