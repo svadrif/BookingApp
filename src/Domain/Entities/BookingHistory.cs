@@ -3,32 +3,32 @@ using Domain.Common;
 
 namespace Domain.Entities
 {
-    public class BookingHistory : BaseEntity<Guid>
+    public class BookingHistory : IHasKey<Guid>
     {
         public Guid Id { get; set; }
+
+        public string? Country { get; set; } = string.Empty;
+        public string? City { get; set; } = string.Empty;
+        public Guid? OfficeId { get; set; } = null;
         
-        public string? Country { get; set; }
-        public string? City { get; set; }
-        public Guid? OfficeId { get; set; }
+        public int? Floor { get; set; } = null;
+        public bool? HasKitchen { get; set; } = null;
+        public bool? HasConfRoom { get; set; } = null;
+        public Guid? MapId { get; set; } = null;
         
-        public int? Floor { get; set; }
-        public bool? HasKitchen { get; set; }
-        public bool? HasConfRoom { get; set; }
-        public Guid? MapId { get; set; }
+        public bool? IsNextToWindow { get; set; } = null;
+        public bool? HasPC { get; set; } = null;
+        public bool? HasMonitor { get; set; } = null;
+        public bool? HasKeyboard { get; set; } = null;
+        public bool? HasMouse { get; set; } = null;
+        public bool? HasHeadset { get; set; } = null;
+        public Guid? WorkPlaceId { get; set; } = null;
         
-        public bool? IsNextToWindow { get; set; }
-        public bool? HasPC { get; set; }
-        public bool? HasMonitor { get; set; }
-        public bool? HasKeyboard { get; set; }
-        public bool? HasMouse { get; set; }
-        public bool? HasHeadset { get; set; }
-        public Guid? WorkPlaceId { get; set; }
-        
-        public DateTimeOffset? BookingStart { get; set; }
-        public DateTimeOffset? BookingEnd { get; set; }
-        public bool? IsRecurring { get; set; }
+        public DateTimeOffset? BookingStart { get; set; } = null;
+        public DateTimeOffset? BookingEnd { get; set; } = null;
+        public bool? IsRecurring { get; set; } = null;
         public string? Frequancy { get; set; } = string.Empty;
-        public Guid? ParkingPlaceId { get; set; }
+        public Guid? ParkingPlaceId { get; set; } = null;
         
         //EF relation
         public Guid UserId { get; set; }
