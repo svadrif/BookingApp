@@ -9,9 +9,9 @@ namespace Infrastructure.Repositories
     {
         public StateRepository(ApplicationDbContext context) : base(context) { }
 
-        public async Task<State> GetByUserIdAsync(Guid id, bool tracking = false)
+        public async Task<State> GetByUserIdAsync(Guid userId, bool tracking = false)
         {
-            return await Search(x => x.UserId == id,
+            return await Search(x => x.UserId == userId,
                                 tracking)
                         .FirstOrDefaultAsync();
         }
