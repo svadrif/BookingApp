@@ -10,6 +10,7 @@ namespace Application.Interfaces.IServices
         Task<Guid> AddAsync(AddBookingDTO bookingDTO);
         Task<GetBookingDTO> UpdateAsync(UpdateBookingDTO bookingDTO);
         Task<bool> RemoveAsync(Guid Id);
-        Task<IEnumerable<GetBookingDTO>> SearchByUserIdAsync(Guid UserId);
+        Task<PagedList<GetBookingDTO>> SearchByUserIdAsync(Guid userId, PagedQueryBase query);
+        Task<PagedList<GetBookingDTO>> SearchByWorkPlaceIdAsync(Guid workPlaceId, PagedQueryBase query);
     }
 }
