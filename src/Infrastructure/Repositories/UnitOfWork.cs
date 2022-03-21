@@ -1,6 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Interfaces.IRepositories;
-using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace Infrastructure.Repositories
 {
@@ -39,7 +39,7 @@ namespace Infrastructure.Repositories
             WorkPlaces = workPlaces;
             States = states;
             BookingHistories = bookingHistories;
-            _logger = loggerFactory.CreateLogger("db_logs");
+            _logger = logger.CreateLogger("db_logs");
         }
 
         public async Task<int> CompleteAsync(CancellationToken cancellationToken = new CancellationToken())
