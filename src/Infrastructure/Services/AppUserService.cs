@@ -79,25 +79,5 @@ namespace Infrastructure.Services
             await _unitOfWork.CompleteAsync();
             return _mapper.Map<GetAppUserDTO>(appUser);
         }
-
-        public async Task<State> GetStateByTelegramIdAsync(long telegramId)
-        {
-            var user = await _unitOfWork.AppUsers.GetByTelegramIdAsync(telegramId);
-            var state = await _stateService.GetByUserIdAsync(user.Id);
-            return state;
-        }
-
-        public async Task<State> UpdateUserStateAsync(State state)
-        {
-            await _stateService.UpdateAsync(state);
-            return state;
-        }
-
-        public async Task<BookingHistory> GetBookingHistoryByTelegramIdAsync(long telegramId)
-        {
-            var user = await _unitOfWork.AppUsers.GetByTelegramIdAsync(telegramId);
-            var bookingHistory = await _historyService.GetByUserIdAsync(user.Id);
-            return bookingHistory;
-        }
     }
 }
