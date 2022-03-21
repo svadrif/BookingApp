@@ -61,5 +61,15 @@ namespace Infrastructure.Services
             await _unitOfWork.CompleteAsync();
             return _mapper.Map<GetOfficeDTO>(office);
         }
+
+        public async Task<PagedList<string>> GetCountriesAsync(PagedQueryBase query)
+        {
+            return await _unitOfWork.Offices.GetPagedCountriesAsync(query);
+        }
+
+        public async Task<PagedList<string>> GetCitiesAsync(string country, PagedQueryBase query)
+        {
+            return await _unitOfWork.Offices.GetPagedCitiesByCountryAsync(country, query);
+        }
     }
 }
