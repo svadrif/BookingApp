@@ -31,13 +31,16 @@ namespace TelegramBot.Handlers
             switch (state.StateNumber)
             {
                 case UserState.NotAuthorized:
+                    #region NotAuthorized
                     await StartCommand.ExecuteAsync(callback, botClient);
 
                     state.StateNumber = UserState.SelectingAction;
                     await stateService.UpdateAsync(state);
                     return;
+                    #endregion
 
                 case UserState.SelectingAction:
+                    #region SelectingAction
                     switch (callback.Data)
                     {
                         case "New Booking":
@@ -48,13 +51,15 @@ namespace TelegramBot.Handlers
                             await stateService.UpdateAsync(state);
                             return;
 
-                        case "My  Bookings":
+                        case "My Bookings":
 
                             return;
                     }
                     return;
+                    #endregion
 
                 case UserState.SelectingCountry:
+                    #region SelectingCountry
                     await SendCitiesCommand.ExecuteAsync(callback, botClient, officeService);
 
                     state.LastCommand = callback.Data;
@@ -64,6 +69,20 @@ namespace TelegramBot.Handlers
                     history.Country = callback.Data;
                     await historyService.UpdateAsync(history);
                     return;
+                    #endregion
+
+                case UserState.SelectingCity:
+                    #region SelectingCity
+                    await SendOfficesCommand.ExecuteAsync(callback, botClient, officeService, state.LastCommand);
+
+                    state.LastCommand = callback.Data;
+                    state.StateNumber = UserState.SelectingOffice;
+                    await stateService.UpdateAsync(state);
+
+                    history.City = callback.Data;
+                    await historyService.UpdateAsync(history);
+                    return;
+                    #endregion
             }
         }
     }
