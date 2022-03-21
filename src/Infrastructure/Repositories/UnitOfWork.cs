@@ -13,6 +13,7 @@ namespace Infrastructure.Repositories
         public IParkingPlaceRepository ParkingPlaces { get; private set; }
         public IVacationRepository Vacations { get; private set; }
         public IWorkPlaceRepository WorkPlaces { get; private set; }
+        public IStateRepository States { get; private set; }
         public IBookingHistoryRepository BookingHistories { get; private set; }
 
         public UnitOfWork(IApplicationDbContext context,
@@ -23,6 +24,7 @@ namespace Infrastructure.Repositories
             IParkingPlaceRepository parkingPlaces,
             IVacationRepository vacations,
             IWorkPlaceRepository workPlaces, 
+            IStateRepository states)
             IBookingHistoryRepository bookingHistories)
         {
             _context = context;
@@ -33,6 +35,7 @@ namespace Infrastructure.Repositories
             ParkingPlaces = parkingPlaces;
             Vacations = vacations;
             WorkPlaces = workPlaces;
+            States = states;
             BookingHistories = bookingHistories;
         }
 
