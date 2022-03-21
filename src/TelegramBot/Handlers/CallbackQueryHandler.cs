@@ -18,6 +18,7 @@ namespace TelegramBot.Handlers
         {
             var user = await userService.GetByTelegramIdAsync(callback.From.Id);
             var state = await stateService.GetByUserIdAsync(user.Id);
+            var history = await historyService.GetByUserIdAsync(user.Id);
             switch (state.StateNumber)
             {
                 case UserState.SelectingAction:
@@ -35,6 +36,17 @@ namespace TelegramBot.Handlers
 
                             return;
                     }
+                    return;
+
+                case UserState.SelectingCountry:
+                    await SendCitiesCommand.ExecuteAsync(callback, botClient, officeService);
+
+                    state.LastCommand = callback.Data;
+                    state.StateNumber = UserState.SelectingCity;
+                    await stateService.UpdateAsync(state);
+
+                    history.Country = callback.Data;
+                    await historyService.UpdateAsync(history);
                     return;
             }
         }
