@@ -87,6 +87,12 @@ namespace Infrastructure.Services
             return state;
         }
 
+        public async Task<State> UpdateUserStateAsync(State state)
+        {
+            await _stateService.UpdateAsync(state);
+            return state;
+        }
+
         public async Task<BookingHistory> GetBookingHistoryByTelegramIdAsync(long telegramId)
         {
             var user = await _unitOfWork.AppUsers.GetByTelegramIdAsync(telegramId);
