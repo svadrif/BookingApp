@@ -55,7 +55,7 @@ namespace Infrastructure.Repositories
             return await Search(x => x.Country == country,
                                 tracking)
                         .Sort(query.SortOn, query.SortDirection)
-                        .Select(x => x.Country)
+                        .Select(x => x.City)
                         .Distinct()
                         .ToPagedListAsync(query);
         }
