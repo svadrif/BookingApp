@@ -7,6 +7,7 @@ namespace Application.Interfaces.IServices
     {
         Task<PagedList<GetAppUserDTO>> GetPagedAsync(PagedQueryBase query);
         Task<GetAppUserDTO> GetByIdAsync(Guid Id);
+        Task<GetAppUserDTO> GetByTelegramIdAsync(long telegramId);
         Task<Guid> AddAsync(AddAppUserDTO appUserDTO);
         Task<GetAppUserDTO> UpdateAsync(UpdateAppUserDTO appUserDTO);
         Task<bool> RemoveAsync(Guid Id);

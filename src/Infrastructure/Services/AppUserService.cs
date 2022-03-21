@@ -39,6 +39,12 @@ namespace Infrastructure.Services
             return _mapper.Map<GetAppUserDTO>(appUsers);
         }
 
+        public async Task<GetAppUserDTO> GetByTelegramIdAsync(long telegramId)
+        {
+            var appUsers = await _unitOfWork.AppUsers.GetByTelegramIdAsync(telegramId);
+            return _mapper.Map<GetAppUserDTO>(appUsers);
+        }
+
         public async Task<bool> RemoveAsync(Guid Id)
         {
             var appUser = await _unitOfWork.AppUsers.GetByIdAsync(Id);
