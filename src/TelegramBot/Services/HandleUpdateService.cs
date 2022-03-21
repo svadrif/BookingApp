@@ -33,7 +33,7 @@ public class HandleUpdateService
         switch (update.Type)
         {
             case UpdateType.Message:
-                await MessageHandler.HandleAsync(update.Message, _botClient);
+                await MessageHandler.HandleAsync(update.Message, _botClient, _userService);
                 break;
         }
     }
