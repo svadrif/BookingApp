@@ -24,7 +24,7 @@ namespace Infrastructure.Repositories
             IParkingPlaceRepository parkingPlaces,
             IVacationRepository vacations,
             IWorkPlaceRepository workPlaces, 
-            IStateRepository states)
+            IStateRepository states,
             IBookingHistoryRepository bookingHistories)
         {
             _context = context;
