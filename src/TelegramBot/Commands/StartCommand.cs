@@ -9,14 +9,15 @@ namespace TelegramBot.Commands
 {
     public static class StartCommand
     {
-        public static async Task ExecuteAsync(Message message, ITelegramBotClient botClient, IAppUserService userService)
+        public static async Task ExecuteAsync(Message message, ITelegramBotClient botClient, IAppUserService userService, IStateService stateService)
         {
             var buttons = new List<InlineKeyboardButton>{
                 InlineKeyboardButton.WithCallbackData("New booking", "New Booking"),
                 InlineKeyboardButton.WithCallbackData("My bookings", "My Bookings")
             };
 
-            var state = await userService.GetStateByTelegramIdAsync(message.From.Id);
+            var user = await userService.GetByTelegramIdAsync(message.From.Id);
+            var state = await stateService.GetByUserIdAsync(user.Id);
 
             if (state.StateNumber != UserState.NotAuthorized)
             {
@@ -31,7 +32,7 @@ namespace TelegramBot.Commands
             state.StateNumber = UserState.SelectingAction;
             state.LastCommand = "/start";
             state.MessageId = responce.MessageId;
-            await userService.UpdateUserStateAsync(state);
+            await stateService.UpdateAsync(state);
         }
     }
 }
