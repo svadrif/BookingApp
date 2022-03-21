@@ -103,7 +103,6 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
     });
 }
-app.UseHttpsRedirection();
 
 app.UseAuthentication();
 

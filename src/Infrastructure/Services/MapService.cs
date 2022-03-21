@@ -50,13 +50,12 @@ namespace Infrastructure.Services
             return true;
         }
 
-        public async Task<IEnumerable<GetMapDTO>> SearchByOfficeIdAsync(Guid OfficeId)
+        public async Task<PagedList<GetMapDTO>> SearchByOfficeIdAsync(Guid officeId, PagedQueryBase query)
         {
-            var maps = _unitOfWork.Maps.Search(c => c.OfficeId.Equals(OfficeId), false);
-            if (maps == null)
-                return null;
-
-            return _mapper.Map<IEnumerable<GetMapDTO>>(maps);
+            var maps = await _unitOfWork.Maps.GetPagedByOfficeIdAsync(officeId, query);
+            var mapMaps = _mapper.Map<List<GetMapDTO>>(maps);
+            var mapsDTO = new PagedList<GetMapDTO>(mapMaps, maps.TotalCount, maps.CurrentPage, maps.PageSize);
+            return mapsDTO;
         }
 
         public async Task<GetMapDTO> UpdateAsync(UpdateMapDTO mapDTO)

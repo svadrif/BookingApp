@@ -1,11 +1,13 @@
 ﻿using Domain.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Application.DTOs.WorkPlaceDTO
 {
     public class UpdateWorkPlaceDTO
     {
         [Required(ErrorMessage = "This field {0} is required")]
+        [JsonIgnore]
         public Guid Id { get; set; }
 
         [Required(ErrorMessage = "This field {0} is required")]

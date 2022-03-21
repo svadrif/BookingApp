@@ -24,6 +24,7 @@ namespace Domain.Entities
         public IEnumerable<Vacation> Vacations { get; set; }
         public IEnumerable<Booking> Bookings { get; set; }
         public State State { get; set; }
+        public BookingHistory BookingHistory { get; set; }
 
     }
 }
