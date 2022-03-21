@@ -33,6 +33,14 @@ namespace Infrastructure.Services
             return officesDTO;
         }
 
+        public async Task<PagedList<GetOfficeDTO>> GetPagedByCityAsync(string city, PagedQueryBase query)
+        {
+            var offices = await _unitOfWork.Offices.GetPagedByCityAsync(city, query);
+            var mapOffices = _mapper.Map<List<GetOfficeDTO>>(offices);
+            var officesDTO = new PagedList<GetOfficeDTO>(mapOffices, offices.TotalCount, offices.CurrentPage, offices.PageSize);
+            return officesDTO;
+        }
+
         public async Task<GetOfficeDTO> GetByIdAsync(Guid Id)
         {
             var office = await _unitOfWork.Offices.GetByIdAsync(Id);
