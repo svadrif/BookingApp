@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.AppUserDTO;
 using Application.Pagination;
+using Domain.Entities;
 
 namespace Application.Interfaces.IServices
 {
@@ -11,5 +12,6 @@ namespace Application.Interfaces.IServices
         Task<Guid> AddAsync(AddAppUserDTO appUserDTO);
         Task<GetAppUserDTO> UpdateAsync(UpdateAppUserDTO appUserDTO);
         Task<bool> RemoveAsync(Guid Id);
+        Task<BookingHistory> GetBookingHistoryByTelegramIdAsync(long telegramId);
     }
 }

@@ -5,6 +5,8 @@ namespace Application.Interfaces
 {
     public interface IApplicationDbContext
     {
+        DbSet<BookingHistory> BookingHistories { get; set; }
+        DbSet<State> States { get; set; }
         DbSet<AppUser> AppUsers { get; set; }
         DbSet<Booking> Bookings { get; set; }
         DbSet<Map> Maps { get; set; }

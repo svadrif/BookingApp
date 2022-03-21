@@ -13,6 +13,7 @@ namespace Infrastructure.Repositories
         public IParkingPlaceRepository ParkingPlaces { get; private set; }
         public IVacationRepository Vacations { get; private set; }
         public IWorkPlaceRepository WorkPlaces { get; private set; }
+        public IBookingHistoryRepository BookingHistories { get; private set; }
 
         public UnitOfWork(IApplicationDbContext context,
             IAppUserRepository appUsers,
@@ -21,7 +22,8 @@ namespace Infrastructure.Repositories
             IBookingRepository bookings,
             IParkingPlaceRepository parkingPlaces,
             IVacationRepository vacations,
-            IWorkPlaceRepository workPlaces)
+            IWorkPlaceRepository workPlaces, 
+            IBookingHistoryRepository bookingHistories)
         {
             _context = context;
             AppUsers = appUsers;
@@ -31,6 +33,7 @@ namespace Infrastructure.Repositories
             ParkingPlaces = parkingPlaces;
             Vacations = vacations;
             WorkPlaces = workPlaces;
+            BookingHistories = bookingHistories;
         }
 
         public async Task<int> CompleteAsync(CancellationToken cancellationToken = new CancellationToken())
