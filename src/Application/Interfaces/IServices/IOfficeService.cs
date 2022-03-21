@@ -10,5 +10,7 @@ namespace Application.Interfaces.IServices
         Task<Guid> AddAsync(AddOfficeDTO officeDTO);
         Task<GetOfficeDTO> UpdateAsync(UpdateOfficeDTO officeDTO);
         Task<bool> RemoveAsync(Guid Id);
+        Task<PagedList<string>> GetCountriesAsync(PagedQueryBase query);
+        Task<PagedList<string>> GetCitiesAsync(string country, PagedQueryBase query);
     }
 }

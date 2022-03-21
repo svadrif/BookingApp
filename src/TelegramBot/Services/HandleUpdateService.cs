@@ -11,20 +11,25 @@ public class HandleUpdateService
     private readonly ITelegramBotClient _botClient;
     private readonly IAppUserService _userService;
     private readonly IStateService _stateService;
+    private readonly IBookingHistoryService _historyService;
+    private readonly IOfficeService _officeService;
 
     public HandleUpdateService(
-        ITelegramBotClient botClient, 
-        IAppUserService userService, 
-        IStateService stateService)
+        ITelegramBotClient botClient,
+        IAppUserService userService,
+        IStateService stateService,
+        IBookingHistoryService historyService,
+        IOfficeService officeService)
     {
         _botClient = botClient;
         _userService = userService;
         _stateService = stateService;
+        _historyService = historyService;
+        _officeService = officeService;
     }
 
     public async Task Handle(Update update)
     {
-        
         if (update.Message != null)
         {
             var user = await _userService.GetByTelegramIdAsync(update.Message.From.Id);
@@ -39,6 +44,16 @@ public class HandleUpdateService
         {
             case UpdateType.Message:
                 await MessageHandler.HandleAsync(update.Message, _botClient, _userService, _stateService);
+                return;
+
+            case UpdateType.CallbackQuery:
+                await CallbackQueryHandler.HandleAsync(
+                        update.CallbackQuery,
+                        _botClient,
+                        _userService,
+                        _stateService,
+                        _historyService,
+                        _officeService);
                 return;
         }
     }
