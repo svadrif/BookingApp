@@ -13,5 +13,6 @@ namespace Application.Interfaces.IServices
         Task<GetAppUserDTO> UpdateAsync(UpdateAppUserDTO appUserDTO);
         Task<bool> RemoveAsync(Guid Id);
         Task<State> GetStateByTelegramIdAsync(long telegramId);
+        Task<BookingHistory> GetBookingHistoryByTelegramIdAsync(long telegramId);
     }
 }
