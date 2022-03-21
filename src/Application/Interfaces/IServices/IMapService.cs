@@ -10,6 +10,6 @@ namespace Application.Interfaces.IServices
         Task<Guid> AddAsync(AddMapDTO mapDTO);
         Task<GetMapDTO> UpdateAsync(UpdateMapDTO mapDTO);
         Task<bool> RemoveAsync(Guid Id);
-        Task<IEnumerable<GetMapDTO>> SearchByOfficeIdAsync(Guid OfficeId);
+        Task<PagedList<GetMapDTO>> SearchByOfficeIdAsync(Guid officeId, PagedQueryBase query);
     }
 }

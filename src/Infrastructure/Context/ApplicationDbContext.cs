@@ -12,7 +12,7 @@ namespace Infrastructure.Context
         {
 
         }
-
+        public DbSet<BookingHistory> BookingHistories { get; set; }
         public DbSet<State> States { get; set; }
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Booking> Bookings { get; set; }

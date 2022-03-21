@@ -12,9 +12,7 @@ namespace Application.DTOs.BookingDTO
 
         [Required(ErrorMessage = "This field {0} is required")]
         public Guid UserId { get; set; }
-
-        [Required(ErrorMessage = "This field {0} is required")]
-        public Guid? ParkingPlaceId { get; set; }
+        public Guid? ParkingPlaceId { get; set; } = null;
 
         [Required(ErrorMessage = "This field {0} is required")]
         public Guid WorkPlaceId { get; set; }

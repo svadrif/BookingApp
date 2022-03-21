@@ -11,10 +11,15 @@ namespace Infrastructure.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public AppUserService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IStateService _stateService;
+        private readonly IBookingHistoryService _historyService;
+
+        public AppUserService(IUnitOfWork unitOfWork, IMapper mapper, IStateService stateService, IBookingHistoryService historyService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _stateService = stateService;
+            _historyService = historyService;
         }
 
         public async Task<Guid> AddAsync(AddAppUserDTO appUserDTO)
@@ -22,6 +27,10 @@ namespace Infrastructure.Services
             AppUser appUser = _mapper.Map<AppUser>(appUserDTO);
             await _unitOfWork.AppUsers.AddAsync(appUser);
             await _unitOfWork.CompleteAsync();
+
+            await _stateService.AddAsync(new State() { UserId = appUser.Id});
+            await _historyService.AddAsync(new BookingHistory() { UserId = appUser.Id });
+
             return appUser.Id;
         }
 
@@ -50,11 +59,20 @@ namespace Infrastructure.Services
             return _mapper.Map<GetAppUserDTO>(appUsers);
         }
 
+        public async Task<GetAppUserDTO> GetByTelegramIdAsync(long telegramId)
+        {
+            var appUsers = await _unitOfWork.AppUsers.GetByTelegramIdAsync(telegramId);
+            return _mapper.Map<GetAppUserDTO>(appUsers);
+        }
+
         public async Task<bool> RemoveAsync(Guid Id)
         {
             var appUser = await _unitOfWork.AppUsers.GetByIdAsync(Id);
             if (appUser == null)
                 return false;
+
+            await _stateService.RemoveByUserIdAsync(Id);
+            await _historyService.RemoveByUserIdAsync(Id);
 
             _unitOfWork.AppUsers.Remove(appUser);
             await _unitOfWork.CompleteAsync();

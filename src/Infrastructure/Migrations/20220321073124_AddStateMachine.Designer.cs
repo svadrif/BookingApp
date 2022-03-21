@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220317173123_EditMigration")]
-    partial class EditMigration
+    [Migration("20220321073124_AddStateMachine")]
+    partial class AddStateMachine
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -139,6 +139,80 @@ namespace Infrastructure.Migrations
                     b.ToTable("Bookings");
                 });
 
+            modelBuilder.Entity("Domain.Entities.BookingHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("BookingEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("BookingStart")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Floor")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Frequancy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("HasConfRoom")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("HasHeadset")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("HasKeyboard")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("HasKitchen")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("HasMonitor")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("HasMouse")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("HasPC")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsNextToWindow")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsRecurring")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("MapId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("OfficeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ParkingPlaceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("WorkPlaceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("BookingHistories");
+                });
+
             modelBuilder.Entity("Domain.Entities.Map", b =>
                 {
                     b.Property<Guid>("Id")
@@ -225,7 +299,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.State", b =>
                 {
-                    b.Property<Guid>("StateId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -233,13 +307,16 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("MessageId")
+                        .HasColumnType("int");
+
                     b.Property<int>("StateNumber")
                         .HasColumnType("int");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("StateId");
+                    b.HasKey("Id");
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -350,6 +427,17 @@ namespace Infrastructure.Migrations
                     b.Navigation("WorkPlace");
                 });
 
+            modelBuilder.Entity("Domain.Entities.BookingHistory", b =>
+                {
+                    b.HasOne("Domain.Entities.AppUser", "User")
+                        .WithOne("BookingHistory")
+                        .HasForeignKey("Domain.Entities.BookingHistory", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Domain.Entities.Map", b =>
                 {
                     b.HasOne("Domain.Entities.Office", "Office")
@@ -407,6 +495,9 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.AppUser", b =>
                 {
+                    b.Navigation("BookingHistory")
+                        .IsRequired();
+
                     b.Navigation("Bookings");
 
                     b.Navigation("State")

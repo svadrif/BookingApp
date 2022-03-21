@@ -51,13 +51,12 @@ namespace Infrastructure.Services
             return true;
         }
 
-        public async Task<IEnumerable<GetParkingPlaceDTO>> SearchByOfficeIdAsync(Guid? OfficeId)
+        public async Task<PagedList<GetParkingPlaceDTO>> SearchByOfficeIdAsync(Guid officeId, PagedQueryBase query)
         {
-            var parkingPlaces = _unitOfWork.ParkingPlaces.Search(c => c.OfficeId.Equals(OfficeId), false);
-            if (parkingPlaces == null)
-                return null;
-
-            return _mapper.Map<IEnumerable<GetParkingPlaceDTO>>(parkingPlaces);
+            var parkingPlaces = await _unitOfWork.ParkingPlaces.GetPagedByOfficeIdAsync(officeId, query);
+            var parkingPlaceMaps = _mapper.Map<List<GetParkingPlaceDTO>>(parkingPlaces);
+            var parkingPlacesDTO = new PagedList<GetParkingPlaceDTO>(parkingPlaceMaps, parkingPlaces.TotalCount, parkingPlaces.CurrentPage, parkingPlaces.PageSize);
+            return parkingPlacesDTO;
         }
 
         public async Task<GetParkingPlaceDTO> UpdateAsync(UpdateParkingPlaceDTO parkingPlaceDTO)

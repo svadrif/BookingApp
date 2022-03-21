@@ -41,5 +41,24 @@ namespace Infrastructure.Repositories
                         .Sort(query.SortOn, query.SortDirection)
                         .ToPagedListAsync(query);
         }
+
+        public async Task<PagedList<string>> GetPagedCountriesAsync(PagedQueryBase query, bool tracking = false)
+        {
+            return await GetAll(tracking)
+                        .Sort(query.SortOn, query.SortDirection)
+                        .Select(x => x.Country)
+                        .Distinct()
+                        .ToPagedListAsync(query);
+        }
+
+        public async Task<PagedList<string>> GetPagedCitiesByCountryAsync(string country, PagedQueryBase query, bool tracking = false)
+        {
+            return await Search(x => x.Country == country,
+                                tracking)
+                        .Sort(query.SortOn, query.SortDirection)
+                        .Select(x => x.City)
+                        .Distinct()
+                        .ToPagedListAsync(query);
+        }
     }
 }
