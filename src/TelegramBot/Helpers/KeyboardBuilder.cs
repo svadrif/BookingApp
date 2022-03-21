@@ -1,10 +1,11 @@
-﻿using Telegram.Bot.Types.ReplyMarkups;
+﻿using Domain.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace TelegramBot.Helpers
 {
     public static class KeyboardBuilder
     {
-        public static InlineKeyboardMarkup BuildInLineKeyboard(List<InlineKeyboardButton> buttons, int totalColumns)
+        public static InlineKeyboardMarkup BuildInLineKeyboard(List<InlineKeyboardButton> buttons, int totalColumns, Tuple<UserState, string>? backButton = null)
         {
             int currentColumn = 0;
             var rows = new List<InlineKeyboardButton[]>();
@@ -28,6 +29,11 @@ namespace TelegramBot.Helpers
             if (currentColumn > 0)
             {
                 rows.Add(columns.ToArray());
+            }
+
+            if(backButton != null)
+            {
+                rows.Add(new[] { InlineKeyboardButton.WithCallbackData("back", $"back:{backButton.Item1}:{backButton.Item2}") });
             }
 
             var keyboard = new InlineKeyboardMarkup(rows);

@@ -19,8 +19,24 @@ namespace TelegramBot.Handlers
             var user = await userService.GetByTelegramIdAsync(callback.From.Id);
             var state = await stateService.GetByUserIdAsync(user.Id);
             var history = await historyService.GetByUserIdAsync(user.Id);
+
+            if (callback.Data.Substring(0, 5).Equals("back:"))
+            {
+                state.StateNumber = (UserState)Enum.Parse(typeof(UserState), callback.Data.Split(":")[1]);
+                state.LastCommand = callback.Data.Split(":")[2];
+
+                callback.Data = callback.Data.Split(":")[2];
+            }
+
             switch (state.StateNumber)
             {
+                case UserState.NotAuthorized:
+                    await StartCommand.ExecuteAsync(callback, botClient);
+
+                    state.StateNumber = UserState.SelectingAction;
+                    await stateService.UpdateAsync(state);
+                    return;
+
                 case UserState.SelectingAction:
                     switch (callback.Data)
                     {
