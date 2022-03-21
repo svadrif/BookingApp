@@ -10,11 +10,16 @@ public class HandleUpdateService
 {
     private readonly ITelegramBotClient _botClient;
     private readonly IAppUserService _userService;
+    private readonly IStateService _stateService;
 
-    public HandleUpdateService(ITelegramBotClient botClient, IAppUserService userService)
+    public HandleUpdateService(
+        ITelegramBotClient botClient, 
+        IAppUserService userService, 
+        IStateService stateService)
     {
         _botClient = botClient;
         _userService = userService;
+        _stateService = stateService;
     }
 
     public async Task Handle(Update update)
@@ -33,8 +38,8 @@ public class HandleUpdateService
         switch (update.Type)
         {
             case UpdateType.Message:
-                await MessageHandler.HandleAsync(update.Message, _botClient);
-                break;
+                await MessageHandler.HandleAsync(update.Message, _botClient, _userService, _stateService);
+                return;
         }
     }
 }
