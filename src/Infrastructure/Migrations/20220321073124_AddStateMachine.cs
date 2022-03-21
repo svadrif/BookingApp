@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infrastructure.Migrations
 {
-    public partial class EditMigration : Migration
+    public partial class AddStateMachine : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -51,17 +51,55 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "States",
+                name: "BookingHistories",
                 columns: table => new
                 {
-                    StateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LastCommand = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StateNumber = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OfficeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Floor = table.Column<int>(type: "int", nullable: true),
+                    HasKitchen = table.Column<bool>(type: "bit", nullable: true),
+                    HasConfRoom = table.Column<bool>(type: "bit", nullable: true),
+                    MapId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsNextToWindow = table.Column<bool>(type: "bit", nullable: true),
+                    HasPC = table.Column<bool>(type: "bit", nullable: true),
+                    HasMonitor = table.Column<bool>(type: "bit", nullable: true),
+                    HasKeyboard = table.Column<bool>(type: "bit", nullable: true),
+                    HasMouse = table.Column<bool>(type: "bit", nullable: true),
+                    HasHeadset = table.Column<bool>(type: "bit", nullable: true),
+                    WorkPlaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    BookingStart = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    BookingEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    IsRecurring = table.Column<bool>(type: "bit", nullable: true),
+                    Frequancy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ParkingPlaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_States", x => x.StateId);
+                    table.PrimaryKey("PK_BookingHistories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BookingHistories_AppUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AppUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "States",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LastCommand = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StateNumber = table.Column<int>(type: "int", nullable: false),
+                    MessageId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_States", x => x.Id);
                     table.ForeignKey(
                         name: "FK_States_AppUsers_UserId",
                         column: x => x.UserId,
@@ -206,6 +244,12 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_BookingHistories_UserId",
+                table: "BookingHistories",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Bookings_ParkingPlaceId",
                 table: "Bookings",
                 column: "ParkingPlaceId");
@@ -249,6 +293,9 @@ namespace Infrastructure.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "BookingHistories");
+
             migrationBuilder.DropTable(
                 name: "Bookings");
 
