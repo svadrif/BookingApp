@@ -32,18 +32,30 @@ namespace Infrastructure.Repositories
 
         public async Task<AppUser> GetByEmailAsync(string email, bool tracking = false)
         {
+            try { 
             return await Search(x => x.Email == email,
                                 tracking)
                         .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong in the {nameof(GetByEmailAsync)}action {ex}");
+                return null;
+            }
         }
 
         public async Task<PagedList<AppUser>> GetPagedAsync(PagedQueryBase query, bool tracking = false)
         {
-
+            try { 
             return await GetAll(tracking)
                         .Sort(query.SortOn, query.SortDirection)
                         .ToPagedListAsync(query);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong in the {nameof(GetPagedAsync)}action {ex}");
+                return null;
+            }
         }
-
     }
 }
