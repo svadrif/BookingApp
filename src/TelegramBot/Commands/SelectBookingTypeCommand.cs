@@ -10,7 +10,7 @@ namespace TelegramBot.Commands
     {
         static readonly List<InlineKeyboardButton> buttons = new List<InlineKeyboardButton>
         {
-            InlineKeyboardButton.WithCallbackData("One-day", "Dne-day"),
+            InlineKeyboardButton.WithCallbackData("One-day", "One-day"),
             InlineKeyboardButton.WithCallbackData("Continuous", "Continuous")
         };
 
