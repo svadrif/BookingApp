@@ -23,7 +23,6 @@ namespace TelegramBot.Handlers
             if (callback.Data.Substring(0, 5).Equals("back:"))
             {
                 state.StateNumber = (UserState)Enum.Parse(typeof(UserState), callback.Data.Split(":")[1]);
-                state.LastCommand = callback.Data.Split(":")[2];
 
                 callback.Data = callback.Data.Split(":")[2];
             }
@@ -73,7 +72,7 @@ namespace TelegramBot.Handlers
 
                 case UserState.SelectingCity:
                     #region SelectingCity
-                    await SendOfficesCommand.ExecuteAsync(callback, botClient, officeService, state.LastCommand);
+                    await SendOfficesCommand.ExecuteAsync(callback, botClient, officeService, history.Country);
 
                     state.LastCommand = callback.Data;
                     state.StateNumber = UserState.SelectingOffice;
@@ -86,7 +85,7 @@ namespace TelegramBot.Handlers
 
                 case UserState.SelectingOffice:
                     #region SelectingOffice
-                    await SelectBookingTypeCommand.ExecuteAsync(callback, botClient, state.LastCommand);
+                    await SelectBookingTypeCommand.ExecuteAsync(callback, botClient, history.City);
 
                     state.LastCommand = callback.Data;
                     state.StateNumber = UserState.SelectingBookingType;
