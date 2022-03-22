@@ -1,10 +1,7 @@
-﻿using Domain.Enums;
+﻿using Domain.Common;
+using Domain.Enums;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
-using Domain.Common;
 
 namespace Domain.Entities
 {
@@ -12,7 +9,7 @@ namespace Domain.Entities
     {
         public Guid Id { get; set; }
         public string LastCommand { get; set; } = string.Empty;
-        public UserState StateNumber { get; set; }
+        public UserState StateNumber { get; set; } = UserState.NotAuthorized;
         public int MessageId { get; set; }
         
         /* EF Relation */

@@ -35,7 +35,7 @@ namespace Infrastructure.Services
 
         public async Task<GetWorkPlaceDTO> GetByIdAsync(Guid Id)
         {
-            var workPlace = _unitOfWork.WorkPlaces.GetByIdAsync(Id);
+            var workPlace = await _unitOfWork.WorkPlaces.GetByIdAsync(Id);
             return _mapper.Map<GetWorkPlaceDTO>(workPlace);
         }
 
@@ -50,13 +50,12 @@ namespace Infrastructure.Services
             return true;
         }
 
-        public async Task<IEnumerable<GetWorkPlaceDTO>> SearchByMapIdAsync(Guid MapId)
+        public async Task<PagedList<GetWorkPlaceDTO>> SearchByMapIdAsync(Guid mapId, PagedQueryBase query)
         {
-            var workPlaces = _unitOfWork.WorkPlaces.Search(c => c.MapId.Equals(MapId), false);
-            if (workPlaces == null)
-                return null;
-
-            return _mapper.Map<IEnumerable<GetWorkPlaceDTO>>(workPlaces);
+            var workPlaces = await _unitOfWork.WorkPlaces.GetPagedByMapIdAsync(mapId, query);
+            var workPlaceMaps = _mapper.Map<List<GetWorkPlaceDTO>>(workPlaces);
+            var workPlacesDTO = new PagedList<GetWorkPlaceDTO>(workPlaceMaps, workPlaces.TotalCount, workPlaces.CurrentPage, workPlaces.PageSize);
+            return workPlacesDTO;
         }
 
         public async Task<GetWorkPlaceDTO> UpdateAsync(UpdateWorkPlaceDTO workPlaceDTO)
