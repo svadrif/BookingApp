@@ -83,6 +83,19 @@ namespace TelegramBot.Handlers
                     await historyService.UpdateAsync(history);
                     return;
                     #endregion
+
+                case UserState.SelectingOffice:
+                    #region SelectingOffice
+                    await SelectBookingTypeCommand.ExecuteAsync(callback, botClient, state.LastCommand);
+
+                    state.LastCommand = callback.Data;
+                    state.StateNumber = UserState.SelectingBookingType;
+                    await stateService.UpdateAsync(state);
+
+                    history.OfficeId = Guid.Parse(callback.Data);
+                    await historyService.UpdateAsync(history);
+                    return;
+                    #endregion
             }
         }
     }
