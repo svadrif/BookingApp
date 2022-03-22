@@ -6,7 +6,6 @@ namespace Application.DTOs.AppUserDTO
     {
         public Guid Id { get; set; }
         public long TelegramId { get; set; }
-        public Guid LastCommandId { get; set; }
         public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
