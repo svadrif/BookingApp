@@ -11,7 +11,7 @@ namespace TelegramBot.Commands
         static readonly List<InlineKeyboardButton> buttons = new List<InlineKeyboardButton>
         {
             InlineKeyboardButton.WithCallbackData("One-day", "Dne-day"),
-            InlineKeyboardButton.WithCallbackData("Contiuous", "Contiuous")
+            InlineKeyboardButton.WithCallbackData("Continuous", "Continuous")
         };
 
         public static async Task ExecuteAsync(CallbackQuery callback, ITelegramBotClient botClient, string backCommand)
