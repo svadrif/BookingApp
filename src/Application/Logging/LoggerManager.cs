@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Serilog;
+using Serilog.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,22 +11,26 @@ namespace Application.Logging
 {
     public class LoggerManager : ILoggerManager
     {
-        private static Serilog.ILogger logger = LoggerManager.logger;
+        private readonly ILogger _logger;
+        public LoggerManager(ILogger logger)
+        {
+            _logger = logger; 
+        }
         public void LogDebug(string message)
         {
-            logger.Debug(message);
+            _logger.Debug(message);
         }
         public void LogError(string message)
         {
-            logger.Error(message);
+            _logger.Error(message);
         }
         public void LogInfo(string message)
         {
-            logger.Information(message);
+            _logger.Information(message);
         }
         public void LogWarn(string message)
         {
-            logger.Warning(message);
+            _logger.Warning(message);
         }
     }
 }

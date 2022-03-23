@@ -7,21 +7,18 @@ using Serilog.Events;
 using Telegram.Bot;
 using TelegramBot;
 
-Log.Logger = new LoggerConfiguration()
-            .CreateBootstrapLogger();
 
 JwtSettings _jwtSettings = new JwtSettings();
 try 
-{ 
-    Log.Information("Starting an app");
+{    
     var builder = WebApplication.CreateBuilder(args);
 
     // Reading AppSettings + Enebles Serilog
     // Full setup of serilog. We read log settings from appsettings.json
-    builder.Host.UseSerilog((context, services, configuration) => configuration
-        .ReadFrom.Configuration(context.Configuration)
-        .ReadFrom.Services(services)
-        .Enrich.FromLogContext());
+    builder.Host.UseSerilog((context, services, configuration) => configuration    
+            .ReadFrom.Configuration(context.Configuration)
+            .ReadFrom.Services(services)
+            .Enrich.FromLogContext()); 
     builder.Configuration.Bind(_jwtSettings);
 
     // Add services to the container.
@@ -62,6 +59,7 @@ try
     builder.Services.AddAuthorization();
 
     // Dependency injections
+    builder.Services.AddSerilogServices(builder.Configuration);
     builder.Services.AddInfrastructure(builder.Configuration);
     builder.Services.AddApplication();
 

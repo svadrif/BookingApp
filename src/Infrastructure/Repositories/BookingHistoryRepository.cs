@@ -16,9 +16,17 @@ namespace Infrastructure.Repositories
 
         public async Task<BookingHistory> GetByUserIdAsync(Guid userId, bool tracking = false)
         {
-            return await Search(x => x.UserId == userId,
-                                tracking)
-                        .FirstOrDefaultAsync();
+            try
+            {
+                return await Search(x => x.UserId == userId,
+                                    tracking)
+                            .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong in the {nameof(GetByUserIdAsync)} action {ex}");
+                return new BookingHistory();
+            }
         }
     }
 }

@@ -21,13 +21,11 @@ namespace Infrastructure.Repositories
         {
             try
             {
-                return await Search(x => x.TelegramId == telegramId,
-                                    tracking)
-                            .FirstOrDefaultAsync();
+                return await Search(x => x.TelegramId == telegramId,tracking).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
-                //_logger.Error(ex, "{Repo} GetByTelegramIdAsync method has generated an error", typeof(AppUserRepository));
+                _logger.LogError($"Something went wrong in the {nameof(GetByTelegramIdAsync)} action {ex}");
                 return new AppUser();
             }
         }
@@ -36,13 +34,11 @@ namespace Infrastructure.Repositories
         {
             try
             {
-                return await Search(x => x.Email == email,
-                                    tracking)
-                            .FirstOrDefaultAsync();
+                return await Search(x => x.Email == email,tracking).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
-                //_logger.Error(ex, "{Repo} GetByEmailAsync method has generated an error", typeof(AppUserRepository));
+                _logger.LogError($"Something went wrong in the {nameof(GetByEmailAsync)} action {ex}");
                 return new AppUser();
             }
         }
@@ -51,17 +47,13 @@ namespace Infrastructure.Repositories
         {
             try
             {
-                throw new Exception();
-
                 return await GetAll(tracking)
                         .Sort(query.SortOn, query.SortDirection)
                         .ToPagedListAsync(query);
             }
             catch(Exception ex)
             {
-                _logger.LogError($"GetPagedAsync method has generated an error {ex}");
-                //_logger.Error(ex, "{Repo} GetPagedAsync method has generated an error", typeof(AppUserRepository));
-                //_logger.LogError($"Something went wrong in the {nameof(GetPagedAsync)}action {ex}");
+                _logger.LogError($"Something went wrong in the {nameof(GetPagedAsync)} action {ex}");
                 return new PagedList<AppUser>(new List<AppUser>(),0,0,0);
             }
         }

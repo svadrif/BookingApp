@@ -8,8 +8,7 @@ namespace Application
     public static class DependencyInjection
     {
         public static void AddApplication(this IServiceCollection services)
-        {
-            services.AddScoped<ILoggerManager, LoggerManager>();
+        {           
             services.AddAutoMapper(typeof(AppUserProfile));
             services.AddAutoMapper(typeof(BookingProfile));
             services.AddAutoMapper(typeof(MapProfile));

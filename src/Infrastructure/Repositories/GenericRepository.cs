@@ -32,7 +32,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                //_logger.Error(ex, "{Repo} Search method has generated an error", typeof(GenericRepository<T>));
+                _logger.LogError($"Something went wrong in the {nameof(Search)} action {ex}");
                 return null;
             }
         }
@@ -45,7 +45,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                //_logger.Error(ex, "{Repo} GetByIdAsync method has generated an error", typeof(GenericRepository<T>));
+                _logger.LogError($"Something went wrong in the {nameof(GetByIdAsync)} action {ex}");
                 return null;
             }
         }
@@ -59,7 +59,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                //_logger.Error(ex, "{Repo} GetAll method has generated an error", typeof(GenericRepository<T>));
+                _logger.LogError($"Something went wrong in the {nameof(GetAll)} action {ex}");
                 return null;
             }
         }
@@ -72,7 +72,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                //_logger.Error(ex, "{Repo} AddAsync method has generated an error", typeof(GenericRepository<T>));
+                _logger.LogError($"Something went wrong in the {nameof(AddAsync)} action {ex}");
             }
         }
 
@@ -84,7 +84,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                //_logger.Error(ex, "{Repo} Update method has generated an error", typeof(GenericRepository<T>));
+                _logger.LogError($"Something went wrong in the {nameof(Update)} action {ex}");
             }
         }
 
@@ -96,7 +96,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                //_logger.Error(ex, "{Repo} Remove method has generated an error", typeof(GenericRepository<T>));
+                _logger.LogError($"Something went wrong in the {nameof(Remove)} action {ex}");
             }
         }
     }
