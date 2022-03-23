@@ -107,7 +107,7 @@ namespace TelegramBot.Handlers
                     switch (callback.Data)
                     {
                         case "One-day":
-                            await SendDateCommand.ExecuteAsync(callback, botClient, DateTime.Now.Date, 0, "one-day", UserState.SelectingOffice, history.OfficeId.ToString());
+                            await SendDateCommand.ExecuteAsync(callback, botClient, DateTime.Now.Date.AddDays(1), 0, "one-day", UserState.SelectingOffice, history.OfficeId.ToString());
 
                             state.LastCommand = callback.Data;
                             state.StateNumber = UserState.SelectingBookingDate;
@@ -115,7 +115,7 @@ namespace TelegramBot.Handlers
                             return;
 
                         case "Continuous":
-                            await SendDateCommand.ExecuteAsync(callback, botClient, DateTime.Now.Date, 0, "start", UserState.SelectingOffice, history.OfficeId.ToString());
+                            await SendDateCommand.ExecuteAsync(callback, botClient, DateTime.Now.Date.AddDays(1), 0, "start", UserState.SelectingOffice, history.OfficeId.ToString());
 
                             state.LastCommand = callback.Data;
                             state.StateNumber = UserState.SelectingBookingStartDate;
@@ -135,7 +135,8 @@ namespace TelegramBot.Handlers
                             await botClient.AnswerCallbackQueryAsync(callback.Id, "Unavailable button");
                             return;
                         }
-                        await SendDateCommand.ExecuteAsync(callback, botClient, DateTime.Now.Date, skipMonths, "one-day", UserState.SelectingOffice, history.OfficeId.ToString());
+                        await SendDateCommand.ExecuteAsync(callback, botClient, DateTime.Now.Date.AddDays(1), skipMonths, "one-day", UserState.SelectingOffice, history.OfficeId.ToString());
+                        return;
                     }
                     return;
                 #endregion
@@ -150,7 +151,33 @@ namespace TelegramBot.Handlers
                             await botClient.AnswerCallbackQueryAsync(callback.Id, "Unavailable button");
                             return;
                         }
-                        await SendDateCommand.ExecuteAsync(callback, botClient, DateTime.Now.Date, skipMonths, "start", UserState.SelectingOffice, history.OfficeId.ToString());
+                        await SendDateCommand.ExecuteAsync(callback, botClient, DateTime.Now.Date.AddDays(1), skipMonths, "start", UserState.SelectingOffice, history.OfficeId.ToString());
+                        return;
+                    }
+                    await SendDateCommand.ExecuteAsync(callback, botClient, DateTime.Parse(callback.Data).AddDays(1), 0, "end", UserState.SelectingBookingType, "Continuous");
+
+                    state.LastCommand = callback.Data;
+                    state.StateNumber = UserState.SelectingBookingEndDate;
+                    await stateService.UpdateAsync(state);
+
+                    history.BookingStart = DateTime.Parse(callback.Data);
+                    await historyService.UpdateAsync(history);
+                    return;
+                #endregion
+
+                case UserState.SelectingBookingEndDate:
+                    #region SelectingBookingEndDate
+                    if (callback.Data.Substring(0, 6).Equals("month:"))
+                    {
+                        var skipMonths = int.Parse(callback.Data.Split(":")[1]) - (history.BookingStart.Value.Month - DateTime.Now.Month);
+                        var monthDifference = DateTime.Now.AddMonths(3).Month - history.BookingStart.Value.Month;
+                        if (skipMonths < 0 || skipMonths > (monthDifference < 0 ? monthDifference + 12 : monthDifference))
+                        {
+                            await botClient.AnswerCallbackQueryAsync(callback.Id, "Unavailable button");
+                            return;
+                        }
+                        await SendDateCommand.ExecuteAsync(callback, botClient, history.BookingStart.Value.DateTime.AddDays(1), skipMonths, "end", UserState.SelectingBookingType, "Continuous");
+                        return;
                     }
                     return;
                     #endregion
