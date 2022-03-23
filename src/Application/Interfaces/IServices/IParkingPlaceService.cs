@@ -10,6 +10,6 @@ namespace Application.Interfaces.IServices
         Task<Guid> AddAsync(AddParkingPlaceDTO parkingPlaceDTO);
         Task<GetParkingPlaceDTO> UpdateAsync(UpdateParkingPlaceDTO parkingPlaceDTO);
         Task<bool> RemoveAsync(Guid Id);
-        Task<IEnumerable<GetParkingPlaceDTO>> SearchByOfficeIdAsync(Guid? OfficeId);
+        Task<PagedList<GetParkingPlaceDTO>> SearchByOfficeIdAsync(Guid OfficeId, PagedQueryBase query);
     }
 }

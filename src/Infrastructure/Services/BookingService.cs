@@ -51,13 +51,20 @@ namespace Infrastructure.Services
             return true;
         }
 
-        public async Task<IEnumerable<GetBookingDTO>> SearchByUserIdAsync(Guid UserId)
+        public async Task<PagedList<GetBookingDTO>> SearchByUserIdAsync(Guid userId, PagedQueryBase query)
         {
-            var bookings = _unitOfWork.Bookings.Search(c => c.UserId.Equals(UserId), false);
-            if (bookings == null)
-                return null;
+            var bookings = await _unitOfWork.Bookings.GetPagedByUserIdAsync(userId, query);
+            var bookingMaps = _mapper.Map<List<GetBookingDTO>>(bookings);
+            var bookingsDTO = new PagedList<GetBookingDTO>(bookingMaps, bookings.TotalCount, bookings.CurrentPage, bookings.PageSize);
+            return bookingsDTO;
+        }
 
-            return _mapper.Map<IEnumerable<GetBookingDTO>>(bookings);
+        public async Task<PagedList<GetBookingDTO>> SearchByWorkPlaceIdAsync(Guid workPlaceId, PagedQueryBase query)
+        {
+            var bookings = await _unitOfWork.Bookings.GetPagedByWorkPlaceIdAsync(workPlaceId, query);
+            var bookingMaps = _mapper.Map<List<GetBookingDTO>>(bookings);
+            var bookingsDTO = new PagedList<GetBookingDTO>(bookingMaps, bookings.TotalCount, bookings.CurrentPage, bookings.PageSize);
+            return bookingsDTO;
         }
 
         public async Task<GetBookingDTO> UpdateAsync(UpdateBookingDTO bookingDTO)

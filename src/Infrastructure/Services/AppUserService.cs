@@ -11,11 +11,14 @@ namespace Infrastructure.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IStateService _stateService;
         private readonly IBookingHistoryService _historyService;
-        public AppUserService(IUnitOfWork unitOfWork, IMapper mapper, IBookingHistoryService historyService)
+
+        public AppUserService(IUnitOfWork unitOfWork, IMapper mapper, IStateService stateService, IBookingHistoryService historyService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _stateService = stateService;
             _historyService = historyService;
         }
 
@@ -25,6 +28,7 @@ namespace Infrastructure.Services
             await _unitOfWork.AppUsers.AddAsync(appUser);
             await _unitOfWork.CompleteAsync();
 
+            await _stateService.AddAsync(new State() { UserId = appUser.Id});
             await _historyService.AddAsync(new BookingHistory() { UserId = appUser.Id });
 
             return appUser.Id;
@@ -44,12 +48,19 @@ namespace Infrastructure.Services
             return _mapper.Map<GetAppUserDTO>(appUsers);
         }
 
+        public async Task<GetAppUserDTO> GetByTelegramIdAsync(long telegramId)
+        {
+            var appUsers = await _unitOfWork.AppUsers.GetByTelegramIdAsync(telegramId);
+            return _mapper.Map<GetAppUserDTO>(appUsers);
+        }
+
         public async Task<bool> RemoveAsync(Guid Id)
         {
             var appUser = await _unitOfWork.AppUsers.GetByIdAsync(Id);
             if (appUser == null)
                 return false;
 
+            await _stateService.RemoveByUserIdAsync(Id);
             await _historyService.RemoveByUserIdAsync(Id);
 
             _unitOfWork.AppUsers.Remove(appUser);
@@ -67,13 +78,6 @@ namespace Infrastructure.Services
             _unitOfWork.AppUsers.Update(appUser);
             await _unitOfWork.CompleteAsync();
             return _mapper.Map<GetAppUserDTO>(appUser);
-        }
-
-        public async Task<BookingHistory> GetBookingHistoryByTelegramIdAsync(long telegramId)
-        {
-            var user = await _unitOfWork.AppUsers.GetByTelegramIdAsync(telegramId);
-            var bookingHistory = await _historyService.GetByUserIdAsync(user.Id);
-            return bookingHistory;
         }
     }
 }

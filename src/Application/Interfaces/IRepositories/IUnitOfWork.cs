@@ -9,6 +9,7 @@
         IParkingPlaceRepository ParkingPlaces { get; }
         IVacationRepository Vacations { get; }
         IWorkPlaceRepository WorkPlaces { get; }
+        IStateRepository States { get; }
         IBookingHistoryRepository BookingHistories { get; }
 
         Task<int> CompleteAsync(CancellationToken cancellationToken = new CancellationToken());
