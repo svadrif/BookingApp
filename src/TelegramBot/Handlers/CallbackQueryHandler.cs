@@ -30,7 +30,12 @@ namespace TelegramBot.Handlers
             {
                 state.StateNumber = (UserState)Enum.Parse(typeof(UserState), callback.Data.Split(":")[1]);
 
-                callback.Data = callback.Data.Split(":")[2];
+                var data = callback.Data.Split(":")[2];
+                for (var counter = 3; counter < callback.Data.Split(":").Count(); counter++)
+                {
+                    data += $":{callback.Data.Split(":")[counter]}";
+                }
+                callback.Data = data;
             }
 
             switch (state.StateNumber)
@@ -138,6 +143,18 @@ namespace TelegramBot.Handlers
                         await SendDateCommand.ExecuteAsync(callback, botClient, DateTime.Now.Date.AddDays(1), skipMonths, "one-day", UserState.SelectingOffice, history.OfficeId.ToString());
                         return;
                     }
+                    
+                    await SelectParkingPlaceCommand.ExecuteAsync(callback, botClient, UserState.SelectingBookingType, "One-day");
+
+                    state.LastCommand = callback.Data;
+                    state.StateNumber = UserState.SelectingParkingPlace;
+                    await stateService.UpdateAsync(state);
+
+                    history.BookingStart = DateTime.Parse(callback.Data);
+                    history.BookingEnd = DateTime.Parse(callback.Data);
+                    history.IsRecurring = false;
+                    history.Frequancy = string.Empty;
+                    await historyService.UpdateAsync(history);
                     return;
                 #endregion
 
@@ -179,8 +196,21 @@ namespace TelegramBot.Handlers
                         await SendDateCommand.ExecuteAsync(callback, botClient, history.BookingStart.Value.DateTime.AddDays(1), skipMonths, "end", UserState.SelectingBookingType, "Continuous");
                         return;
                     }
+
+                    await SelectParkingPlaceCommand.ExecuteAsync(callback, botClient, UserState.SelectingBookingStartDate, history.BookingStart.ToString());
+
+                    state.LastCommand = callback.Data;
+                    state.StateNumber = UserState.SelectingParkingPlace;
+                    await stateService.UpdateAsync(state);
+
+                    history.BookingEnd = DateTime.Parse(callback.Data);
+                    history.IsRecurring = false;
+                    history.Frequancy = string.Empty;
+                    await historyService.UpdateAsync(history);
                     return;
-                    #endregion
+                #endregion
+
+
             }
         }
     }
