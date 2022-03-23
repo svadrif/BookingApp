@@ -16,6 +16,12 @@ namespace TelegramBot.Handlers
             IBookingHistoryService historyService,
             IOfficeService officeService)
         {
+            if (callback.Data.Equals("."))
+            {
+                await botClient.AnswerCallbackQueryAsync(callback.Id, "Unavailable button");
+                return;
+            }
+
             var user = await userService.GetByTelegramIdAsync(callback.From.Id);
             var state = await stateService.GetByUserIdAsync(user.Id);
             var history = await historyService.GetByUserIdAsync(user.Id);
@@ -36,7 +42,7 @@ namespace TelegramBot.Handlers
                     state.StateNumber = UserState.SelectingAction;
                     await stateService.UpdateAsync(state);
                     return;
-                    #endregion
+                #endregion
 
                 case UserState.SelectingAction:
                     #region SelectingAction
@@ -55,7 +61,7 @@ namespace TelegramBot.Handlers
                             return;
                     }
                     return;
-                    #endregion
+                #endregion
 
                 case UserState.SelectingCountry:
                     #region SelectingCountry
@@ -68,7 +74,7 @@ namespace TelegramBot.Handlers
                     history.Country = callback.Data;
                     await historyService.UpdateAsync(history);
                     return;
-                    #endregion
+                #endregion
 
                 case UserState.SelectingCity:
                     #region SelectingCity
@@ -81,7 +87,7 @@ namespace TelegramBot.Handlers
                     history.City = callback.Data;
                     await historyService.UpdateAsync(history);
                     return;
-                    #endregion
+                #endregion
 
                 case UserState.SelectingOffice:
                     #region SelectingOffice
@@ -94,7 +100,30 @@ namespace TelegramBot.Handlers
                     history.OfficeId = Guid.Parse(callback.Data);
                     await historyService.UpdateAsync(history);
                     return;
-                    #endregion
+                #endregion
+
+                case UserState.SelectingBookingType:
+                    #region SelectingBookingType
+                    switch (callback.Data)
+                    {
+                        case "One-day":
+                            await SendDateCommand.ExecuteAsync(callback, botClient, DateTime.Now.Date, 0, "one-day", UserState.SelectingOffice, history.OfficeId.ToString());
+
+                            state.LastCommand = callback.Data;
+                            state.StateNumber = UserState.SelectingBookingDate;
+                            await stateService.UpdateAsync(state);
+                            return;
+
+                        case "Continuous":
+                            await SendDateCommand.ExecuteAsync(callback, botClient, DateTime.Now.Date, 0, "start", UserState.SelectingOffice, history.OfficeId.ToString());
+
+                            state.LastCommand = callback.Data;
+                            state.StateNumber = UserState.SelectingBookingStartDate;
+                            await stateService.UpdateAsync(state);
+                            return;
+                    }
+                    return;
+                #endregion
             }
         }
     }
