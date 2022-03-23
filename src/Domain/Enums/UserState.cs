@@ -7,7 +7,6 @@ namespace Domain.Enums
     public enum UserState
     {
         NotAuthorized,
-
         SelectingAction,
 
         // Booking creating process states

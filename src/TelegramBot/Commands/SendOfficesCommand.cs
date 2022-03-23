@@ -8,22 +8,22 @@ using TelegramBot.Helpers;
 
 namespace TelegramBot.Commands
 {
-    public static class SendCountriesCommand
+    public static class SendOfficesCommand
     {
-        public static async Task ExecuteAsync(CallbackQuery callback, ITelegramBotClient botClient, IOfficeService officeService)
+        public static async Task ExecuteAsync(CallbackQuery callback, ITelegramBotClient botClient, IOfficeService officeService, string backCommand)
         {
-            var countries = await officeService.GetCountriesAsync(new PagedQueryBase());
+            var offices = await officeService.GetPagedByCityAsync(callback.Data, new PagedQueryBase());
             var buttons = new List<InlineKeyboardButton>();
-            foreach (var country in countries)
+            foreach (var office in offices)
             {
-                buttons.Add(InlineKeyboardButton.WithCallbackData(country, country));
+                buttons.Add(InlineKeyboardButton.WithCallbackData(office.Address, office.Id.ToString()));
             }
-            var backButton = Tuple.Create(UserState.NotAuthorized, "/start");
+            var backButton = Tuple.Create(UserState.SelectingCountry, backCommand);
 
             var inlineKeyboard = KeyboardBuilder.BuildInLineKeyboard(buttons, 2, backButton);
             await botClient.EditMessageTextAsync(chatId: callback.From.Id,
                                                  messageId: callback.Message.MessageId,
-                                                 text: "Select country:",
+                                                 text: "Select office:",
                                                  replyMarkup: inlineKeyboard);
         }
     }
