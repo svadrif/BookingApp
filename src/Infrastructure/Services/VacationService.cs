@@ -4,6 +4,7 @@ using Application.Interfaces.IServices;
 using Application.Pagination;
 using AutoMapper;
 using Domain.Entities;
+using Infrastructure.Validations;
 
 namespace Infrastructure.Services
 {
@@ -21,8 +22,11 @@ namespace Infrastructure.Services
         public async Task<Guid> AddAsync(AddVacationDTO vacationDTO)
         {
             Vacation vacation = _mapper.Map<Vacation>(vacationDTO);
-            await _unitOfWork.Vacations.AddAsync(vacation);
-            await _unitOfWork.CompleteAsync();
+            if (VacationValidation.Validate(vacation))
+            {
+                await _unitOfWork.Vacations.AddAsync(vacation);
+                await _unitOfWork.CompleteAsync();
+            }
             return vacation.Id;
         }
 
@@ -58,8 +62,11 @@ namespace Infrastructure.Services
                 return null;
 
             _mapper.Map(vacationDTO, vacation);
-            _unitOfWork.Vacations.Update(vacation);
-            await _unitOfWork.CompleteAsync();
+            if (VacationValidation.Validate(vacation))
+            {
+                _unitOfWork.Vacations.Update(vacation);
+                await _unitOfWork.CompleteAsync();
+            }
             return _mapper.Map<GetVacationDTO>(vacation);
         }
 

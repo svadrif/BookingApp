@@ -20,7 +20,7 @@ namespace TelegramBot.Handlers
             var state = await stateService.GetByUserIdAsync(user.Id);
             var history = await historyService.GetByUserIdAsync(user.Id);
 
-            if (callback.Data.Substring(0, 5).Equals("back:"))
+            if (callback.Data.Length >=5 && callback.Data.Substring(0, 5).Equals("back:"))
             {
                 state.StateNumber = (UserState)Enum.Parse(typeof(UserState), callback.Data.Split(":")[1]);
                 state.LastCommand = callback.Data.Split(":")[2];

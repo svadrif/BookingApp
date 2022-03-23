@@ -4,6 +4,7 @@ using Application.Interfaces.IServices;
 using Application.Pagination;
 using AutoMapper;
 using Domain.Entities;
+using Infrastructure.Validations;
 
 namespace Infrastructure.Services
 {
@@ -21,9 +22,23 @@ namespace Infrastructure.Services
         public async Task<Guid> AddAsync(AddBookingDTO bookingDTO)
         {
             Booking booking = _mapper.Map<Booking>(bookingDTO);
-            await _unitOfWork.Bookings.AddAsync(booking);
-            await _unitOfWork.CompleteAsync();
-            return booking.Id;
+            var startDb = _unitOfWork.Bookings.Search(x=>x.BookingStart==booking.BookingStart,false).FirstOrDefault();
+            var endDb = _unitOfWork.Bookings.Search(x=>x.BookingStart==booking.BookingEnd,false).FirstOrDefault();
+            if (startDb == null && endDb == null)
+            {
+                await _unitOfWork.Bookings.AddAsync(booking);
+                await _unitOfWork.CompleteAsync();
+                return booking.Id;
+
+            }
+            else if (BookingValidation.Validate(booking, startDb.BookingStart, endDb.BookingEnd))
+            {
+                await _unitOfWork.Bookings.AddAsync(booking);
+                await _unitOfWork.CompleteAsync();
+                return booking.Id;
+            }
+
+            return new Guid();
         }
 
         public async Task<PagedList<GetBookingDTO>> GetPagedAsync(PagedQueryBase query)
