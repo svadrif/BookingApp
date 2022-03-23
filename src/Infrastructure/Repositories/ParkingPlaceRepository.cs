@@ -1,4 +1,5 @@
 ﻿using Application.Extentions;
+using Application.Interfaces;
 using Application.Interfaces.IRepositories;
 using Application.Pagination;
 using Domain.Entities;
@@ -9,7 +10,7 @@ namespace Infrastructure.Repositories
 {
     public class ParkingPlaceRepository : GenericRepository<ParkingPlace>, IParkingPlaceRepository
     {
-        public ParkingPlaceRepository(ApplicationDbContext context, ILogger logger) : base(context, logger) { }
+        public ParkingPlaceRepository(ApplicationDbContext context, ILoggerManager logger) : base(context, logger) { }
 
         public async Task<PagedList<ParkingPlace>> GetPagedAsync(PagedQueryBase query, bool tracking = false)
         {

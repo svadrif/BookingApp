@@ -1,4 +1,5 @@
 ﻿using Application.Extentions;
+using Application.Interfaces;
 using Application.Interfaces.IRepositories;
 using Application.Pagination;
 using Domain.Entities;
@@ -10,7 +11,7 @@ namespace Infrastructure.Repositories
 {
     public class OfficeRepository : GenericRepository<Office>, IOfficeRepository
     {
-        public OfficeRepository(ApplicationDbContext context, ILogger logger) : base(context, logger) { }
+        public OfficeRepository(ApplicationDbContext context, ILoggerManager logger) : base(context, logger) { }
 
         public async Task<PagedList<Office>> GetPagedAsync(PagedQueryBase query, bool tracking = false)
         {

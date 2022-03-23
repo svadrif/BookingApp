@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.IRepositories;
+﻿using Application.Interfaces;
+using Application.Interfaces.IRepositories;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -10,11 +11,12 @@ namespace Infrastructure.Repositories
     {
         protected readonly ApplicationDbContext _context;
         protected readonly DbSet<T> DbSet;
-        protected readonly ILogger _logger;
+        protected readonly ILoggerManager _logger;
 
         protected GenericRepository(
             ApplicationDbContext context,
-            ILogger logger)
+            ILoggerManager logger
+            )
         {
             _context = context;
             _logger = logger;
@@ -23,34 +25,79 @@ namespace Infrastructure.Repositories
 
         public IQueryable<T> Search(Expression<Func<T, bool>> predicate, bool tracking)
         {
-            return !tracking ? DbSet.Where(predicate).AsNoTracking()
+            try
+            {
+                return !tracking ? DbSet.Where(predicate).AsNoTracking()
                              : DbSet.Where(predicate);
+            }
+            catch (Exception ex)
+            {
+                //_logger.Error(ex, "{Repo} Search method has generated an error", typeof(GenericRepository<T>));
+                return null;
+            }
         }
 
         public virtual async Task<T> GetByIdAsync(Guid id)
         {
-            return await DbSet.FindAsync(id);
+            try
+            {
+                return await DbSet.FindAsync(id);
+            }
+            catch (Exception ex)
+            {
+                //_logger.Error(ex, "{Repo} GetByIdAsync method has generated an error", typeof(GenericRepository<T>));
+                return null;
+            }
         }
 
         public virtual IQueryable<T> GetAll(bool tracking)
         {
-            return !tracking ? DbSet.AsNoTracking()
-                             : DbSet;
+            try
+            {
+                return !tracking ? DbSet.AsNoTracking()
+                                 : DbSet;
+            }
+            catch (Exception ex)
+            {
+                //_logger.Error(ex, "{Repo} GetAll method has generated an error", typeof(GenericRepository<T>));
+                return null;
+            }
         }
 
         public virtual async Task AddAsync(T entity)
         {
-            await DbSet.AddAsync(entity);
+            try
+            {
+                await DbSet.AddAsync(entity);
+            }
+            catch (Exception ex)
+            {
+                //_logger.Error(ex, "{Repo} AddAsync method has generated an error", typeof(GenericRepository<T>));
+            }
         }
 
         public virtual void Update(T entity)
         {
-            DbSet.Update(entity);
+            try
+            {
+                DbSet.Update(entity);
+            }
+            catch (Exception ex)
+            {
+                //_logger.Error(ex, "{Repo} Update method has generated an error", typeof(GenericRepository<T>));
+            }
         }
 
         public virtual void Remove(T entity)
         {
-            DbSet.Remove(entity);
+            try
+            {
+                DbSet.Remove(entity);
+            }
+            catch (Exception ex)
+            {
+                //_logger.Error(ex, "{Repo} Remove method has generated an error", typeof(GenericRepository<T>));
+            }
         }
     }
 }

@@ -27,7 +27,8 @@ namespace Infrastructure.Repositories
             IVacationRepository vacations,
             IWorkPlaceRepository workPlaces, 
             IStateRepository states,
-            IBookingHistoryRepository bookingHistories)
+            IBookingHistoryRepository bookingHistories,
+            ILogger logger)
         {
             _context = context;
             AppUsers = appUsers;
@@ -39,7 +40,7 @@ namespace Infrastructure.Repositories
             WorkPlaces = workPlaces;
             States = states;
             BookingHistories = bookingHistories;
-            _logger = logger.CreateLogger("db_logs");
+            _logger = logger;
         }
 
         public async Task<int> CompleteAsync(CancellationToken cancellationToken = new CancellationToken())

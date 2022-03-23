@@ -7,18 +7,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
         private readonly IAppUserService _appUserService;
         private readonly IAuthenticationService _authenticationService;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(IAppUserService appUserService, IAuthenticationService authenticationService)
+        public UserController(IAppUserService appUserService, IAuthenticationService authenticationService, ILogger<UserController> logger)
         {
             _appUserService = appUserService;
             _authenticationService = authenticationService;
+            _logger = logger;
         }
 
         [AllowAnonymous]
@@ -28,7 +30,7 @@ namespace API.Controllers
             var authResult = await _authenticationService.AuthenticateAsync(id);
             if (authResult == null)
                 return Unauthorized();
-
+            _logger.LogInformation("SignIn method by {id}", id);
             return Ok(authResult);
         }
 
@@ -38,10 +40,11 @@ namespace API.Controllers
         {
             var userId = await _appUserService.AddAsync(newUser);
             var authResult = await _authenticationService.AuthenticateAsync(userId);
+            _logger.LogInformation("Created a user {id}", userId);
             return Ok(authResult);
         }
 
-        [Authorize(Roles = "Admin")]
+       // [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetUsersPaged([FromQuery] PagedQueryBase query)
         {
