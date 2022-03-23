@@ -24,14 +24,12 @@ namespace TelegramBot.Helpers
 
             for (int dayOfWeek = 0; dayOfWeek < ((int)startDate.DayOfWeek + 6) % 7; dayOfWeek++)
             {
-                Console.WriteLine($"skipDay {dayOfWeek} of {(int)startDate.DayOfWeek}");
                 columns.Add(InlineKeyboardButton.WithCallbackData(" ", "."));
                 currentColumn++;
             }
 
             for (int currentDay = 0; currentDay < dayCount; currentDay++)
             {
-                Console.WriteLine($"addDay {startDate.AddDays(currentDay).Day}, which is {(int)startDate.AddDays(currentDay).DayOfWeek}");
                 columns.Add(InlineKeyboardButton.WithCallbackData($"{startDate.AddDays(currentDay).Day}", $"{startDate.AddDays(currentDay)}"));
                 currentColumn++;
 
@@ -49,7 +47,6 @@ namespace TelegramBot.Helpers
             {
                 for (int dayOfWeek = ((int)startDate.AddDays(dayCount).DayOfWeek + 6) % 7; dayOfWeek < 7; dayOfWeek++)
                 {
-                    Console.WriteLine($"skipDay {dayOfWeek} after {(int)startDate.AddDays(dayCount).DayOfWeek}");
                     columns.Add(InlineKeyboardButton.WithCallbackData(" ", "."));
                     currentColumn++;
                 }

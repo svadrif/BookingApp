@@ -138,6 +138,21 @@ namespace TelegramBot.Handlers
                         await SendDateCommand.ExecuteAsync(callback, botClient, DateTime.Now.Date, skipMonths, "one-day", UserState.SelectingOffice, history.OfficeId.ToString());
                     }
                     return;
+                #endregion
+
+                case UserState.SelectingBookingStartDate:
+                    #region SelectingBookingStartDate
+                    if (callback.Data.Substring(0, 6).Equals("month:"))
+                    {
+                        var skipMonths = int.Parse(callback.Data.Split(":")[1]);
+                        if (skipMonths < 0 || skipMonths > 3)
+                        {
+                            await botClient.AnswerCallbackQueryAsync(callback.Id, "Unavailable button");
+                            return;
+                        }
+                        await SendDateCommand.ExecuteAsync(callback, botClient, DateTime.Now.Date, skipMonths, "start", UserState.SelectingOffice, history.OfficeId.ToString());
+                    }
+                    return;
                     #endregion
             }
         }
