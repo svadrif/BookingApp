@@ -1,4 +1,5 @@
 ﻿using Application.DTOs.MapDTO;
+using Application.Interfaces;
 using Application.Interfaces.IServices;
 using Application.Pagination;
 using Microsoft.AspNetCore.Authorization;
@@ -12,10 +13,11 @@ namespace API.Controllers
     public class MapController : ControllerBase
     {
         private readonly IMapService _mapService;
-
-        public MapController(IMapService mapService)
+        private readonly ILoggerManager _logger;
+        public MapController(IMapService mapService, ILoggerManager logger)
         {
             _mapService = mapService;
+            _logger = logger;
         }
 
         [Authorize(Roles = "MapEditor")]
@@ -23,6 +25,7 @@ namespace API.Controllers
         public async Task<IActionResult> AddMap([FromBody] AddMapDTO newMap)
         {
             var mapId = await _mapService.AddAsync(newMap);
+            _logger.LogInfo($"called method {nameof(AddMap)}");
             return Ok(mapId);
         }
 
@@ -30,6 +33,7 @@ namespace API.Controllers
         public async Task<IActionResult> GetMapsPaged([FromQuery] PagedQueryBase query)
         {
             var maps = await _mapService.GetPagedAsync(query);
+            _logger.LogInfo($"called method {nameof(GetMapsPaged)}");
             return Ok(maps);
         }
 
@@ -37,6 +41,7 @@ namespace API.Controllers
         public async Task<IActionResult> GetMapsByOfficePaged([FromRoute] Guid officeId, [FromQuery] PagedQueryBase query)
         {
             var maps = await _mapService.SearchByOfficeIdAsync(officeId, query);
+            _logger.LogInfo($"called method {nameof(GetMapsByOfficePaged)} by {officeId}");
             return Ok(maps);
         }
 
@@ -44,6 +49,7 @@ namespace API.Controllers
         public async Task<IActionResult> GetMapById([FromRoute] Guid id)
         {
             var map = await _mapService.GetByIdAsync(id);
+            _logger.LogInfo($"called method {nameof(GetMapById)} by {id}");
             return Ok(map);
         }
 
@@ -53,6 +59,7 @@ namespace API.Controllers
         {
             updatedMap.Id = id;
             var map = await _mapService.UpdateAsync(updatedMap);
+            _logger.LogInfo($"called method {nameof(UpdateMap)} by {id}");
             return Ok(map);
         }
 
@@ -61,6 +68,7 @@ namespace API.Controllers
         public async Task<IActionResult> DeleteMap([FromRoute] Guid id)
         {
             var result = await _mapService.RemoveAsync(id);
+            _logger.LogInfo($"called method {nameof(DeleteMap)} by {id}");
             return Ok(result);
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Application.DTOs.ParkingPlaceDTO;
+using Application.Interfaces;
 using Application.Interfaces.IServices;
 using Application.Pagination;
 using Microsoft.AspNetCore.Authorization;
@@ -12,10 +13,11 @@ namespace API.Controllers
     public class ParkingPlaceController : ControllerBase
     {
         private readonly IParkingPlaceService _parkingPlaceService;
-
-        public ParkingPlaceController(IParkingPlaceService parkingPlaceService)
+        private readonly ILoggerManager _logger;
+        public ParkingPlaceController(IParkingPlaceService parkingPlaceService, ILoggerManager logger)
         {
             _parkingPlaceService = parkingPlaceService;
+            _logger = logger;
         }
 
         [Authorize(Roles = "MapEditor")]
@@ -23,6 +25,7 @@ namespace API.Controllers
         public async Task<IActionResult> AddParkingPlace([FromBody] AddParkingPlaceDTO newParkingPlace)
         {
             var parkingPlaceId = await _parkingPlaceService.AddAsync(newParkingPlace);
+            _logger.LogInfo($"called method {nameof(AddParkingPlace)}");
             return Ok(parkingPlaceId);
         }
 
@@ -30,6 +33,7 @@ namespace API.Controllers
         public async Task<IActionResult> GetParkingPlacesPaged([FromQuery] PagedQueryBase query)
         {
             var parkingPlaces = await _parkingPlaceService.GetPagedAsync(query);
+            _logger.LogInfo($"called method {nameof(GetParkingPlacesPaged)}");
             return Ok(parkingPlaces);
         }
 
@@ -37,6 +41,7 @@ namespace API.Controllers
         public async Task<IActionResult> GetParkingPlacesByOfficePaged([FromRoute] Guid officeId, [FromQuery] PagedQueryBase query)
         {
             var parkingPlaces = await _parkingPlaceService.SearchByOfficeIdAsync(officeId, query);
+            _logger.LogInfo($"called method {nameof(GetParkingPlacesByOfficePaged)} by {officeId}");
             return Ok(parkingPlaces);
         }
 
@@ -44,6 +49,7 @@ namespace API.Controllers
         public async Task<IActionResult> GetParkingPlaceById([FromRoute] Guid id)
         {
             var parkingPlace = await _parkingPlaceService.GetByIdAsync(id);
+            _logger.LogInfo($"called method {nameof(GetParkingPlaceById)} by {id}");
             return Ok(parkingPlace);
         }
 
@@ -53,6 +59,7 @@ namespace API.Controllers
         {
             updatedParkingPlace.Id = id;
             var parkingPlace = await _parkingPlaceService.UpdateAsync(updatedParkingPlace);
+            _logger.LogInfo($"called method {nameof(UpdateParkingPlace)} by {id}");
             return Ok(parkingPlace);
         }
 
@@ -61,6 +68,7 @@ namespace API.Controllers
         public async Task<IActionResult> DeleteParkingPlace([FromRoute] Guid id)
         {
             var result = await _parkingPlaceService.RemoveAsync(id);
+            _logger.LogInfo($"called method {nameof(DeleteParkingPlace)} by {id}");
             return Ok(result);
         }
     }
