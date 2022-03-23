@@ -4,6 +4,7 @@ using Application.Interfaces.IServices;
 using Application.Pagination;
 using AutoMapper;
 using Domain.Entities;
+using Infrastructure.Validations;
 
 namespace Infrastructure.Services
 {
@@ -20,8 +21,11 @@ namespace Infrastructure.Services
         public async Task<Guid> AddAsync(AddOfficeDTO officeDTO)
         {
             Office office = _mapper.Map<Office>(officeDTO);
-            await _unitOfWork.Offices.AddAsync(office);
-            await _unitOfWork.CompleteAsync();
+            if (OfficeValidation.Validate(office))
+            {
+                await _unitOfWork.Offices.AddAsync(office);
+                await _unitOfWork.CompleteAsync();
+            }
             return office.Id;
         }
 
@@ -65,8 +69,11 @@ namespace Infrastructure.Services
                 return null;
 
             _mapper.Map(officeDTO, office);
-            _unitOfWork.Offices.Update(office);
-            await _unitOfWork.CompleteAsync();
+            if (OfficeValidation.Validate(office))
+            {
+                _unitOfWork.Offices.Update(office);
+                await _unitOfWork.CompleteAsync();
+            }
             return _mapper.Map<GetOfficeDTO>(office);
         }
 
