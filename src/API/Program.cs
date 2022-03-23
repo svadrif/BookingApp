@@ -3,22 +3,21 @@ using Application.Authentication;
 using Infrastructure;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using Serilog.Events;
 using Telegram.Bot;
 using TelegramBot;
 
 
 JwtSettings _jwtSettings = new JwtSettings();
-try 
-{    
+try
+{
     var builder = WebApplication.CreateBuilder(args);
 
     // Reading AppSettings + Enebles Serilog
     // Full setup of serilog. We read log settings from appsettings.json
-    builder.Host.UseSerilog((context, services, configuration) => configuration    
+    builder.Host.UseSerilog((context, services, configuration) => configuration
             .ReadFrom.Configuration(context.Configuration)
             .ReadFrom.Services(services)
-            .Enrich.FromLogContext()); 
+            .Enrich.FromLogContext());
     builder.Configuration.Bind(_jwtSettings);
 
     // Add services to the container.

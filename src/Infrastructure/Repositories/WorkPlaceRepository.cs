@@ -4,7 +4,6 @@ using Application.Interfaces.IRepositories;
 using Application.Pagination;
 using Domain.Entities;
 using Infrastructure.Context;
-using Serilog;
 
 namespace Infrastructure.Repositories
 {

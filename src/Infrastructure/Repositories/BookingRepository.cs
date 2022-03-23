@@ -4,7 +4,6 @@ using Application.Interfaces.IRepositories;
 using Application.Pagination;
 using Domain.Entities;
 using Infrastructure.Context;
-using Serilog;
 
 namespace Infrastructure.Repositories
 {
@@ -51,7 +50,7 @@ namespace Infrastructure.Repositories
                             .Sort(query.SortOn, query.SortDirection)
                             .ToPagedListAsync(query);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError($"Something went wrong in the {nameof(GetPagedByWorkPlaceIdAsync)} action {ex}");
                 return new PagedList<Booking>(new List<Booking>(), 0, 0, 0);

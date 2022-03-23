@@ -1,11 +1,5 @@
 ﻿using Application.Interfaces;
 using Serilog;
-using Serilog.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Logging
 {
@@ -14,7 +8,7 @@ namespace Application.Logging
         private readonly ILogger _logger;
         public LoggerManager(ILogger logger)
         {
-            _logger = logger; 
+            _logger = logger;
         }
         public void LogDebug(string message)
         {

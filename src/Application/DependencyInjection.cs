@@ -1,6 +1,4 @@
-﻿using Application.Interfaces;
-using Application.Logging;
-using Application.Profiles;
+﻿using Application.Profiles;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application
@@ -8,7 +6,7 @@ namespace Application
     public static class DependencyInjection
     {
         public static void AddApplication(this IServiceCollection services)
-        {           
+        {
             services.AddAutoMapper(typeof(AppUserProfile));
             services.AddAutoMapper(typeof(BookingProfile));
             services.AddAutoMapper(typeof(MapProfile));

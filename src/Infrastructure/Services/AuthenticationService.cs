@@ -51,7 +51,7 @@ namespace Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogWarn($"Non correct info in {nameof(AuthenticateAsync)} action {ex}");
+                _logger.LogDebug($"Non correct info in {nameof(AuthenticateAsync)} action {ex}");
                 return null;
             }
         }
@@ -81,7 +81,7 @@ namespace Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogWarn($"Something went wrong in {nameof(AuthenticateAsync)} action {ex}");
+                _logger.LogDebug($"Something went wrong in {nameof(AuthenticateAsync)} action {ex}");
                 return null;
             }
         }

@@ -5,7 +5,6 @@ using Application.Pagination;
 using Domain.Entities;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
-using Serilog;
 
 namespace Infrastructure.Repositories
 {

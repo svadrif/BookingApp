@@ -1,6 +1,5 @@
 ﻿using Application.Interfaces;
 using Application.Interfaces.IRepositories;
-using Serilog;
 
 namespace Infrastructure.Repositories
 {
@@ -25,7 +24,7 @@ namespace Infrastructure.Repositories
             IBookingRepository bookings,
             IParkingPlaceRepository parkingPlaces,
             IVacationRepository vacations,
-            IWorkPlaceRepository workPlaces, 
+            IWorkPlaceRepository workPlaces,
             IStateRepository states,
             IBookingHistoryRepository bookingHistories,
             ILoggerManager logger)

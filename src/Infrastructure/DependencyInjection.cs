@@ -2,7 +2,6 @@
 using Application.Interfaces;
 using Application.Interfaces.IRepositories;
 using Application.Interfaces.IServices;
-using Application.Logging;
 using Infrastructure.Context;
 using Infrastructure.Repositories;
 using Infrastructure.Services;

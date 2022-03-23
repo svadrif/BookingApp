@@ -4,7 +4,6 @@ using Application.Interfaces.IRepositories;
 using Application.Pagination;
 using Domain.Entities;
 using Infrastructure.Context;
-using Serilog;
 
 namespace Infrastructure.Repositories
 {
@@ -14,7 +13,7 @@ namespace Infrastructure.Repositories
 
         public async Task<PagedList<Map>> GetPagedAsync(PagedQueryBase query, bool tracking = false)
         {
-            try 
+            try
             {
                 return await GetAll(tracking)
                             .Sort(query.SortOn, query.SortDirection)

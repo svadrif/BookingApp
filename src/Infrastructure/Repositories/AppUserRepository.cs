@@ -5,7 +5,6 @@ using Application.Pagination;
 using Domain.Entities;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
-using Serilog;
 
 namespace Infrastructure.Repositories
 {
@@ -14,14 +13,14 @@ namespace Infrastructure.Repositories
         public AppUserRepository(
             ApplicationDbContext context,
             ILoggerManager logger
-            ): base(context, logger)
+            ) : base(context, logger)
         { }
 
         public async Task<AppUser> GetByTelegramIdAsync(long telegramId, bool tracking = false)
         {
             try
             {
-                return await Search(x => x.TelegramId == telegramId,tracking).FirstOrDefaultAsync();
+                return await Search(x => x.TelegramId == telegramId, tracking).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -34,7 +33,7 @@ namespace Infrastructure.Repositories
         {
             try
             {
-                return await Search(x => x.Email == email,tracking).FirstOrDefaultAsync();
+                return await Search(x => x.Email == email, tracking).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -51,10 +50,10 @@ namespace Infrastructure.Repositories
                         .Sort(query.SortOn, query.SortDirection)
                         .ToPagedListAsync(query);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError($"Something went wrong in the {nameof(GetPagedAsync)} action {ex}");
-                return new PagedList<AppUser>(new List<AppUser>(),0,0,0);
+                return new PagedList<AppUser>(new List<AppUser>(), 0, 0, 0);
             }
         }
     }
