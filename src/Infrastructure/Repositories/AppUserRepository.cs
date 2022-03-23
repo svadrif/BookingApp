@@ -1,4 +1,5 @@
 ﻿using Application.Extentions;
+using Application.Interfaces;
 using Application.Interfaces.IRepositories;
 using Application.Pagination;
 using Domain.Entities;
@@ -12,8 +13,9 @@ namespace Infrastructure.Repositories
     {
         public AppUserRepository(
             ApplicationDbContext context,
-            ILogger logger
-        ) : base(context, logger) { }
+            ILoggerManager logger
+            ): base(context, logger)
+        { }
 
         public async Task<AppUser> GetByTelegramIdAsync(long telegramId, bool tracking = false)
         {
@@ -25,7 +27,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "{Repo} GetByTelegramIdAsync method has generated an error", typeof(AppUserRepository));
+                //_logger.Error(ex, "{Repo} GetByTelegramIdAsync method has generated an error", typeof(AppUserRepository));
                 return new AppUser();
             }
         }
@@ -40,7 +42,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "{Repo} GetByEmailAsync method has generated an error", typeof(AppUserRepository));
+                //_logger.Error(ex, "{Repo} GetByEmailAsync method has generated an error", typeof(AppUserRepository));
                 return new AppUser();
             }
         }
@@ -49,13 +51,17 @@ namespace Infrastructure.Repositories
         {
             try
             {
+                throw new Exception();
+
                 return await GetAll(tracking)
                         .Sort(query.SortOn, query.SortDirection)
                         .ToPagedListAsync(query);
             }
             catch(Exception ex)
             {
-                Log.Error(ex, "{Repo} GetPagedAsync method has generated an error", typeof(AppUserRepository));
+                _logger.LogError($"GetPagedAsync method has generated an error {ex}");
+                //_logger.Error(ex, "{Repo} GetPagedAsync method has generated an error", typeof(AppUserRepository));
+                //_logger.LogError($"Something went wrong in the {nameof(GetPagedAsync)}action {ex}");
                 return new PagedList<AppUser>(new List<AppUser>(),0,0,0);
             }
         }

@@ -1,4 +1,6 @@
-﻿using Application.Profiles;
+﻿using Application.Interfaces;
+using Application.Logging;
+using Application.Profiles;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application
@@ -7,6 +9,7 @@ namespace Application
     {
         public static void AddApplication(this IServiceCollection services)
         {
+            services.AddScoped<ILoggerManager, LoggerManager>();
             services.AddAutoMapper(typeof(AppUserProfile));
             services.AddAutoMapper(typeof(BookingProfile));
             services.AddAutoMapper(typeof(MapProfile));
