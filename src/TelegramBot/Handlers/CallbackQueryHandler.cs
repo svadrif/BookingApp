@@ -26,7 +26,7 @@ namespace TelegramBot.Handlers
             var state = await stateService.GetByUserIdAsync(user.Id);
             var history = await historyService.GetByUserIdAsync(user.Id);
 
-            if (callback.Data.Substring(0, 5).Equals("back:"))
+            if (callback.Data.Length > 5 && callback.Data.Substring(0, 5).Equals("back:"))
             {
                 state.StateNumber = (UserState)Enum.Parse(typeof(UserState), callback.Data.Split(":")[1]);
 
@@ -132,7 +132,7 @@ namespace TelegramBot.Handlers
 
                 case UserState.SelectingBookingDate:
                     #region SelectingBookingDate
-                    if (callback.Data.Substring(0, 6).Equals("month:"))
+                    if (callback.Data.Length > 6 && callback.Data.Substring(0, 6).Equals("month:"))
                     {
                         var skipMonths = int.Parse(callback.Data.Split(":")[1]);
                         if (skipMonths < 0 || skipMonths > 3)
@@ -160,7 +160,7 @@ namespace TelegramBot.Handlers
 
                 case UserState.SelectingBookingStartDate:
                     #region SelectingBookingStartDate
-                    if (callback.Data.Substring(0, 6).Equals("month:"))
+                    if (callback.Data.Length > 6 && callback.Data.Substring(0, 6).Equals("month:"))
                     {
                         var skipMonths = int.Parse(callback.Data.Split(":")[1]);
                         if (skipMonths < 0 || skipMonths > 3)
@@ -184,7 +184,7 @@ namespace TelegramBot.Handlers
 
                 case UserState.SelectingBookingEndDate:
                     #region SelectingBookingEndDate
-                    if (callback.Data.Substring(0, 6).Equals("month:"))
+                    if (callback.Data.Length > 6 && callback.Data.Substring(0, 6).Equals("month:"))
                     {
                         var skipMonths = int.Parse(callback.Data.Split(":")[1]) - (history.BookingStart.Value.Month - DateTime.Now.Month);
                         var monthDifference = DateTime.Now.AddMonths(3).Month - history.BookingStart.Value.Month;
