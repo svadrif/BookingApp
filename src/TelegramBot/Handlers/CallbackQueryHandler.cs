@@ -70,7 +70,11 @@ namespace TelegramBot.Handlers
                             return;
 
                         case "My Bookings":
-                            await botClient.AnswerCallbackQueryAsync(callback.Id, "Unavailable button");
+                            await SendBookingsCommand.ExecuteAsync(callback, botClient, bookingService, workPlaceService, mapService, officeService, user.Id);
+
+                            state.LastCommand = callback.Data;
+                            state.StateNumber = UserState.ReviewingMyBookings;
+                            await stateService.UpdateAsync(state);
                             return;
                     }
                     return;
@@ -387,6 +391,13 @@ namespace TelegramBot.Handlers
                     history.Frequancy = string.Empty;
                     history.ParkingPlaceId = null;
                     await historyService.UpdateAsync(history);
+                    return;
+                #endregion
+
+
+                case UserState.ReviewingMyBookings:
+                    #region ReviewingMyBookings
+                    await botClient.AnswerCallbackQueryAsync(callback.Id, "Unavailable button");
                     return;
                     #endregion
             }
