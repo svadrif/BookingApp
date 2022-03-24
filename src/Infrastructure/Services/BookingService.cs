@@ -32,7 +32,7 @@ namespace Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogWarn($"Non correct values in the {nameof(AddAsync)} action {ex}");
-                return null;
+                return Guid.Empty;
             }
         }
 

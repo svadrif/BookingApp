@@ -21,7 +21,7 @@ namespace Application
             return services.AddSerilogServices(
                 new LoggerConfiguration()
                     .MinimumLevel.Verbose()
-                    .WriteTo.Seq(configuration.GetSection("Serillog")["serverUrl"])
+                    .WriteTo.Seq(configuration.GetSection("Serilog")["serverUrl"])
                     .WriteTo.Logger(l => l.Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Information).WriteTo.File(@"Logs\Info-{Date}.log", rollingInterval: RollingInterval.Day))
                     .WriteTo.Logger(l => l.Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Debug).WriteTo.File(@"Logs\Debug-{Date}.log", rollingInterval: RollingInterval.Day))
                     .WriteTo.Logger(l => l.Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Warning).WriteTo.File(@"Logs\Warning-{Date}.log", rollingInterval: RollingInterval.Day))
