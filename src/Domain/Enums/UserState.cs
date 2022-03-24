@@ -19,15 +19,17 @@ namespace Domain.Enums
         SelectingSpecificWorkPlace,
 
         // SpecifyingWorkPlace
-        SpecifyingWorkPlaceSelectingSpecificMap,
+            // Map
+        SpecifyingWorkPlaceSelectingExactMap,
         SpecifyingWorkPlaceSelectingMapFloor,
         SpecifyingWorkPlaceSelectingMapAttributes,
+            // WorkPlace
         SpecifyingWorkPlaceSelectingExactWorkPlace,
         SpecifyingWorkPlaceSelectingWorkPlace,
         SpecifyingWorkPlaceSelectingWorkPlaceAttibutes,
 
         // Booking setting date states
-        // One-day
+            // One-day
         SelectingBookingDate,
             // Continuous
         SelectingBookingStartDate,
