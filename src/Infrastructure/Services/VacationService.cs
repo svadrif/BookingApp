@@ -4,6 +4,7 @@ using Application.Interfaces.IServices;
 using Application.Pagination;
 using AutoMapper;
 using Domain.Entities;
+using Application.Interfaces;
 
 namespace Infrastructure.Services
 {
@@ -11,65 +12,115 @@ namespace Infrastructure.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILoggerManager _logger;
 
-        public VacationService(IUnitOfWork unitOfWork, IMapper mapper)
+        public VacationService(IUnitOfWork unitOfWork, IMapper mapper, ILoggerManager logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<Guid> AddAsync(AddVacationDTO vacationDTO)
         {
-            Vacation vacation = _mapper.Map<Vacation>(vacationDTO);
-            await _unitOfWork.Vacations.AddAsync(vacation);
-            await _unitOfWork.CompleteAsync();
-            return vacation.Id;
+            try
+            {
+                Vacation vacation = _mapper.Map<Vacation>(vacationDTO);
+                await _unitOfWork.Vacations.AddAsync(vacation);
+                await _unitOfWork.CompleteAsync();
+                return vacation.Id;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarn($"Non correct values in the {nameof(AddAsync)} action {ex}");
+                return Guid.Empty;
+            }
         }
 
         public async Task<PagedList<GetVacationDTO>> GetPagedAsync(PagedQueryBase query)
         {
-            var vacations = await _unitOfWork.Vacations.GetPagedAsync(query);
-            var mapVacations = _mapper.Map<List<GetVacationDTO>>(vacations);
-            var vacationsDTO = new PagedList<GetVacationDTO>(mapVacations, vacations.TotalCount, vacations.CurrentPage, vacations.PageSize);
-            return vacationsDTO;
+            try
+            {
+                var vacations = await _unitOfWork.Vacations.GetPagedAsync(query);
+                var mapVacations = _mapper.Map<List<GetVacationDTO>>(vacations);
+                var vacationsDTO = new PagedList<GetVacationDTO>(mapVacations, vacations.TotalCount, vacations.CurrentPage, vacations.PageSize);
+                return vacationsDTO;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarn($"Non correct values in the {nameof(GetPagedAsync)} action {ex}");
+                return null;
+            }
         }
 
         public async Task<GetVacationDTO> GetByIdAsync(Guid Id)
         {
-            var vacation = await _unitOfWork.Vacations.GetByIdAsync(Id);
-            return _mapper.Map<GetVacationDTO>(vacation);
+            try
+            {
+                var vacation = await _unitOfWork.Vacations.GetByIdAsync(Id);
+                return _mapper.Map<GetVacationDTO>(vacation);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarn($"Non correct values in the {nameof(GetByIdAsync)} action {ex}");
+                return null;
+            }
         }
 
         public async Task<bool> RemoveAsync(Guid Id)
         {
-            var vacation = await _unitOfWork.Vacations.GetByIdAsync(Id);
-            if (vacation == null)
-                return false;
+            try
+            {
+                var vacation = await _unitOfWork.Vacations.GetByIdAsync(Id);
+                if (vacation == null)
+                    return false;
 
-            _unitOfWork.Vacations.Remove(vacation);
-            await _unitOfWork.CompleteAsync();
-            return true;
+                _unitOfWork.Vacations.Remove(vacation);
+                await _unitOfWork.CompleteAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarn($"Non correct values in the {nameof(RemoveAsync)} action {ex}");
+                return false;
+            }
         }
 
         public async Task<GetVacationDTO> UpdateAsync(UpdateVacationDTO vacationDTO)
         {
-            var vacation = await _unitOfWork.Vacations.GetByIdAsync(vacationDTO.Id);
-            if (vacation == null)
-                return null;
+            try
+            {
+                var vacation = await _unitOfWork.Vacations.GetByIdAsync(vacationDTO.Id);
+                if (vacation == null)
+                    return null;
 
-            _mapper.Map(vacationDTO, vacation);
-            _unitOfWork.Vacations.Update(vacation);
-            await _unitOfWork.CompleteAsync();
-            return _mapper.Map<GetVacationDTO>(vacation);
+                _mapper.Map(vacationDTO, vacation);
+                _unitOfWork.Vacations.Update(vacation);
+                await _unitOfWork.CompleteAsync();
+                return _mapper.Map<GetVacationDTO>(vacation);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarn($"Non correct values in the {nameof(UpdateAsync)} action {ex}");
+                return null;
+            }
         }
 
         public async Task<IEnumerable<GetVacationDTO>> SearchByUserIdAsync(Guid UserId)
         {
-            var vacations = _unitOfWork.Vacations.Search(c => c.UserId.Equals(UserId), false);
-            if (vacations == null)
-                return null;
+            try
+            {
+                var vacations = _unitOfWork.Vacations.Search(c => c.UserId.Equals(UserId), false);
+                if (vacations == null)
+                    return null;
 
-            return _mapper.Map<IEnumerable<GetVacationDTO>>(vacations);
+                return _mapper.Map<IEnumerable<GetVacationDTO>>(vacations);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarn($"Non correct values in the {nameof(SearchByUserIdAsync)} action {ex}");
+                return null;
+            }
         }
     }
 }
