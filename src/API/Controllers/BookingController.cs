@@ -1,6 +1,8 @@
 ﻿using Application.DTOs.BookingDTO;
+using Application.Interfaces;
 using Application.Interfaces.IServices;
 using Application.Pagination;
+using FluentEmail.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,16 +14,20 @@ namespace API.Controllers
     public class BookingController : ControllerBase
     {
         private readonly IBookingService _bookingService;
+        private readonly IEmailService _emailService;
 
-        public BookingController(IBookingService bookingService)
+        public BookingController(IBookingService bookingService, IEmailService emailService)
         {
             _bookingService = bookingService;
+            _emailService = emailService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddBooking([FromBody] AddBookingDTO newBooking)
+        public async Task<IActionResult> AddBooking([FromBody] AddBookingDTO newBooking, [FromServices] IFluentEmail mailer)
         {
             var bookingId = await _bookingService.AddAsync(newBooking);
+            if (bookingId != null)
+                var email = await _emailService.SendAsync(newBooking, mailer);
             return Ok(bookingId);
         }
 
