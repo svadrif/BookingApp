@@ -67,7 +67,7 @@ namespace TelegramBot.Handlers
                             return;
 
                         case "My Bookings":
-
+                            await botClient.AnswerCallbackQueryAsync(callback.Id, "Unavailable button");
                             return;
                     }
                     return;
@@ -221,7 +221,7 @@ namespace TelegramBot.Handlers
                     switch (callback.Data)
                     {
                         case "Yes":
-
+                            await botClient.AnswerCallbackQueryAsync(callback.Id, "Unavailable button");
                             return;
 
                         case "No":
@@ -251,7 +251,7 @@ namespace TelegramBot.Handlers
                             return;
 
                         case "No":
-
+                            await botClient.AnswerCallbackQueryAsync(callback.Id, "Unavailable button");
                             return;
                     }
                     return;
@@ -270,7 +270,7 @@ namespace TelegramBot.Handlers
                             return;
 
                         case "No":
-
+                            await botClient.AnswerCallbackQueryAsync(callback.Id, "Unavailable button");
                             return;
                     }
                     return;
@@ -308,7 +308,7 @@ namespace TelegramBot.Handlers
                             return;
 
                         case "No":
-
+                            await botClient.AnswerCallbackQueryAsync(callback.Id, "Unavailable button");
                             return;
                     }
                     return;
