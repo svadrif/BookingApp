@@ -88,13 +88,12 @@ namespace Infrastructure
             #endregion
             #region Email
             services.AddTransient<IEmailService, EmailService>();
-            var from = configuration.GetSection("Email")["From"];
-            var gmailSender = configuration.GetSection("Gmail")["Sender"];
-            var gmailPassword = configuration.GetSection("Gmail")["Password"];
-            var gmailPort = Convert.ToInt32(configuration.GetSection("Gmail")["Port"]);
+            var from = configuration["Mail:From"];
+            var gmailSender = configuration["Gmail:Sender"];
+            var gmailPassword = configuration["Gmail:Password"];
+            var gmailPort = Convert.ToInt32(configuration["Gmail:Port"]);
 
             services.AddFluentEmail(gmailSender, from)
-                    .AddRazorRenderer()
                     .AddSmtpSender(new SmtpClient("smtp.gmail.com")
                     {
                         //set smtp-client with SSL Authentication

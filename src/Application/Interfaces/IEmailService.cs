@@ -11,6 +11,7 @@ namespace Application.Interfaces
 {
     public interface IEmailService
     {
-        Task SendAsync(AddBookingDTO newBooking, IFluentEmail mailer);
+        Task SendBaseEmailAsync(AddBookingDTO newBooking);
+        Task SendHtmlEmailAsync(AddBookingDTO newBooking);
     }
 }

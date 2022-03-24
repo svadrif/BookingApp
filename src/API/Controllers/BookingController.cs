@@ -15,10 +15,9 @@ namespace API.Controllers
     {
         private readonly IBookingService _bookingService;
         private readonly ILoggerManager _logger;
-        public BookingController(IBookingService bookingService, ILoggerManager logger)
         private readonly IEmailService _emailService;
 
-        public BookingController(IBookingService bookingService, IEmailService emailService)
+        public BookingController(IBookingService bookingService, ILoggerManager logger, IEmailService emailService)
         {
             _bookingService = bookingService;
             _logger = logger;
@@ -26,13 +25,14 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddBooking([FromBody] AddBookingDTO newBooking, [FromServices] IFluentEmail mailer)
+        public async Task<IActionResult> AddBooking([FromBody] AddBookingDTO newBooking)
         {
-            var bookingId = await _bookingService.AddAsync(newBooking);
-            if (bookingId != null)
-                var email = await _emailService.SendAsync(newBooking, mailer);
+            //var bookingId = await _bookingService.AddAsync(newBooking);
+            //if (bookingId != null)
+                 await _emailService.SendAsync(newBooking);
             _logger.LogInfo($"called method {nameof(AddBooking)}");
-            return Ok(bookingId);
+            //return Ok(bookingId);
+            return Ok();
         }
 
         [HttpGet]
