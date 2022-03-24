@@ -23,13 +23,32 @@ public static class BookingValidation
 
     public static bool ValidateBookingDate(Booking booking,DateTimeOffset startDb,DateTimeOffset endDb)
     {
-        //already exists
+        
         if (DateTimeOffset.Compare(booking.BookingStart.Date, startDb.Date) == 0)
         {
             return false;
         }
         
         if(DateTimeOffset.Compare(booking.BookingEnd.Date,endDb.Date) == 0)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public static bool ValidateOnVacation(Booking booking,Vacation vacation)
+    {
+        var vacationEnd = vacation.VacationEnd??default;
+        var vacationStart = vacation.VacationStart??default;
+        if (DateTimeOffset.Compare(booking.BookingStart.Date, vacationStart.Date) > 0)
+        {
+            return false;
+        }
+        if(DateTimeOffset.Compare(booking.BookingStart.Date,vacationStart.Date) < 0 && (DateTimeOffset.Compare(booking.BookingEnd.Date, vacationStart.Date) > 0 ))
+        {
+            return false;
+        }
+        if(DateTimeOffset.Compare(booking.BookingStart.Date, vacationStart.Date) > 0 && (DateTimeOffset.Compare(booking.BookingStart.Date, vacationEnd.Date) < 0))
         {
             return false;
         }
