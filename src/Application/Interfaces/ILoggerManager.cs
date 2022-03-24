@@ -1,4 +1,4 @@
-﻿namespace Application.Interfaces
+namespace Application.Interfaces
 {
     public interface ILoggerManager
     {
@@ -8,3 +8,4 @@
         void LogError(string message);
     }
 }
+

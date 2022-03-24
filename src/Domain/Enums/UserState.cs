@@ -14,17 +14,30 @@ namespace Domain.Enums
         SelectingCity,
         SelectingOffice,
         SelectingBookingType,
-        SelectingBookingDate,
-        SelectingFloor,
-        SelectingWorkPlace,
+        SelectingBookingRecurringType,
         SelectingParkingPlace,
+        SelectingSpecificWorkPlace,
 
-        // Booking setting states
-        SettingShortTermBooking,
-        SettingLongTermBooking,
-        SettingRecurringBooking,
+        // SpecifyingWorkPlace
+            // Map
+        SpecifyingWorkPlaceSelectingExactMap,
+        SpecifyingWorkPlaceSelectingMapFloor,
+        SpecifyingWorkPlaceSelectingMapAttributes,
+            // WorkPlace
+        SpecifyingWorkPlaceSelectingExactWorkPlace,
+        SpecifyingWorkPlaceSelectingWorkPlace,
+        SpecifyingWorkPlaceSelectingWorkPlaceAttibutes,
 
-    
+        // Booking setting date states
+            // One-day
+        SelectingBookingDate,
+            // Continuous
+        SelectingBookingStartDate,
+        SelectingBookingEndDate,
+            // Recurring
+        SelectingRecurringDays,
+
+
         ReviewingMyBookings,
 
         // Booking editing process states

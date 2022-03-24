@@ -12,7 +12,7 @@ namespace Infrastructure.Repositories
             ApplicationDbContext context,
             ILoggerManager logger
             ) : base(context, logger) { }
-
+            
         public async Task<State> GetByUserIdAsync(Guid userId, bool tracking = false)
         {
             try
