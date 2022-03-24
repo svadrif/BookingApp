@@ -17,11 +17,17 @@ namespace Domain.Enums
         SelectingBookingRecurringType,
         SelectingParkingPlace,
         SelectingSpecificWorkPlace,
-        SelectingFloor,
-        SelectingWorkPlace,
+
+        // SpecifyingWorkPlace
+        SpecifyingWorkPlaceSelectingSpecificMap,
+        SpecifyingWorkPlaceSelectingMapFloor,
+        SpecifyingWorkPlaceSelectingMapAttributes,
+        SpecifyingWorkPlaceSelectingExactWorkPlace,
+        SpecifyingWorkPlaceSelectingWorkPlace,
+        SpecifyingWorkPlaceSelectingWorkPlaceAttibutes,
 
         // Booking setting date states
-            // One-day
+        // One-day
         SelectingBookingDate,
             // Continuous
         SelectingBookingStartDate,
