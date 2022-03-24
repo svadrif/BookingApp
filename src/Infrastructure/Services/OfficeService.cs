@@ -27,7 +27,7 @@ namespace Infrastructure.Services {
                     return office.Id;
 
                 } else {
-                    throw Exception e;
+                    throw new Exception();
                 }
             } catch (Exception ex) {
                 _logger.LogWarn($"Non correct values in the {nameof(AddAsync)} action {ex}");
@@ -88,11 +88,11 @@ namespace Infrastructure.Services {
                 _mapper.Map(officeDTO, office);
                 if (OfficeValidation.Validate(office)) {
                     _unitOfWork.Offices.Update(office);
-                    await _unitOfWork.CompleteAsync();.
+                    await _unitOfWork.CompleteAsync();
                     return _mapper.Map < GetOfficeDTO > (office);
 
                 } else {
-                    throw Exception ex;
+                    throw new Exception();
                 }
             } catch (Exception ex) {
                 _logger.LogWarn($"Non correct values in the {nameof(UpdateAsync)} action {ex}");

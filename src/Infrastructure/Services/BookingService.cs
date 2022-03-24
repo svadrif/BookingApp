@@ -37,7 +37,7 @@ namespace Infrastructure.Services {
                         await _unitOfWork.CompleteAsync();
                         return booking.Id;
                     } else {
-                        throw Exception e;
+                        throw new Exception();
                     }
                 } else {
                     foreach(var item in workPlace) {
@@ -52,7 +52,7 @@ namespace Infrastructure.Services {
                         await _unitOfWork.CompleteAsync();
                         return booking.Id;
                     } else {
-                        throw Exception e;
+                        throw new Exception();
                     }
                 }
             } catch (Exception ex) {
@@ -143,7 +143,7 @@ namespace Infrastructure.Services {
                         await _unitOfWork.CompleteAsync();
                         return _mapper.Map < GetBookingDTO > (booking);
                     } else {
-                        throw Exception e;
+                        throw new Exception();
                     }
                 } else {
 
@@ -159,7 +159,7 @@ namespace Infrastructure.Services {
                         await _unitOfWork.CompleteAsync();
                         return _mapper.Map < GetBookingDTO > (booking);
                     } else {
-                        throw Exception e;
+                        throw new Exception();
                     }
                 }
             } catch (Exception ex) {

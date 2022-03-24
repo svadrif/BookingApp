@@ -19,25 +19,23 @@ namespace Infrastructure.Services {
         }
 
         public async Task < Guid > AddAsync(AddMapDTO mapDTO) {
-            <<
-            << << < feature / #79-add-api-features
-            Map map = _mapper.Map < Map > (mapDTO);
-            if (MapValidation.Validate(map)) {
-                await _unitOfWork.Maps.AddAsync(map);
-                await _unitOfWork.CompleteAsync();
-            }
-            return map.Id; ===
-            === =
-            try {
+           
+            try
+            {
                 Map map = _mapper.Map < Map > (mapDTO);
-                await _unitOfWork.Maps.AddAsync(map);
-                await _unitOfWork.CompleteAsync();
-                return map.Id;
+                if (MapValidation.Validate(map)) {
+                    await _unitOfWork.Maps.AddAsync(map);
+                    await _unitOfWork.CompleteAsync();
+                    return map.Id;
+                }
+                else
+                {
+                    throw new Exception();
+                }
             } catch (Exception ex) {
                 _logger.LogWarn($"Non correct values in the {nameof(AddAsync)} action {ex}");
                 return Guid.Empty;
-            } >>>
-            >>> > master
+            } 
         }
 
         public async Task < PagedList < GetMapDTO >> GetPagedAsync(PagedQueryBase query) {
@@ -103,7 +101,7 @@ namespace Infrastructure.Services {
                     return _mapper.Map < GetMapDTO > (map);
 
                 } else {
-                    throw Exception e;
+                    throw new Exception();
                 }
             } catch (Exception ex) {
                 _logger.LogWarn($"Non correct values in the {nameof(UpdateAsync)} action {ex}");

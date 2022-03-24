@@ -28,7 +28,7 @@ namespace Infrastructure.Services {
                         return vacation.Id;
 
                     } else {
-                        throw Exception e;
+                        throw new Exception();
                     }
                 } catch (Exception ex) {
                     _logger.LogWarn($"Non correct values in the {nameof(AddAsync)} action {ex}");
@@ -80,30 +80,35 @@ namespace Infrastructure.Services {
                         return null;
 
                     _mapper.Map(vacationDTO, vacation);
-                    if (VacationValidation.Validate(vacation)) {
+                    if (VacationValidation.Validate(vacation))
+                    {
                         _unitOfWork.Vacations.Update(vacation);
                         await _unitOfWork.CompleteAsync();
-                        return _mapper.Map < GetVacationDTO > (vacation);
-
-                    } else {
-                        throw Exception e;
-                    } catch (Exception ex) {
-                        _logger.LogWarn($"Non correct values in the {nameof(UpdateAsync)} action {ex}");
-                        return null;
+                        return _mapper.Map<GetVacationDTO>(vacation);
+                    }
+                    else
+                    {
+                        throw new Exception();
                     }
                 }
-
-                public async Task < IEnumerable < GetVacationDTO >> SearchByUserIdAsync(Guid UserId) {
-                    try {
-                        var vacations = _unitOfWork.Vacations.Search(c => c.UserId.Equals(UserId), false);
-                        if (vacations == null)
-                            return null;
-
-                        return _mapper.Map < IEnumerable < GetVacationDTO >> (vacations);
-                    } catch (Exception ex) {
-                        _logger.LogWarn($"Non correct values in the {nameof(SearchByUserIdAsync)} action {ex}");
-                        return null;
-                    }
+                catch (Exception ex)
+                {
+                    _logger.LogWarn($"Non correct values in the {nameof(UpdateAsync)} action {ex}");
+                    return null;
                 }
+            }
+
+            public async Task < IEnumerable < GetVacationDTO >> SearchByUserIdAsync(Guid UserId) {
+                try {
+                    var vacations = _unitOfWork.Vacations.Search(c => c.UserId.Equals(UserId), false);
+                    if (vacations == null)
+                        return null;
+
+                    return _mapper.Map < IEnumerable < GetVacationDTO >> (vacations);
+                } catch (Exception ex) {
+                    _logger.LogWarn($"Non correct values in the {nameof(SearchByUserIdAsync)} action {ex}");
+                    return null;
+                }
+            }
             }
         }
