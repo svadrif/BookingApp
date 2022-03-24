@@ -10,5 +10,6 @@
         public Guid UserId { get; set; }
         public Guid? ParkingPlaceId { get; set; }
         public Guid WorkPlaceId { get; set; }
+        public bool IsActive { get; set; }
     }
 }
