@@ -34,7 +34,7 @@ namespace TelegramBot.Commands
             var inlineKeyboard = KeyboardBuilder.BuildInLineKeyboard(buttons, 2, backButton);
             await botClient.EditMessageTextAsync(chatId: callback.From.Id,
                                                  messageId: callback.Message.MessageId,
-                                                 text: "Select floor:/n🍽 - has kitchen/t💬 - has conference room",
+                                                 text: "Select floor:\n🍽 - has kitchen\t💬 - has conference room",
                                                  replyMarkup: inlineKeyboard);
         }
     }
