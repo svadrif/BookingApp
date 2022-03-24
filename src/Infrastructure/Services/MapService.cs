@@ -12,10 +12,10 @@ namespace Infrastructure.Services {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILoggerManager _logger;
-        public MapService(IUnitOfWork unitOfWork, IMapper mapper, ILoggerManager _logger) {
+        public MapService(IUnitOfWork unitOfWork, IMapper mapper, ILoggerManager logger) {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _logger = _logger;
+            _logger = logger;
         }
 
         public async Task < Guid > AddAsync(AddMapDTO mapDTO) {
@@ -32,8 +32,9 @@ namespace Infrastructure.Services {
                 {
                     throw new Exception();
                 }
-            } catch (Exception ex) {
-                _logger.LogWarn($"Non correct values in the {nameof(AddAsync)} action {ex}");
+            }
+            catch (Exception ex) {
+                _logger.LogWarn($"Non correct values in the {nameof(AddAsync)} action {ex.Message}");
                 return Guid.Empty;
             } 
         }
