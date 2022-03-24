@@ -254,7 +254,7 @@ namespace TelegramBot.Handlers
                 #endregion
 
                 case UserState.SpecifyingWorkPlaceSelectingExactMap:
-                    #region SpecifyingWorkPlaceSelectingSpecificMap
+                    #region SpecifyingWorkPlaceSelectingExactMap
                     switch (callback.Data)
                     {
                         case "Yes":
@@ -274,10 +274,14 @@ namespace TelegramBot.Handlers
 
                 case UserState.SpecifyingWorkPlaceSelectingMapFloor:
                     #region SpecifyingWorkPlaceSelectingMapFloor
+                    await SelectExactWorkPlaceCommand.ExecuteAsync(callback, botClient, UserState.SpecifyingWorkPlaceSelectingExactMap, "Yes");
 
-                    //state.StateNumber = UserState.SpecifyingWorkPlaceSelectingExactWorkPlace;
-                    //state.LastCommand = callback.Data;
-                    //await stateService.UpdateAsync(state);
+                    state.StateNumber = UserState.SpecifyingWorkPlaceSelectingExactWorkPlace;
+                    state.LastCommand = callback.Data;
+                    await stateService.UpdateAsync(state);
+
+                    history.MapId = Guid.Parse(callback.Data);
+                    await historyService.UpdateAsync(history);
                     return;
                     #endregion
             }
