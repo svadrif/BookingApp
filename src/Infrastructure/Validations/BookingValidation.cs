@@ -18,7 +18,6 @@ public static class BookingValidation
         {
             return false;
         }
-        
         return true;
     }
 
