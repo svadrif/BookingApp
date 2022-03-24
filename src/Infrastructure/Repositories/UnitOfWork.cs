@@ -6,6 +6,7 @@ namespace Infrastructure.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private readonly IApplicationDbContext _context;
+        private readonly ILoggerManager _logger;
         public IAppUserRepository AppUsers { get; private set; }
         public IMapRepository Maps { get; private set; }
         public IOfficeRepository Offices { get; private set; }
@@ -23,9 +24,10 @@ namespace Infrastructure.Repositories
             IBookingRepository bookings,
             IParkingPlaceRepository parkingPlaces,
             IVacationRepository vacations,
-            IWorkPlaceRepository workPlaces, 
+            IWorkPlaceRepository workPlaces,
             IStateRepository states,
-            IBookingHistoryRepository bookingHistories)
+            IBookingHistoryRepository bookingHistories,
+            ILoggerManager logger)
         {
             _context = context;
             AppUsers = appUsers;
@@ -37,11 +39,20 @@ namespace Infrastructure.Repositories
             WorkPlaces = workPlaces;
             States = states;
             BookingHistories = bookingHistories;
+            _logger = logger;
         }
 
         public async Task<int> CompleteAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-            return await _context.SaveChangesAsync(cancellationToken);
+            try
+            {
+                return await _context.SaveChangesAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong in the {nameof(CompleteAsync)} action {ex}");
+                return 0;
+            }
         }
     }
 }

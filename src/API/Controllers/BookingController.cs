@@ -1,4 +1,5 @@
 ﻿using Application.DTOs.BookingDTO;
+using Application.Interfaces;
 using Application.Interfaces.IServices;
 using Application.Pagination;
 using Microsoft.AspNetCore.Authorization;
@@ -12,16 +13,18 @@ namespace API.Controllers
     public class BookingController : ControllerBase
     {
         private readonly IBookingService _bookingService;
-
-        public BookingController(IBookingService bookingService)
+        private readonly ILoggerManager _logger;
+        public BookingController(IBookingService bookingService, ILoggerManager logger)
         {
             _bookingService = bookingService;
+            _logger = logger;
         }
 
         [HttpPost]
         public async Task<IActionResult> AddBooking([FromBody] AddBookingDTO newBooking)
         {
             var bookingId = await _bookingService.AddAsync(newBooking);
+            _logger.LogInfo($"called method {nameof(AddBooking)}");
             return Ok(bookingId);
         }
 
@@ -29,6 +32,7 @@ namespace API.Controllers
         public async Task<IActionResult> GetBookingsPaged([FromQuery] PagedQueryBase query)
         {
             var bookings = await _bookingService.GetPagedAsync(query);
+            _logger.LogInfo($"called method {nameof(GetBookingsPaged)}");
             return Ok(bookings);
         }
 
@@ -36,6 +40,7 @@ namespace API.Controllers
         public async Task<IActionResult> GetBookingsByUserIdPaged([FromRoute] Guid userId, [FromQuery] PagedQueryBase query)
         {
             var bookings = await _bookingService.SearchByUserIdAsync(userId, query);
+            _logger.LogInfo($"called method {nameof(GetBookingsByUserIdPaged)} by {userId}");
             return Ok(bookings);
         }
 
@@ -43,6 +48,7 @@ namespace API.Controllers
         public async Task<IActionResult> GetBookingsByWorkPlaceIdPaged([FromRoute] Guid workPlaceId, [FromQuery] PagedQueryBase query)
         {
             var bookings = await _bookingService.SearchByWorkPlaceIdAsync(workPlaceId, query);
+            _logger.LogInfo($"called method {nameof(GetBookingsByWorkPlaceIdPaged)}");
             return Ok(bookings);
         }
 
@@ -50,6 +56,7 @@ namespace API.Controllers
         public async Task<IActionResult> GetBookingById([FromRoute] Guid id)
         {
             var booking = await _bookingService.GetByIdAsync(id);
+            _logger.LogInfo($"called method {nameof(GetBookingById)} by {id}");
             return Ok(booking);
         }
 
@@ -58,6 +65,7 @@ namespace API.Controllers
         {
             updatedBooking.Id = id;
             var booking = await _bookingService.UpdateAsync(updatedBooking);
+            _logger.LogInfo($"called method {nameof(UpdateBooking)} by {id}");
             return Ok(booking);
         }
 
@@ -65,6 +73,7 @@ namespace API.Controllers
         public async Task<IActionResult> DeleteBooking([FromRoute] Guid id)
         {
             var result = await _bookingService.RemoveAsync(id);
+            _logger.LogInfo($"called method {nameof(DeleteBooking)} by {id}");
             return Ok(result);
         }
     }
