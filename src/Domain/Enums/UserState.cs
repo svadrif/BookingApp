@@ -17,6 +17,7 @@ namespace Domain.Enums
         SelectingBookingRecurringType,
         SelectingParkingPlace,
         SelectingSpecificWorkPlace,
+        FinishingBooking,
 
         // SpecifyingWorkPlace
             // Map
