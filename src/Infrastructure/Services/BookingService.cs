@@ -25,8 +25,8 @@ namespace Infrastructure.Services
             Booking booking = _mapper.Map<Booking>(bookingDTO);
             
             var vacation = _unitOfWork.Vacations.Search(x=>x.UserId==booking.UserId,false).FirstOrDefault();
-            
-            bool validOnVacation = BookingValidation.ValidateOnVacation(booking, vacation);
+            bool validOnVacation = true;
+            validOnVacation = vacation == null?true:BookingValidation.ValidateOnVacation(booking, vacation);
             
             var workPlace = _unitOfWork.Bookings.Search(x=>x.WorkPlaceId==booking.WorkPlaceId,false).ToList();
             bool validData = BookingValidation.Validate(booking);
