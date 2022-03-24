@@ -397,6 +397,16 @@ namespace TelegramBot.Handlers
 
                 case UserState.ReviewingMyBookings:
                     #region ReviewingMyBookings
+                    await SendBookingInfoCommand.ExecuteAsync(callback, botClient, bookingService, workPlaceService, mapService, officeService, parkingPlaceService, Guid.Parse(callback.Data));
+
+                    state.LastCommand = callback.Data;
+                    state.StateNumber = UserState.ReviewingBookingInfo;
+                    await stateService.UpdateAsync(state);
+                    return;
+                #endregion
+
+                case UserState.ReviewingBookingInfo:
+                    #region ReviewingBookingInfo
                     await botClient.AnswerCallbackQueryAsync(callback.Id, "Unavailable button");
                     return;
                     #endregion
