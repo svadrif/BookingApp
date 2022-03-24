@@ -16,6 +16,7 @@ public class HandleUpdateService
     private readonly IMapService _mapService;
     private readonly IWorkPlaceService _workPlaceService;
     private readonly IBookingService _bookingService;
+    private readonly IParkingPlaceService _parkingPlaceService;
 
     public HandleUpdateService(
         ITelegramBotClient botClient,
@@ -24,8 +25,9 @@ public class HandleUpdateService
         IBookingHistoryService historyService,
         IOfficeService officeService,
         IMapService mapService,
-        IWorkPlaceService workPlaceService, 
-        IBookingService bookingService)
+        IWorkPlaceService workPlaceService,
+        IBookingService bookingService, 
+        IParkingPlaceService parkingPlaceService)
     {
         _botClient = botClient;
         _userService = userService;
@@ -35,6 +37,7 @@ public class HandleUpdateService
         _mapService = mapService;
         _workPlaceService = workPlaceService;
         _bookingService = bookingService;
+        _parkingPlaceService = parkingPlaceService;
     }
 
     public async Task Handle(Update update)
@@ -65,7 +68,8 @@ public class HandleUpdateService
                         _officeService,
                         _mapService,
                         _workPlaceService,
-                        _bookingService);
+                        _bookingService,
+                        _parkingPlaceService);
                 return;
         }
     }

@@ -17,7 +17,8 @@ namespace TelegramBot.Handlers
             IOfficeService officeService,
             IMapService mapService,
             IWorkPlaceService workPlaceService,
-            IBookingService bookingService)
+            IBookingService bookingService,
+            IParkingPlaceService parkingPlaceService)
         {
             if (callback.Data.Equals("."))
             {
@@ -287,6 +288,7 @@ namespace TelegramBot.Handlers
                     history.HasConfRoom = null;
                     history.HasKitchen = null;
                     history.MapId = Guid.Parse(callback.Data);
+                    history.Floor = mapService.GetByIdAsync(history.MapId.Value).Result.Floor;
                     await historyService.UpdateAsync(history);
                     return;
                 #endregion
@@ -312,9 +314,22 @@ namespace TelegramBot.Handlers
                             return;
                     }
                     return;
+                #endregion
+
+                case UserState.SpecifyingWorkPlaceSelectingWorkPlace:
+                    #region SpecifyingWorkPlaceSelectingWorkPlace
+                    history.WorkPlaceId = Guid.Parse(callback.Data);
+
+                    await SendBookingSummaryCommand.ExecuteAsync(callback, botClient, history, officeService, workPlaceService, parkingPlaceService,
+                                                                 UserState.SpecifyingWorkPlaceSelectingExactWorkPlace, "Yes");
+
+                    state.StateNumber = UserState.FinishingBooking;
+                    state.LastCommand = callback.Data;
+                    await stateService.UpdateAsync(state);
+
+                    await historyService.UpdateAsync(history);
+                    return;
                     #endregion
-
-
             }
         }
     }
