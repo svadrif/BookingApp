@@ -23,21 +23,6 @@ namespace Infrastructure.Services
         public async Task<Guid> AddAsync(AddBookingDTO bookingDTO)
         {
             Booking booking = _mapper.Map<Booking>(bookingDTO);
-            // var startDb = _unitOfWork.Bookings.Search(x=>x.BookingStart==booking.BookingStart,false).FirstOrDefault();
-            // var endDb = _unitOfWork.Bookings.Search(x=>x.BookingStart==booking.BookingEnd,false).FirstOrDefault();
-            // if (startDb == null && endDb == null)
-            // {
-            //     await _unitOfWork.Bookings.AddAsync(booking);
-            //     await _unitOfWork.CompleteAsync();
-            //     return booking.Id;
-            //
-            // }
-            // else if (BookingValidation.Validate(booking, startDb.BookingStart, endDb.BookingEnd))
-            // {
-            //     await _unitOfWork.Bookings.AddAsync(booking);
-            //     await _unitOfWork.CompleteAsync();
-            //     return booking.Id;
-            // }
             var workPlace = _unitOfWork.Bookings.Search(x=>x.WorkPlaceId==booking.WorkPlaceId,false);
             if (workPlace.Any())
             {
