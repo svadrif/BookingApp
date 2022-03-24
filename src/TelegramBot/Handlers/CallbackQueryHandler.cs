@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.IServices;
+﻿using Application.DTOs.BookingDTO;
+using Application.Interfaces.IServices;
 using Domain.Enums;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -31,6 +32,7 @@ namespace TelegramBot.Handlers
             var history = await historyService.GetByUserIdAsync(user.Id);
             UserState backState;
             string backCommand;
+            AddBookingDTO booking;
 
             if (callback.Data.Length > 5 && callback.Data.Substring(0, 5).Equals("back:"))
             {
@@ -327,6 +329,63 @@ namespace TelegramBot.Handlers
                     state.LastCommand = callback.Data;
                     await stateService.UpdateAsync(state);
 
+                    await historyService.UpdateAsync(history);
+                    return;
+                #endregion
+
+                case UserState.FinishingBooking:
+                    #region FinishingBooking
+                    booking = new AddBookingDTO
+                    {
+                        UserId = history.UserId,
+                        WorkPlaceId = history.WorkPlaceId.Value,
+                        ParkingPlaceId = history.ParkingPlaceId,
+                        BookingStart = history.BookingStart.Value,
+                        BookingEnd = history.BookingEnd.Value,
+                        IsRecurring = history.IsRecurring.Value,
+                        Frequancy = history.Frequancy
+                    };
+
+                    switch (callback.Data)
+                    {
+                        case "Confirm":
+                            await StartCommand.ExecuteAsync(callback, botClient);
+
+                            await bookingService.AddAsync(booking);
+
+                            state.StateNumber = UserState.SelectingAction;
+                            state.LastCommand = callback.Data;
+                            await stateService.UpdateAsync(state);
+                            break;
+
+                        case "Cancel":
+                            await StartCommand.ExecuteAsync(callback, botClient);
+
+                            state.StateNumber = UserState.SelectingAction;
+                            state.LastCommand = callback.Data;
+                            await stateService.UpdateAsync(state);
+                            break;
+                    }
+
+                    history.Country = string.Empty;
+                    history.City = string.Empty;
+                    history.OfficeId = null;
+                    history.Floor = null;
+                    history.HasKitchen = null;
+                    history.HasConfRoom = null;
+                    history.MapId = null;
+                    history.IsNextToWindow = null;
+                    history.HasPC = null;
+                    history.HasMonitor = null;
+                    history.HasKeyboard = null;
+                    history.HasMouse = null;
+                    history.HasHeadset = null;
+                    history.WorkPlaceId = null;
+                    history.BookingStart = null;
+                    history.BookingEnd = null;
+                    history.IsRecurring = null;
+                    history.Frequancy = string.Empty;
+                    history.ParkingPlaceId = null;
                     await historyService.UpdateAsync(history);
                     return;
                     #endregion
