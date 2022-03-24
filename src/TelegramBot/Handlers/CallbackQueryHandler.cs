@@ -210,7 +210,29 @@ namespace TelegramBot.Handlers
                     return;
                 #endregion
 
+                case UserState.SelectingParkingPlace:
+                    var backState = history.BookingStart == history.BookingEnd ? UserState.SelectingBookingDate : UserState.SelectingBookingEndDate;
+                    var backCommand = history.BookingEnd.ToString();
+                    #region SelectingParkingPlace
+                    switch (callback.Data)
+                    {
+                        case "Yes":
 
+                            return;
+
+                        case "No":
+                            await SelectSpecificWorkPlaceCommand.ExecuteAsync(callback, botClient, backState, backCommand);
+                            
+                            state.StateNumber = UserState.SelectingSpecificWorkPlace;
+                            state.LastCommand = callback.Data;
+                            await stateService.UpdateAsync(state);
+
+                            history.ParkingPlaceId = null;
+                            await historyService.UpdateAsync(history);
+                            return;
+                    }
+                    return;
+                    #endregion
             }
         }
     }

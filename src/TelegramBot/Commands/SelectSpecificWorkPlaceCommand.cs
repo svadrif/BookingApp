@@ -6,7 +6,7 @@ using TelegramBot.Helpers;
 
 namespace TelegramBot.Commands
 {
-    public static class SelectParkingPlaceCommand
+    public static class SelectSpecificWorkPlaceCommand
     {
         public static async Task ExecuteAsync(CallbackQuery callback, ITelegramBotClient botClient, UserState backState, string backCommand)
         {
@@ -21,7 +21,7 @@ namespace TelegramBot.Commands
             var inlineKeyboard = KeyboardBuilder.BuildInLineKeyboard(buttons, 2, backButton);
             await botClient.EditMessageTextAsync(chatId: callback.From.Id,
                                                  messageId: callback.Message.MessageId,
-                                                 text: "Would you like to add parking place?",
+                                                 text: "Would you like to specify workplace parameters?",
                                                  replyMarkup: inlineKeyboard);
         }
     }
