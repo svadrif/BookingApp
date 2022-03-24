@@ -14,7 +14,8 @@ namespace TelegramBot.Handlers
             IAppUserService userService,
             IStateService stateService,
             IBookingHistoryService historyService,
-            IOfficeService officeService)
+            IOfficeService officeService,
+            IMapService mapService)
         {
             if (callback.Data.Equals("."))
             {
@@ -238,9 +239,9 @@ namespace TelegramBot.Handlers
                     switch (callback.Data)
                     {
                         case "Yes":
-                            await SelectExactFloorCommand.ExecuteAsync(callback, botClient, "No");
+                            await SelectExactFloorCommand.ExecuteAsync(callback, botClient, history.ParkingPlaceId == null ? "No" : "Yes");
 
-                            state.StateNumber = UserState.SpecifyingWorkPlaceSelectingSpecificMap;
+                            state.StateNumber = UserState.SpecifyingWorkPlaceSelectingExactMap;
                             state.LastCommand = callback.Data;
                             await stateService.UpdateAsync(state);
                             return;
@@ -249,6 +250,34 @@ namespace TelegramBot.Handlers
 
                             return;
                     }
+                    return;
+                #endregion
+
+                case UserState.SpecifyingWorkPlaceSelectingExactMap:
+                    #region SpecifyingWorkPlaceSelectingSpecificMap
+                    switch (callback.Data)
+                    {
+                        case "Yes":
+                            await SendFloorsCommand.ExecuteAsync(callback, botClient, mapService, history.OfficeId.Value);
+
+                            state.StateNumber = UserState.SpecifyingWorkPlaceSelectingMapFloor;
+                            state.LastCommand = callback.Data;
+                            await stateService.UpdateAsync(state);
+                            return;
+
+                        case "No":
+
+                            return;
+                    }
+                    return;
+                #endregion
+
+                case UserState.SpecifyingWorkPlaceSelectingMapFloor:
+                    #region SpecifyingWorkPlaceSelectingMapFloor
+
+                    //state.StateNumber = UserState.SpecifyingWorkPlaceSelectingExactWorkPlace;
+                    //state.LastCommand = callback.Data;
+                    //await stateService.UpdateAsync(state);
                     return;
                     #endregion
             }
