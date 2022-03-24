@@ -4,6 +4,8 @@ using Application.Interfaces.IServices;
 using Application.Pagination;
 using AutoMapper;
 using Domain.Entities;
+using Application.Interfaces;
+
 
 namespace Infrastructure.Services
 {
@@ -11,63 +13,113 @@ namespace Infrastructure.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public MapService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly ILoggerManager _logger;
+        public MapService(IUnitOfWork unitOfWork, IMapper mapper, ILoggerManager _logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = _logger;
         }
 
         public async Task<Guid> AddAsync(AddMapDTO mapDTO)
         {
-            Map map = _mapper.Map<Map>(mapDTO);
-            await _unitOfWork.Maps.AddAsync(map);
-            await _unitOfWork.CompleteAsync();
-            return map.Id;
+            try
+            {
+                Map map = _mapper.Map<Map>(mapDTO);
+                await _unitOfWork.Maps.AddAsync(map);
+                await _unitOfWork.CompleteAsync();
+                return map.Id;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarn($"Non correct values in the {nameof(AddAsync)} action {ex}");
+                return Guid.Empty;
+            }
         }
 
         public async Task<PagedList<GetMapDTO>> GetPagedAsync(PagedQueryBase query)
         {
-            var maps = await _unitOfWork.Maps.GetPagedAsync(query);
-            var mapMaps = _mapper.Map<List<GetMapDTO>>(maps);
-            var mapsDTO = new PagedList<GetMapDTO>(mapMaps, maps.TotalCount, maps.CurrentPage, maps.PageSize);
-            return mapsDTO;
+            try
+            {
+                var maps = await _unitOfWork.Maps.GetPagedAsync(query);
+                var mapMaps = _mapper.Map<List<GetMapDTO>>(maps);
+                var mapsDTO = new PagedList<GetMapDTO>(mapMaps, maps.TotalCount, maps.CurrentPage, maps.PageSize);
+                return mapsDTO;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarn($"Non correct values in the {nameof(GetPagedAsync)} action {ex}");
+                return null;
+            }
         }
 
         public async Task<GetMapDTO> GetByIdAsync(Guid Id)
         {
-            var map = await _unitOfWork.Maps.GetByIdAsync(Id);
-            return _mapper.Map<GetMapDTO>(map);
+            try
+            {
+                var map = await _unitOfWork.Maps.GetByIdAsync(Id);
+                return _mapper.Map<GetMapDTO>(map);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarn($"Non correct values in the {nameof(GetByIdAsync)} action {ex}");
+                return null;
+            }
         }
 
         public async Task<bool> RemoveAsync(Guid Id)
         {
-            var map = await _unitOfWork.Maps.GetByIdAsync(Id);
-            if (map == null)
-                return false;
+            try
+            {
+                var map = await _unitOfWork.Maps.GetByIdAsync(Id);
+                if (map == null)
+                    return false;
 
-            _unitOfWork.Maps.Remove(map);
-            await _unitOfWork.CompleteAsync();
-            return true;
+                _unitOfWork.Maps.Remove(map);
+                await _unitOfWork.CompleteAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarn($"Non correct values in the {nameof(RemoveAsync)} action {ex}");
+                return false;
+            }
         }
 
         public async Task<PagedList<GetMapDTO>> SearchByOfficeIdAsync(Guid officeId, PagedQueryBase query)
         {
-            var maps = await _unitOfWork.Maps.GetPagedByOfficeIdAsync(officeId, query);
-            var mapMaps = _mapper.Map<List<GetMapDTO>>(maps);
-            var mapsDTO = new PagedList<GetMapDTO>(mapMaps, maps.TotalCount, maps.CurrentPage, maps.PageSize);
-            return mapsDTO;
+            try
+            {
+                var maps = await _unitOfWork.Maps.GetPagedByOfficeIdAsync(officeId, query);
+                var mapMaps = _mapper.Map<List<GetMapDTO>>(maps);
+                var mapsDTO = new PagedList<GetMapDTO>(mapMaps, maps.TotalCount, maps.CurrentPage, maps.PageSize);
+                return mapsDTO;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarn($"Non correct values in the {nameof(SearchByOfficeIdAsync)} action {ex}");
+                return null;
+            }
         }
 
         public async Task<GetMapDTO> UpdateAsync(UpdateMapDTO mapDTO)
         {
-            var map = await _unitOfWork.Maps.GetByIdAsync(mapDTO.Id);
-            if (map == null)
-                return null;
+            try
+            {
+                var map = await _unitOfWork.Maps.GetByIdAsync(mapDTO.Id);
+                if (map == null)
+                    return null;
 
-            _mapper.Map(mapDTO, map);
-            _unitOfWork.Maps.Update(map);
-            await _unitOfWork.CompleteAsync();
-            return _mapper.Map<GetMapDTO>(map);
+                _mapper.Map(mapDTO, map);
+                _unitOfWork.Maps.Update(map);
+                await _unitOfWork.CompleteAsync();
+                return _mapper.Map<GetMapDTO>(map);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarn($"Non correct values in the {nameof(UpdateAsync)} action {ex}");
+                return null;
+            }
         }
     }
 }
