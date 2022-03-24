@@ -1,6 +1,5 @@
 ﻿using Application.DTOs.AppUserDTO;
 using Application.Pagination;
-using Domain.Entities;
 
 namespace Application.Interfaces.IServices
 {
