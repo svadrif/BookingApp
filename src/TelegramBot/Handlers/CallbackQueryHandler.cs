@@ -80,6 +80,7 @@ namespace TelegramBot.Handlers
                     return;
                 #endregion
 
+                    // New Bookimg
                 case UserState.SelectingCountry:
                     #region SelectingCountry
                     await SendCitiesCommand.ExecuteAsync(callback, botClient, officeService);
@@ -394,7 +395,7 @@ namespace TelegramBot.Handlers
                     return;
                 #endregion
 
-
+                    // My Bookings
                 case UserState.ReviewingMyBookings:
                     #region ReviewingMyBookings
                     await SendBookingInfoCommand.ExecuteAsync(callback, botClient, bookingService, workPlaceService, mapService, officeService, parkingPlaceService, Guid.Parse(callback.Data));
@@ -407,7 +408,22 @@ namespace TelegramBot.Handlers
 
                 case UserState.ReviewingBookingInfo:
                     #region ReviewingBookingInfo
-                    await botClient.AnswerCallbackQueryAsync(callback.Id, "Unavailable button");
+                    switch(callback.Data.Split(":")[0])
+                    {
+                        case "Delete":
+                            await StartCommand.ExecuteAsync(callback, botClient);
+
+                            await bookingService.RemoveAsync(Guid.Parse(callback.Data.Split(":")[1]));
+
+                            state.LastCommand = callback.Data;
+                            state.StateNumber = UserState.SelectingAction;
+                            await stateService.UpdateAsync(state);
+                            return;
+
+                        case "Edit":
+                            await botClient.AnswerCallbackQueryAsync(callback.Id, "Unavailable button");
+                            return;
+                    }
                     return;
                     #endregion
             }
