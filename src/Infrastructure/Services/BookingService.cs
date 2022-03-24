@@ -24,9 +24,10 @@ namespace Infrastructure.Services
         {
             Booking booking = _mapper.Map<Booking>(bookingDTO);
             var workPlace = _unitOfWork.Bookings.Search(x=>x.WorkPlaceId==booking.WorkPlaceId,false);
-            if (workPlace.Any())
+            bool validData = BookingValidation.Validate(booking);
+            if (!workPlace.Any())
             {
-                if (BookingValidation.Validate(booking))
+                if (validData)
                 {
                     await _unitOfWork.Bookings.AddAsync(booking);
                     await _unitOfWork.CompleteAsync();
@@ -37,7 +38,7 @@ namespace Infrastructure.Services
             {
                 foreach (var item in workPlace)
                 {
-                    if (BookingValidation.ValidateBookingDate(booking, item.BookingStart, item.BookingEnd) && BookingValidation.Validate(booking))
+                    if (BookingValidation.ValidateBookingDate(booking, item.BookingStart, item.BookingEnd) && validData)
                     {
                         await _unitOfWork.Bookings.AddAsync(booking);
                         await _unitOfWork.CompleteAsync();
@@ -95,10 +96,34 @@ namespace Infrastructure.Services
             var booking = await _unitOfWork.Bookings.GetByIdAsync(bookingDTO.Id);
             if (booking == null)
                 return null;
-
+            
             _mapper.Map(bookingDTO, booking);
-            _unitOfWork.Bookings.Update(booking);
-            await _unitOfWork.CompleteAsync();
+            bool validData = BookingValidation.Validate(booking);
+
+            var workPlace = _unitOfWork.Bookings.Search(x=>x.WorkPlaceId==booking.WorkPlaceId,false);
+            if (!workPlace.Any())
+            {
+                if (validData)
+                {
+                    _unitOfWork.Bookings.Update(booking);
+                    await _unitOfWork.CompleteAsync();
+                    return _mapper.Map<GetBookingDTO>(booking);
+                }
+            }
+            else
+            {
+                foreach (var item in workPlace)
+                {
+                    if (BookingValidation.ValidateBookingDate(booking, item.BookingStart, item.BookingEnd) && validData)
+                    {
+                        _unitOfWork.Bookings.Update(booking);
+                        await _unitOfWork.CompleteAsync();
+                        return _mapper.Map<GetBookingDTO>(booking);
+                    }
+                }
+                
+            }
+            //data is not valid
             return _mapper.Map<GetBookingDTO>(booking);
         }
     }
