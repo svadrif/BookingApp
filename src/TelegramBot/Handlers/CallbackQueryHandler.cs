@@ -15,7 +15,9 @@ namespace TelegramBot.Handlers
             IStateService stateService,
             IBookingHistoryService historyService,
             IOfficeService officeService,
-            IMapService mapService)
+            IMapService mapService,
+            IWorkPlaceService workPlaceService,
+            IBookingService bookingService)
         {
             if (callback.Data.Equals("."))
             {
@@ -26,6 +28,8 @@ namespace TelegramBot.Handlers
             var user = await userService.GetByTelegramIdAsync(callback.From.Id);
             var state = await stateService.GetByUserIdAsync(user.Id);
             var history = await historyService.GetByUserIdAsync(user.Id);
+            UserState backState;
+            string backCommand;
 
             if (callback.Data.Length > 5 && callback.Data.Substring(0, 5).Equals("back:"))
             {
@@ -213,6 +217,7 @@ namespace TelegramBot.Handlers
 
                 case UserState.SelectingParkingPlace:
                     #region SelectingParkingPlace
+                    backState = history.BookingStart == history.BookingEnd ? UserState.SelectingBookingDate : UserState.SelectingBookingEndDate;
                     switch (callback.Data)
                     {
                         case "Yes":
@@ -220,7 +225,6 @@ namespace TelegramBot.Handlers
                             return;
 
                         case "No":
-                            var backState = history.BookingStart == history.BookingEnd ? UserState.SelectingBookingDate : UserState.SelectingBookingEndDate;
                             await SelectSpecificWorkPlaceCommand.ExecuteAsync(callback, botClient, backState, history.BookingEnd.ToString());
 
                             state.StateNumber = UserState.SelectingSpecificWorkPlace;
@@ -254,7 +258,7 @@ namespace TelegramBot.Handlers
                 #endregion
 
                 case UserState.SpecifyingWorkPlaceSelectingExactMap:
-                    #region SpecifyingWorkPlaceSelectingSpecificMap
+                    #region SpecifyingWorkPlaceSelectingExactMap
                     switch (callback.Data)
                     {
                         case "Yes":
@@ -274,12 +278,43 @@ namespace TelegramBot.Handlers
 
                 case UserState.SpecifyingWorkPlaceSelectingMapFloor:
                     #region SpecifyingWorkPlaceSelectingMapFloor
+                    await SelectExactWorkPlaceCommand.ExecuteAsync(callback, botClient, UserState.SpecifyingWorkPlaceSelectingExactMap, "Yes");
 
-                    //state.StateNumber = UserState.SpecifyingWorkPlaceSelectingExactWorkPlace;
-                    //state.LastCommand = callback.Data;
-                    //await stateService.UpdateAsync(state);
+                    state.StateNumber = UserState.SpecifyingWorkPlaceSelectingExactWorkPlace;
+                    state.LastCommand = callback.Data;
+                    await stateService.UpdateAsync(state);
+
+                    history.HasConfRoom = null;
+                    history.HasKitchen = null;
+                    history.MapId = Guid.Parse(callback.Data);
+                    await historyService.UpdateAsync(history);
+                    return;
+                #endregion
+
+                case UserState.SpecifyingWorkPlaceSelectingExactWorkPlace:
+                    #region SpecifyingWorkPlaceSelectingExactWorkPlace
+
+                    backState = history.HasConfRoom == null ? UserState.SpecifyingWorkPlaceSelectingMapFloor : UserState.SpecifyingWorkPlaceSelectingMapAttributes;
+                    backCommand = history.HasConfRoom == null ? history.MapId.Value.ToString() : "Confirm";
+                    switch (callback.Data)
+                    {
+                        case "Yes":
+                            await SendWorkPlacesCommand.ExecuteAsync(callback, botClient, workPlaceService, bookingService, history.MapId.Value,
+                                                                     history.BookingStart.Value.DateTime, history.BookingEnd.Value.DateTime, backState, backCommand);
+
+                            state.StateNumber = UserState.SpecifyingWorkPlaceSelectingWorkPlace;
+                            state.LastCommand = callback.Data;
+                            await stateService.UpdateAsync(state);
+                            return;
+
+                        case "No":
+
+                            return;
+                    }
                     return;
                     #endregion
+
+
             }
         }
     }
