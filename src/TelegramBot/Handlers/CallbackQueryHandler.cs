@@ -26,11 +26,16 @@ namespace TelegramBot.Handlers
             var state = await stateService.GetByUserIdAsync(user.Id);
             var history = await historyService.GetByUserIdAsync(user.Id);
 
-            if (callback.Data.Substring(0, 5).Equals("back:"))
+            if (callback.Data.Length > 5 && callback.Data.Substring(0, 5).Equals("back:"))
             {
                 state.StateNumber = (UserState)Enum.Parse(typeof(UserState), callback.Data.Split(":")[1]);
 
-                callback.Data = callback.Data.Split(":")[2];
+                var data = callback.Data.Split(":")[2];
+                for (var counter = 3; counter < callback.Data.Split(":").Count(); counter++)
+                {
+                    data += $":{callback.Data.Split(":")[counter]}";
+                }
+                callback.Data = data;
             }
 
             switch (state.StateNumber)
@@ -107,7 +112,7 @@ namespace TelegramBot.Handlers
                     switch (callback.Data)
                     {
                         case "One-day":
-                            await SendDateCommand.ExecuteAsync(callback, botClient, DateTime.Now.Date, 0, "one-day", UserState.SelectingOffice, history.OfficeId.ToString());
+                            await SendDateCommand.ExecuteAsync(callback, botClient, DateTime.Now.Date.AddDays(1), 0, "one-day", UserState.SelectingOffice, history.OfficeId.ToString());
 
                             state.LastCommand = callback.Data;
                             state.StateNumber = UserState.SelectingBookingDate;
@@ -115,7 +120,7 @@ namespace TelegramBot.Handlers
                             return;
 
                         case "Continuous":
-                            await SendDateCommand.ExecuteAsync(callback, botClient, DateTime.Now.Date, 0, "start", UserState.SelectingOffice, history.OfficeId.ToString());
+                            await SendDateCommand.ExecuteAsync(callback, botClient, DateTime.Now.Date.AddDays(1), 0, "start", UserState.SelectingOffice, history.OfficeId.ToString());
 
                             state.LastCommand = callback.Data;
                             state.StateNumber = UserState.SelectingBookingStartDate;
@@ -127,7 +132,7 @@ namespace TelegramBot.Handlers
 
                 case UserState.SelectingBookingDate:
                     #region SelectingBookingDate
-                    if (callback.Data.Substring(0, 6).Equals("month:"))
+                    if (callback.Data.Length > 6 && callback.Data.Substring(0, 6).Equals("month:"))
                     {
                         var skipMonths = int.Parse(callback.Data.Split(":")[1]);
                         if (skipMonths < 0 || skipMonths > 3)
@@ -135,14 +140,27 @@ namespace TelegramBot.Handlers
                             await botClient.AnswerCallbackQueryAsync(callback.Id, "Unavailable button");
                             return;
                         }
-                        await SendDateCommand.ExecuteAsync(callback, botClient, DateTime.Now.Date, skipMonths, "one-day", UserState.SelectingOffice, history.OfficeId.ToString());
+                        await SendDateCommand.ExecuteAsync(callback, botClient, DateTime.Now.Date.AddDays(1), skipMonths, "one-day", UserState.SelectingOffice, history.OfficeId.ToString());
+                        return;
                     }
+                    
+                    await SelectParkingPlaceCommand.ExecuteAsync(callback, botClient, UserState.SelectingBookingType, "One-day");
+
+                    state.LastCommand = callback.Data;
+                    state.StateNumber = UserState.SelectingParkingPlace;
+                    await stateService.UpdateAsync(state);
+
+                    history.BookingStart = DateTime.Parse(callback.Data);
+                    history.BookingEnd = DateTime.Parse(callback.Data);
+                    history.IsRecurring = false;
+                    history.Frequancy = string.Empty;
+                    await historyService.UpdateAsync(history);
                     return;
                 #endregion
 
                 case UserState.SelectingBookingStartDate:
                     #region SelectingBookingStartDate
-                    if (callback.Data.Substring(0, 6).Equals("month:"))
+                    if (callback.Data.Length > 6 && callback.Data.Substring(0, 6).Equals("month:"))
                     {
                         var skipMonths = int.Parse(callback.Data.Split(":")[1]);
                         if (skipMonths < 0 || skipMonths > 3)
@@ -150,10 +168,49 @@ namespace TelegramBot.Handlers
                             await botClient.AnswerCallbackQueryAsync(callback.Id, "Unavailable button");
                             return;
                         }
-                        await SendDateCommand.ExecuteAsync(callback, botClient, DateTime.Now.Date, skipMonths, "start", UserState.SelectingOffice, history.OfficeId.ToString());
+                        await SendDateCommand.ExecuteAsync(callback, botClient, DateTime.Now.Date.AddDays(1), skipMonths, "start", UserState.SelectingOffice, history.OfficeId.ToString());
+                        return;
                     }
+                    await SendDateCommand.ExecuteAsync(callback, botClient, DateTime.Parse(callback.Data).AddDays(1), 0, "end", UserState.SelectingBookingType, "Continuous");
+
+                    state.LastCommand = callback.Data;
+                    state.StateNumber = UserState.SelectingBookingEndDate;
+                    await stateService.UpdateAsync(state);
+
+                    history.BookingStart = DateTime.Parse(callback.Data);
+                    await historyService.UpdateAsync(history);
                     return;
-                    #endregion
+                #endregion
+
+                case UserState.SelectingBookingEndDate:
+                    #region SelectingBookingEndDate
+                    if (callback.Data.Length > 6 && callback.Data.Substring(0, 6).Equals("month:"))
+                    {
+                        var skipMonths = int.Parse(callback.Data.Split(":")[1]) - (history.BookingStart.Value.Month - DateTime.Now.Month);
+                        var monthDifference = DateTime.Now.AddMonths(3).Month - history.BookingStart.Value.Month;
+                        if (skipMonths < 0 || skipMonths > (monthDifference < 0 ? monthDifference + 12 : monthDifference))
+                        {
+                            await botClient.AnswerCallbackQueryAsync(callback.Id, "Unavailable button");
+                            return;
+                        }
+                        await SendDateCommand.ExecuteAsync(callback, botClient, history.BookingStart.Value.DateTime.AddDays(1), skipMonths, "end", UserState.SelectingBookingType, "Continuous");
+                        return;
+                    }
+
+                    await SelectParkingPlaceCommand.ExecuteAsync(callback, botClient, UserState.SelectingBookingStartDate, history.BookingStart.ToString());
+
+                    state.LastCommand = callback.Data;
+                    state.StateNumber = UserState.SelectingParkingPlace;
+                    await stateService.UpdateAsync(state);
+
+                    history.BookingEnd = DateTime.Parse(callback.Data);
+                    history.IsRecurring = false;
+                    history.Frequancy = string.Empty;
+                    await historyService.UpdateAsync(history);
+                    return;
+                #endregion
+
+
             }
         }
     }

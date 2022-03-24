@@ -15,9 +15,10 @@ namespace Domain.Enums
         SelectingOffice,
         SelectingBookingType,
         SelectingBookingRecurringType,
+        SelectingParkingPlace,
+        SelectingSpecificWorkPlace,
         SelectingFloor,
         SelectingWorkPlace,
-        SelectingParkingPlace,
 
         // Booking setting date states
             // One-day
