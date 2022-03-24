@@ -6,9 +6,9 @@ using TelegramBot.Helpers;
 
 namespace TelegramBot.Commands
 {
-    public static class SelectParkingPlaceCommand
+    public static class SelectExactFloorCommand
     {
-        public static async Task ExecuteAsync(CallbackQuery callback, ITelegramBotClient botClient, UserState backState, string backCommand)
+        public static async Task ExecuteAsync(CallbackQuery callback, ITelegramBotClient botClient, string backCommand)
         {
             var buttons = new List<InlineKeyboardButton>
             {
@@ -16,12 +16,12 @@ namespace TelegramBot.Commands
                 InlineKeyboardButton.WithCallbackData("No", "No")
             };
 
-            var backButton = Tuple.Create(backState, backCommand);
+            var backButton = Tuple.Create(UserState.SelectingParkingPlace, backCommand);
 
             var inlineKeyboard = KeyboardBuilder.BuildInLineKeyboard(buttons, 2, backButton);
             await botClient.EditMessageTextAsync(chatId: callback.From.Id,
                                                  messageId: callback.Message.MessageId,
-                                                 text: "Would you like to add parking place?",
+                                                 text: "Would you like to choose the exact floor?",
                                                  replyMarkup: inlineKeyboard);
         }
     }
