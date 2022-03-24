@@ -25,7 +25,7 @@ namespace API.Controllers
 
         [AllowAnonymous]
         [HttpPost("SignIn")]
-        public async Task<ActionResult> SignIn([FromBody]Guid id)
+        public async Task<ActionResult> SignIn([FromBody] Guid id)
         {
             var authResult = await _authenticationService.AuthenticateAsync(id);
             _logger.LogInfo($"{nameof(SignIn)} method by {id}");

@@ -53,15 +53,18 @@ namespace Infrastructure
             #endregion
 
             #region JWToken
+            // Update the JWT settings from the settings
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
                 .AddJwtBearer(options =>
                 {
+                    options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         // указывает, будет ли валидироваться издатель при валидации токена
@@ -75,6 +78,7 @@ namespace Infrastructure
                         // валидация ключа безопасности
                         ValidateIssuerSigningKey = true,
                         ClockSkew = TimeSpan.Zero,
+                        RequireExpirationTime = false, // ToDo Update
                         ValidIssuer = configuration["JwtSettings:Issuer"],
                         ValidAudience = configuration["JwtSettings:Audience"],
                     };
