@@ -23,8 +23,9 @@ namespace Infrastructure.Services
         public async Task<Guid> AddAsync(AddBookingDTO bookingDTO)
         {
             Booking booking = _mapper.Map<Booking>(bookingDTO);
-            var workPlace = _unitOfWork.Bookings.Search(x=>x.WorkPlaceId==booking.WorkPlaceId,false);
+            var workPlace = _unitOfWork.Bookings.Search(x=>x.WorkPlaceId==booking.WorkPlaceId,false).ToList();
             bool validData = BookingValidation.Validate(booking);
+            bool validDate = true;
             if (!workPlace.Any())
             {
                 if (validData)
@@ -38,12 +39,18 @@ namespace Infrastructure.Services
             {
                 foreach (var item in workPlace)
                 {
-                    if (BookingValidation.ValidateBookingDate(booking, item.BookingStart, item.BookingEnd) && validData)
+                    if (!BookingValidation.ValidateBookingDate(booking, item.BookingStart, item.BookingEnd))
                     {
-                        await _unitOfWork.Bookings.AddAsync(booking);
-                        await _unitOfWork.CompleteAsync();
-                        return booking.Id;
+                        validDate = false;
+                        break;
                     }
+                }
+
+                if (validDate && validData)
+                {
+                    await _unitOfWork.Bookings.AddAsync(booking);
+                    await _unitOfWork.CompleteAsync();
+                    return booking.Id;
                 }
                 
             }
