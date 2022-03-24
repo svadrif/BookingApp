@@ -143,7 +143,7 @@ namespace TelegramBot.Handlers
                         await SendDateCommand.ExecuteAsync(callback, botClient, DateTime.Now.Date.AddDays(1), skipMonths, "one-day", UserState.SelectingOffice, history.OfficeId.ToString());
                         return;
                     }
-                    
+
                     await SelectParkingPlaceCommand.ExecuteAsync(callback, botClient, UserState.SelectingBookingType, "One-day");
 
                     state.LastCommand = callback.Data;
@@ -211,8 +211,6 @@ namespace TelegramBot.Handlers
                 #endregion
 
                 case UserState.SelectingParkingPlace:
-                    var backState = history.BookingStart == history.BookingEnd ? UserState.SelectingBookingDate : UserState.SelectingBookingEndDate;
-                    var backCommand = history.BookingEnd.ToString();
                     #region SelectingParkingPlace
                     switch (callback.Data)
                     {
@@ -221,14 +219,34 @@ namespace TelegramBot.Handlers
                             return;
 
                         case "No":
-                            await SelectSpecificWorkPlaceCommand.ExecuteAsync(callback, botClient, backState, backCommand);
-                            
+                            var backState = history.BookingStart == history.BookingEnd ? UserState.SelectingBookingDate : UserState.SelectingBookingEndDate;
+                            await SelectSpecificWorkPlaceCommand.ExecuteAsync(callback, botClient, backState, history.BookingEnd.ToString());
+
                             state.StateNumber = UserState.SelectingSpecificWorkPlace;
                             state.LastCommand = callback.Data;
                             await stateService.UpdateAsync(state);
 
                             history.ParkingPlaceId = null;
                             await historyService.UpdateAsync(history);
+                            return;
+                    }
+                    return;
+                #endregion
+
+                case UserState.SelectingSpecificWorkPlace:
+                    #region SelectingSpecificWorkPlace
+                    switch (callback.Data)
+                    {
+                        case "Yes":
+                            await SelectExactFloorCommand.ExecuteAsync(callback, botClient, "No");
+
+                            state.StateNumber = UserState.SpecifyingWorkPlaceSelectingSpecificMap;
+                            state.LastCommand = callback.Data;
+                            await stateService.UpdateAsync(state);
+                            return;
+
+                        case "No":
+
                             return;
                     }
                     return;
