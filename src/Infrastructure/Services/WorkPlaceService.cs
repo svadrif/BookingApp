@@ -38,7 +38,15 @@ namespace Infrastructure.Services
             var workPlace = await _unitOfWork.WorkPlaces.GetByIdAsync(Id);
             return _mapper.Map<GetWorkPlaceDTO>(workPlace);
         }
-
+        public async Task<PagedList<GetWorkPlaceDTO>> GetByAttributesAsync(bool isNextToWindow, bool hasPc, bool hasMonitor, bool hasKeyboard,
+            bool hasMouse, bool hasHeadset, PagedQueryBase query)
+        {
+            var workPlaces = await _unitOfWork.WorkPlaces.GetPagedByAttributesAsync(isNextToWindow,  hasPc,  hasMonitor,  hasKeyboard,
+                 hasMouse,  hasHeadset,  query);
+            var mapWorkPlaces = _mapper.Map<List<GetWorkPlaceDTO>>(workPlaces);
+            var workPlacesDTO = new PagedList<GetWorkPlaceDTO>(mapWorkPlaces, workPlaces.TotalCount, workPlaces.CurrentPage, workPlaces.PageSize);
+            return workPlacesDTO;
+        }
         public async Task<bool> RemoveAsync(Guid Id)
         {
             var workPlace = await _unitOfWork.WorkPlaces.GetByIdAsync(Id);
