@@ -5,6 +5,7 @@ using Application.Pagination;
 using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Validations;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Services
 {
@@ -22,22 +23,44 @@ namespace Infrastructure.Services
         public async Task<Guid> AddAsync(AddBookingDTO bookingDTO)
         {
             Booking booking = _mapper.Map<Booking>(bookingDTO);
-            var startDb = _unitOfWork.Bookings.Search(x=>x.BookingStart==booking.BookingStart,false).FirstOrDefault();
-            var endDb = _unitOfWork.Bookings.Search(x=>x.BookingStart==booking.BookingEnd,false).FirstOrDefault();
-            if (startDb == null && endDb == null)
+            // var startDb = _unitOfWork.Bookings.Search(x=>x.BookingStart==booking.BookingStart,false).FirstOrDefault();
+            // var endDb = _unitOfWork.Bookings.Search(x=>x.BookingStart==booking.BookingEnd,false).FirstOrDefault();
+            // if (startDb == null && endDb == null)
+            // {
+            //     await _unitOfWork.Bookings.AddAsync(booking);
+            //     await _unitOfWork.CompleteAsync();
+            //     return booking.Id;
+            //
+            // }
+            // else if (BookingValidation.Validate(booking, startDb.BookingStart, endDb.BookingEnd))
+            // {
+            //     await _unitOfWork.Bookings.AddAsync(booking);
+            //     await _unitOfWork.CompleteAsync();
+            //     return booking.Id;
+            // }
+            var workPlace = _unitOfWork.Bookings.Search(x=>x.WorkPlaceId==booking.WorkPlaceId,false);
+            if (workPlace.Any())
             {
-                await _unitOfWork.Bookings.AddAsync(booking);
-                await _unitOfWork.CompleteAsync();
-                return booking.Id;
-
+                if (BookingValidation.Validate(booking))
+                {
+                    await _unitOfWork.Bookings.AddAsync(booking);
+                    await _unitOfWork.CompleteAsync();
+                    return booking.Id;
+                }
             }
-            else if (BookingValidation.Validate(booking, startDb.BookingStart, endDb.BookingEnd))
+            else
             {
-                await _unitOfWork.Bookings.AddAsync(booking);
-                await _unitOfWork.CompleteAsync();
-                return booking.Id;
+                foreach (var item in workPlace)
+                {
+                    if (BookingValidation.ValidateBookingDate(booking, item.BookingStart, item.BookingEnd) && BookingValidation.Validate(booking))
+                    {
+                        await _unitOfWork.Bookings.AddAsync(booking);
+                        await _unitOfWork.CompleteAsync();
+                        return booking.Id;
+                    }
+                }
+                
             }
-
             return new Guid();
         }
 

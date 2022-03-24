@@ -2,9 +2,9 @@ using Domain.Entities;
 
 namespace Infrastructure.Validations;
 
-public class BookingValidation
+public static class BookingValidation
 {
-    public static bool Validate(Booking booking,DateTimeOffset startDb,DateTimeOffset endDb)
+    public static bool Validate(Booking booking)
     {
         if (DateTimeOffset.Compare(booking.BookingStart,DateTimeOffset.UtcNow) > 0)
         {
@@ -15,20 +15,26 @@ public class BookingValidation
         {
             return false;       
         }
-        //already exists
-        if (DateTimeOffset.Compare(booking.BookingStart, startDb) == 0)
-        {
-            return false;
-        }
-        if(DateTimeOffset.Compare(booking.BookingEnd,endDb) == 0)
-        {
-            return false;
-        }
         if (DateTimeOffset.Compare(booking.BookingEnd, booking.BookingStart) > 0)
         {
             return false;
         }
         
+        return true;
+    }
+
+    public static bool ValidateBookingDate(Booking booking,DateTimeOffset startDb,DateTimeOffset endDb)
+    {
+        //already exists
+        if (DateTimeOffset.Compare(booking.BookingStart, startDb) == 0)
+        {
+            return false;
+        }
+        
+        if(DateTimeOffset.Compare(booking.BookingEnd,endDb) == 0)
+        {
+            return false;
+        }
         return true;
     }
 }
