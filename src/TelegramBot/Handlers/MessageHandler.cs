@@ -13,6 +13,7 @@ namespace TelegramBot.Handlers
             {
                 case "/start":
                     await StartCommand.ExecuteAsync(message, botClient, userService, stateService);
+                    await botClient.DeleteMessageAsync(message.From.Id, message.MessageId);
                     return;
                 default:
                     await botClient.DeleteMessageAsync(message.From.Id, message.MessageId);
