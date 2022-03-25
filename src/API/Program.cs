@@ -1,9 +1,7 @@
 using Application;
 using Application.Authentication;
-using Application.Interfaces.IRepositories;
 using Infrastructure;
 using Infrastructure.Context;
-using Infrastructure.Repositories;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Telegram.Bot;

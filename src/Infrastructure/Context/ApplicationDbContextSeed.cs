@@ -1,6 +1,4 @@
-﻿using Application.Interfaces.IRepositories;
-using Infrastructure.Repositories;
-using Infrastructure.Seeds;
+﻿using Infrastructure.Seeds;
 
 namespace Infrastructure.Context
 {

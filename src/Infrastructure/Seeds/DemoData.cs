@@ -89,7 +89,7 @@ namespace Infrastructure.Seeds
             foreach (var office in OfficesSeed.GetOffices())
             {
                 varOffice = context.Offices.FirstOrDefault(x => x.Address == office.Address);
-                if (varOffice == null || context.Maps.Any(x => x.OfficeId == varOffice.Id))
+                if (varOffice == null || !context.Maps.Any(x => x.OfficeId == varOffice.Id))
                 {
                     continue;
                 }
