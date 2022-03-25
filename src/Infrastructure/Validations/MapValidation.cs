@@ -6,7 +6,7 @@ public class MapValidation
 {
     public static bool Validate(Map map)
     {
-        if (map.Floor < 0)
+        if (map.Floor <= 0)
         {
             return false;
         }
