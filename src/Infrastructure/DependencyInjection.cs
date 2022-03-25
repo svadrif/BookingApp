@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System.Net;
+using System.Net.Mail;
 using System.Text;
 
 namespace Infrastructure
@@ -83,6 +85,23 @@ namespace Infrastructure
                         ValidAudience = configuration["JwtSettings:Audience"],
                     };
                 });
+            #endregion
+            #region Email
+            services.AddTransient<IEmailService, EmailService>();
+            var from = configuration["Mail:From"];
+            var gmailSender = configuration["Gmail:Sender"];
+            var gmailPassword = configuration["Gmail:Password"];
+            var gmailPort = Convert.ToInt32(configuration["Gmail:Port"]);
+
+            services.AddFluentEmail(gmailSender, from)
+                    .AddSmtpSender(new SmtpClient("smtp.gmail.com")
+                    {
+                        //set smtp-client with SSL Authentication
+                        EnableSsl = true,
+                        Port = gmailPort,
+                        UseDefaultCredentials = false,
+                        Credentials = new NetworkCredential(gmailSender, gmailPassword)
+                    });
             #endregion
         }
     }

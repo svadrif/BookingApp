@@ -14,10 +14,13 @@ namespace Infrastructure.Services {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILoggerManager _logger;
-        public BookingService(IUnitOfWork unitOfWork, IMapper mapper, ILoggerManager logger) {
+        private readonly IEmailService _emailService;
+        public BookingService(IUnitOfWork unitOfWork, IMapper mapper, ILoggerManager logger, IEmailService emailService)
+        {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
+            _emailService = emailService;
         }
 
         public async Task < Guid > AddAsync(AddBookingDTO bookingDTO) {
@@ -35,6 +38,7 @@ namespace Infrastructure.Services {
                     if (validData && validOnVacation) {
                         await _unitOfWork.Bookings.AddAsync(booking);
                         await _unitOfWork.CompleteAsync();
+                        await _emailService.SendBaseEmailAsync(bookingDTO);
                         return booking.Id;
                     } else {
                         throw new Exception();
@@ -50,6 +54,7 @@ namespace Infrastructure.Services {
                     if (validDate && validData && validOnVacation) {
                         await _unitOfWork.Bookings.AddAsync(booking);
                         await _unitOfWork.CompleteAsync();
+                        await _emailService.SendBaseEmailAsync(bookingDTO);
                         return booking.Id;
                     } else {
                         throw new Exception();

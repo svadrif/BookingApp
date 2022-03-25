@@ -14,6 +14,7 @@ namespace API.Controllers
     {
         private readonly IBookingService _bookingService;
         private readonly ILoggerManager _logger;
+
         public BookingController(IBookingService bookingService, ILoggerManager logger)
         {
             _bookingService = bookingService;
