@@ -1,6 +1,9 @@
 using Application;
 using Application.Authentication;
+using Application.Interfaces.IRepositories;
 using Infrastructure;
+using Infrastructure.Context;
+using Infrastructure.Repositories;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Telegram.Bot;
@@ -81,12 +84,20 @@ try
 
     var app = builder.Build();
 
-    // Logging every request
-    // Configure the HTTP request pipeline.
-    app.UseSerilogRequestLogging(configure =>
+
+        // Logging every request
+        // Configure the HTTP request pipeline.
+        app.UseSerilogRequestLogging(configure =>
     {
         configure.MessageTemplate = "HTTP {RequestMethod} {RequestPath} ({UserId}) responded {StatusCode} in {Elapsed:0.0000}ms";
     }); // We want to log all HTTP requests
+
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        await ApplicationDbContextSeed.SeedAsync(context);
+    }
 
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
