@@ -1,5 +1,4 @@
 ﻿using Application.DTOs.BookingDTO;
-using Application.Sender;
 using FluentEmail.Core;
 using System;
 using System.Collections.Generic;
@@ -12,6 +11,5 @@ namespace Application.Interfaces
     public interface IEmailService
     {
         Task SendBaseEmailAsync(AddBookingDTO newBooking);
-        Task SendHtmlEmailAsync(AddBookingDTO newBooking);
     }
 }

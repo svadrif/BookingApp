@@ -1,7 +1,6 @@
 ﻿using Application.DTOs.BookingDTO;
 using Application.Interfaces;
 using Application.Interfaces.IRepositories;
-using Application.Sender;
 using FluentEmail.Core;
 using FluentEmail.Smtp;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,6 +32,36 @@ namespace Infrastructure.Services
             try
             {
                 var appUser = await _unitOfWork.AppUsers.GetByIdAsync(newBooking.UserId);
+                var parkingPlace = await _unitOfWork.ParkingPlaces.GetByIdAsync(newBooking.ParkingPlaceId.Value);
+                var workPlace = await _unitOfWork.WorkPlaces.GetByIdAsync(newBooking.WorkPlaceId);
+                var map = await _unitOfWork.Maps.GetByIdAsync(workPlace.MapId);
+                var office = await _unitOfWork.Offices.GetByIdAsync(map.OfficeId);
+
+                StringBuilder template = new();
+                template.AppendLine($"Dear {appUser.FirstName} , your booking register on {workPlace.Number} ");
+                template.AppendLine($"Booking summary:\n" +
+                        $"Office Address: {office.Country}, {office.City}, {office.Address}\n" +
+                          $"Floor: {map.Floor}\n" +
+                          $"Workplace number: {workPlace.Number}\n" +
+                          $"Booking date: {newBooking.BookingStart.Year}.{newBooking.BookingStart.Month}.{newBooking.BookingStart.Day}");
+
+                if (newBooking.BookingStart != newBooking.BookingEnd)
+                {
+                    template.AppendLine($" - {newBooking.BookingEnd.Year}.{newBooking.BookingEnd.Month}.{newBooking.BookingEnd.Day}\n");
+                }
+                else
+                {
+                    template.AppendLine("\n");
+                }
+                if (newBooking.IsRecurring)
+                {
+                    template.AppendLine($"Frequency: {newBooking.Frequancy}\n");
+                }
+                if (parkingPlace != null)
+                {
+                    template.AppendLine($"Parking place number {parkingPlace.Number}");
+                }
+                template.AppendLine("- The Team 4");
 
                 if (appUser != null)
                 {
@@ -42,7 +71,7 @@ namespace Infrastructure.Services
                         var email = mailer
                         .To(appUser.Email, appUser.FirstName)
                         .Subject("BookingApp")
-                        .Body("<b>Test Mail</b><br>using <b>HTML</b>");
+                        .Body(template.ToString());
 
                         _logger.LogWarn($"Sending email to {appUser.Email} from {mailer.SetFrom} with subject {mailer.Subject}.");
                         await email.SendAsync();
@@ -54,32 +83,6 @@ namespace Infrastructure.Services
                 _logger.LogError($"BookingApp EmailService: Unhandled Exception {ex} for {nameof(SendBaseEmailAsync)}");
             }
         }
-
-        public Task SendHtmlEmailAsync(AddBookingDTO newBooking)
-        {
-            try
-            {
-                var appUser = await _unitOfWork.AppUsers.GetByIdAsync(newBooking.UserId);
-
-                if (appUser != null)
-                {
-                    using (var scope = _serviceProvider.CreateScope())
-                    {
-                        var mailer = scope.ServiceProvider.GetRequiredService<IFluentEmail>();
-                        var email = mailer
-                        .To(appUser.Email, appUser.FirstName)
-                        .Subject("BookingApp")
-                        .Body("<b>Test Mail</b><br>using <b>HTML</b>");
-
-                        _logger.LogWarn($"Sending email to {appUser.Email} from {mailer.SetFrom} with subject {mailer.Subject}.");
-                        await email.SendAsync();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"BookingApp EmailService: Unhandled Exception {ex} for {nameof(SendBaseEmailAsync)}");
-            }
-        }
     }
+    
 }
