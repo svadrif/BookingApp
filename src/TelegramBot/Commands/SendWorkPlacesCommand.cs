@@ -34,7 +34,7 @@ namespace TelegramBot.Commands
                     bookings = await bookingService.SearchByWorkPlaceIdAsync(workPlace.Id, new PagedQueryBase() { CurrentPage = page });
                     foreach (var booking in bookings)
                     {
-                        isValid = BookingValidation.Validate(new Booking { BookingStart = bookingStart, BookingEnd = bookingEnd },
+                        isValid = BookingValidation.ValidateBookingDate(new Booking { BookingStart = bookingStart, BookingEnd = bookingEnd },
                                                       booking.BookingStart, booking.BookingEnd);
                         if (!isValid)
                         {

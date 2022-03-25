@@ -40,6 +40,7 @@ namespace Domain.Enums
 
 
         ReviewingMyBookings,
+        ReviewingBookingInfo,
 
         // Booking editing process states
         EditingBookingType,

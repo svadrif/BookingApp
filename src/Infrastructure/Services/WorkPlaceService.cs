@@ -65,7 +65,15 @@ namespace Infrastructure.Services
                 return null;
             }
         }
-
+        public async Task<PagedList<GetWorkPlaceDTO>> GetByAttributesAsync(bool isNextToWindow, bool hasPc, bool hasMonitor, bool hasKeyboard,
+            bool hasMouse, bool hasHeadset, PagedQueryBase query)
+        {
+            var workPlaces = await _unitOfWork.WorkPlaces.GetPagedByAttributesAsync(isNextToWindow,  hasPc,  hasMonitor,  hasKeyboard,
+                 hasMouse,  hasHeadset,  query);
+            var mapWorkPlaces = _mapper.Map<List<GetWorkPlaceDTO>>(workPlaces);
+            var workPlacesDTO = new PagedList<GetWorkPlaceDTO>(mapWorkPlaces, workPlaces.TotalCount, workPlaces.CurrentPage, workPlaces.PageSize);
+            return workPlacesDTO;
+        }
         public async Task<bool> RemoveAsync(Guid Id)
         {
             try

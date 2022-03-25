@@ -11,5 +11,6 @@ namespace Application.Interfaces.IServices
         Task<GetWorkPlaceDTO> UpdateAsync(UpdateWorkPlaceDTO workPlaceDTO);
         Task<bool> RemoveAsync(Guid Id);
         Task<PagedList<GetWorkPlaceDTO>> SearchByMapIdAsync(Guid mapId, PagedQueryBase query);
+        Task<PagedList<GetWorkPlaceDTO>> GetByAttributesAsync(bool isNextToWindow, bool hasPc, bool hasMonitor, bool hasKeyboard, bool hasMouse, bool hasHeadset, PagedQueryBase query);
     }
 }

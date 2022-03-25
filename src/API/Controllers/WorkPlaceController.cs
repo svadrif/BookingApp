@@ -52,7 +52,16 @@ namespace API.Controllers
             _logger.LogInfo($"called method {nameof(GetWorkPlaceById)} by {id}");
             return Ok(workPlace);
         }
-
+        
+        [HttpGet("ByAttributes/{isNextToWindow:bool}/{hasPc:bool}/{hasMonitor:bool}/{hasKeyboard:bool}/{hasMouse:bool}/{hasHeadset:bool}")]
+        public async Task<IActionResult> GetWorkplaceByAttributesAsync([FromQuery] PagedQueryBase query, [FromRoute]bool isNextToWindow, bool hasPc, bool hasMonitor, bool hasKeyboard,
+            bool hasMouse, bool hasHeadset)
+        {
+            var workPlaces = await _workPlaceService.GetByAttributesAsync(isNextToWindow,  hasPc,  hasMonitor,  hasKeyboard,
+                hasMouse,  hasHeadset,  query);
+            return Ok(workPlaces);
+        }
+        
         [Authorize(Roles = "MapEditor")]
         [HttpPut("{id:Guid}")]
         public async Task<IActionResult> UpdateWorkPlace([FromRoute] Guid id, [FromBody] UpdateWorkPlaceDTO updatedWorkPlace)
